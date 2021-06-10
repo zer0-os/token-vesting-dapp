@@ -1,4 +1,4 @@
 export * from './types';
 export * from './logger';
-export * from './merkleTree';
 export * from './vesting';
+export * from './helpers';

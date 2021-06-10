@@ -2,25 +2,35 @@ import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import React from 'react';
 import { MerkleTokenVesting } from '../contracts/types';
-import { estimateVestedAmount, getLogger, Maybe } from '../util';
+import { estimateVestedAmount, getLogger, Maybe, MaybeNull } from '../util';
 import { useVestingMerkleTree } from './useVestingMerkleTree';
 
 const logger = getLogger(`hooks::useMerkleVesting`);
 
+interface VestingParams {
+	start: number;
+	duration: number;
+	cliff: number;
+}
+
 export const useMerkleVesting = (
 	contract: MerkleTokenVesting,
 	user: Maybe<string>,
+	refreshToken?: number,
 ) => {
 	const { merkleTree } = useVestingMerkleTree(contract);
 
-	const [hasAward, setHasAward] = React.useState<Maybe<boolean>>(null);
-	const [hasClaimed, setHasClaimed] = React.useState<Maybe<boolean>>(undefined);
+	const [hasAward, setHasAward] = React.useState<MaybeNull<boolean>>(null);
+	const [hasClaimed, setHasClaimed] = React.useState<MaybeNull<boolean>>(null);
 	const [awardedTokens, setAwardedTokens] =
-		React.useState<Maybe<BigNumber>>(undefined);
+		React.useState<MaybeNull<BigNumber>>(null);
 	const [vestedTokens, setVestedTokens] =
-		React.useState<Maybe<BigNumber>>(undefined);
+		React.useState<MaybeNull<BigNumber>>(null);
 	const [releasableTokens, setReleasableTokens] =
-		React.useState<Maybe<BigNumber>>(undefined);
+		React.useState<MaybeNull<BigNumber>>(null);
+	const [vestingParams, setVestingParams] =
+		React.useState<MaybeNull<VestingParams>>(null);
+	const [token, setToken] = React.useState<MaybeNull<string>>(null);
 
 	React.useEffect(() => {
 		if (!merkleTree) {
@@ -29,10 +39,10 @@ export const useMerkleVesting = (
 
 		if (!user) {
 			setHasAward(false);
-			setHasClaimed(undefined);
-			setAwardedTokens(undefined);
-			setVestedTokens(undefined);
-			setReleasableTokens(undefined);
+			setHasClaimed(null);
+			setAwardedTokens(null);
+			setVestedTokens(null);
+			setReleasableTokens(null);
 			return;
 		}
 
@@ -40,10 +50,10 @@ export const useMerkleVesting = (
 
 		if (!userClaim) {
 			setHasAward(false);
-			setHasClaimed(undefined);
-			setAwardedTokens(undefined);
-			setVestedTokens(undefined);
-			setReleasableTokens(undefined);
+			setHasClaimed(null);
+			setAwardedTokens(null);
+			setVestedTokens(null);
+			setReleasableTokens(null);
 
 			logger.debug(`No user claim found.`);
 			return;
@@ -57,26 +67,33 @@ export const useMerkleVesting = (
 		const fetchValuesFromContract = async () => {
 			try {
 				const claimed = await contract.isClaimed(userClaim.index);
+				const tokenAddress = await contract.targetToken();
+
+				const start = (await contract.vestingStart()).toNumber();
+				const duration = (await contract.vestingDuration()).toNumber();
+				const cliff = (await contract.vestingCliff()).sub(start).toNumber();
+
+				if (subscribed) {
+					setHasClaimed(claimed);
+					setVestingParams({ start, duration, cliff });
+					setToken(tokenAddress);
+				}
 
 				// User has not claimed so we will attempt to estimate how many have vested
 				if (!claimed) {
 					logger.debug(`User has not yet claimed award.`);
 
 					const currentBlock = await contract.provider.getBlockNumber();
-					const start = await contract.vestingStart();
-					const duration = await contract.vestingDuration();
-					const cliff = await contract.vestingCliff();
 
 					const amountVested = estimateVestedAmount(
 						currentBlock,
-						start.toNumber(),
-						duration.toNumber(),
-						cliff.toNumber(),
+						start,
+						duration,
+						cliff,
 						awardedAmount,
 					);
 
 					if (subscribed) {
-						setHasClaimed(false);
 						setVestedTokens(amountVested);
 						setReleasableTokens(amountVested);
 					}
@@ -105,7 +122,7 @@ export const useMerkleVesting = (
 		return () => {
 			subscribed = false;
 		};
-	}, [merkleTree, contract, user]);
+	}, [merkleTree, contract, user, refreshToken]);
 
 	const claimAward = async (): Promise<ethers.ContractTransaction> => {
 		if (!merkleTree) {
@@ -121,6 +138,9 @@ export const useMerkleVesting = (
 		if (!userClaim) {
 			throw Error(`No user claim`);
 		}
+		logger.debug(
+			`Claiming award. user=${user} ${JSON.stringify(userClaim, null, 2)}`,
+		);
 
 		const tx = await contract.claimAward(
 			userClaim.index,
@@ -144,7 +164,9 @@ export const useMerkleVesting = (
 	};
 
 	return {
+		token,
 		hasAward,
+		vestingParams,
 		hasClaimed,
 		awardedTokens,
 		vestedTokens,

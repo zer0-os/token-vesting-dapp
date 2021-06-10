@@ -1,8 +1,9 @@
 import axios from 'axios';
-import { VestingMerkleTree } from './types';
+import { VestingMerkleTree } from '../util/types';
 
 const merkleFiles: { [address: string]: string } = {
-	'0x1': 'location',
+	'0xBB249Ffa0673284A3DdAB5de157A6970f849b0FE':
+		'https://ipfs.io/ipfs/QmdrErpGsuMKLTFQSmziwLuDd7FYCBCmhpfXbpW8jKFtWg',
 };
 
 export const getVestingMerkleTree = async (

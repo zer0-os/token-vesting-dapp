@@ -1,11 +1,7 @@
 import React from 'react';
+import { getVestingMerkleTree } from '../common';
 import { MerkleTokenVesting } from '../contracts/types';
-import {
-	getLogger,
-	getVestingMerkleTree,
-	Maybe,
-	VestingMerkleTree,
-} from '../util';
+import { getLogger, Maybe, VestingMerkleTree } from '../util';
 
 const logger = getLogger(`hooks::useVestingMerkleTree`);
 

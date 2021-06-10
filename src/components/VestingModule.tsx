@@ -30,7 +30,7 @@ export const VestingModule: React.FC<Props> = (props) => {
 			<Grid container className={classes.root}>
 				<Grid item>
 					<p>
-						<b>Account: </b>
+						<b>Current Account: </b>
 						{`${props.account}`}
 					</p>
 					<Grid container>
