@@ -1,0 +1,154 @@
+/* Generic */
+
+.Container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	width: 645px;
+	padding: 34.5px 40px 40px 40px;
+
+	background: var(--background-blue-card-wilder);
+}
+
+.Container > section:first-of-type {
+	margin-top: 40px;
+}
+
+.Container > section:not(:first-of-type) {
+	margin-top: 70px;
+}
+
+.Container > section > *:not(:first-child) {
+	margin-top: 16px;
+}
+
+.Container h1 {
+	width: 100%;
+
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}
+
+.Container h2 {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.Container p {
+	font-size: 18px;
+	line-height: 21.6px;
+}
+
+/* Progress Bar */
+
+.ProgressBar {
+	position: relative;
+
+	width: 100%;
+	height: 10px;
+
+	margin-top: 32px;
+
+	border-radius: 5px;
+	background: #6e10bb;
+}
+
+.ProgressBar > div {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	height: 100%;
+	width: 50px;
+	border-radius: 5px;
+}
+
+.ProgressBar span {
+	position: absolute;
+	top: calc(-100% - 4px);
+
+	color: var(--color-primary-lighter-3);
+	font-weight: 700;
+	font-size: 14px;
+
+	white-space: nowrap;
+}
+
+.ProgressBar > span {
+	right: 0;
+}
+
+.ProgressBar > div > span {
+	left: 50%;
+}
+
+.ProgressBar > div:first-of-type {
+	z-index: 2;
+	background: #e0baff;
+}
+
+.ProgressBar > div:first-of-type > span {
+	transform: translateX(-50%);
+}
+
+.ProgressBar > div:last-of-type {
+	z-index: 1;
+	background: rgba(224, 186, 255, 0.6);
+	width: 200px;
+}
+
+/* Timeline */
+
+.Timeline {
+	position: relative;
+
+	width: 100%;
+	height: 10px;
+
+	margin-top: 32px;
+
+	border-radius: 5px;
+	background: #6e10bb;
+}
+
+.Timeline span {
+	position: absolute;
+	top: calc(-100%);
+
+	color: var(--color-primary-lighter-3);
+	font-weight: 700;
+	font-size: 12px;
+
+	white-space: nowrap;
+}
+
+.Timeline > span {
+	right: 0;
+
+	top: calc(-100% - 6px);
+}
+
+.Timeline > div > span {
+	left: 50%;
+	transform: translate(-50%);
+}
+
+.Timeline > div:first-of-type > span {
+	left: 0;
+	transform: translate(0);
+}
+
+.Timeline > div {
+	position: absolute;
+	top: -2px;
+	width: 15px;
+	height: 15px;
+
+	border-radius: 50%;
+
+	background: var(--color-accent-1);
+
+	cursor: pointer;
+}

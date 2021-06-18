@@ -5,7 +5,16 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	text-align: center;
 }
 
-.Button {
+.Buttons > *:not(:first-child) {
+	margin-top: 18px;
+}
+
+.Profile {
+	width: 56px;
+	height: 56px;
+	margin: 0 auto;
+	border-radius: 50%;
 }

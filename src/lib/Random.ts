@@ -13,6 +13,6 @@ export const randomName = (seed: string) => {
 	return RandomName({ seed: seed });
 };
 
-export const randomImage = (seed: string) => {
-	return `https://picsum.photos/seed/${seed}/200/300`;
+export const randomImage = (seed: string, width?: number, height?: number) => {
+	return `https://picsum.photos/seed/${seed}/${width ?? 200}/${height ?? 200}`;
 };
