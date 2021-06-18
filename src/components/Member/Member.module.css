@@ -1,0 +1,46 @@
+.Member {
+	display: flex;
+}
+
+.Image {
+	height: 32px;
+	width: 32px;
+	border-radius: 50%;
+	margin-right: 12px;
+	/* background-color: rgba(0,0,0,0.5); */
+	overflow: hidden;
+	cursor: pointer;
+	transition: transform var(--animation-time-medium) ease-in-out;
+}
+
+.Image:hover {
+	transform: scale(1.1);
+}
+
+.Image > * {
+	height: 100%;
+	width: 100%;
+}
+
+.Info {
+	margin-top: 4px;
+	font-weight: 700;
+}
+
+.Info > * {
+	display: block;
+}
+
+.Info > span:first-of-type {
+	font-weight: 700;
+	cursor: pointer;
+}
+
+.Info > *:not(:first-child) {
+	margin-top: 4px;
+	font-weight: 700;
+}
+
+.Info > span:last-of-type {
+	color: var(--color-primary-lighter-3);
+}
