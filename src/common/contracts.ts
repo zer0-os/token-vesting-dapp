@@ -13,11 +13,11 @@ type ContractAddressMap = {
 };
 
 const contractAddresses: ContractAddressMap = {
-	// [Network.Mainnet]: {
-	// 	vesting: '',
-	// },
+	[Network.Mainnet]: {
+		vesting: process.env.REACT_APP_VESTING_CONTRACT,
+	},
 	[Network.Kovan]: {
-		vesting: '0xBB249Ffa0673284A3DdAB5de157A6970f849b0FE',
+		vesting: '0x7102118207925C04FFF66DA7b2e26B2ce8aF693B',
 	},
 } as ContractAddressMap;
 
