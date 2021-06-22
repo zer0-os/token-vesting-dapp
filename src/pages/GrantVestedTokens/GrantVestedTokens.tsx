@@ -15,6 +15,7 @@ import styles from './GrantVestedTokens.module.css';
 
 enum Modals {
 	ConnectToWallet,
+	GrantInit,
 	Grant,
 	Granting,
 	Granted,
@@ -38,61 +39,57 @@ const GrantVestedTokens: React.FC = () => {
 	// Function //
 	//////////////
 
-	const closeModal = () => setModal(undefined);
+	//- Modals States
+		const closeModal = () => setModal(undefined);
 
-	// Wallet flow
-	const openConnectWallet = () => setModal(Modals.ConnectToWallet);
+		// Wallet flow
+		const openConnectWallet = () => setModal(Modals.ConnectToWallet);
 
-	// Grant flow
-	const openGrantModal = () => setModal(Modals.Grant);
-	const openGrantingModal = () => setModal(Modals.Granting);
-	const openGrantedModal = () => setModal(Modals.Granted);
+		// Grant flow
+		const openGrantInit = () => setModal(Modals.GrantInit);
+		const openGrantModal = () => setModal(Modals.Grant);
+		const openGrantingModal = () => setModal(Modals.Granting);
+		const openGrantedModal = () => setModal(Modals.Granted);
 
 	return (
-		<>
-			{modal != undefined && modal === Modals.ConnectToWallet && (
+	<div className={styles.Container}>
+
+			{modal !== undefined && modal === Modals.ConnectToWallet && (
 				<Overlay centered onClose={closeModal} open>
-					<ConnectToWallet onConnect={closeModal} />
+					<ConnectToWallet onConnect={openGrantInit} />
 				</Overlay>
 			)}
 
-			{modal != undefined && modal === Modals.Granted && (
-				<Overlay onClose={closeModal} open>
+			{modal !== undefined && modal === Modals.Granted && (
+				<Overlay onClose={openGrantInit} open>
 					<p>Granted</p>
 				</Overlay>
 			)}
 
-			{modal != undefined && modal === Modals.Granting && (
-				<Overlay onClose={closeModal} open>
+			{modal !== undefined && modal === Modals.Granting && (
+				<Overlay onClose={openGrantInit} open>
 					<FutureButton onClick={openGrantedModal}>Granting</FutureButton>
 				</Overlay>
 			)}
 
-			{modal != undefined && modal === Modals.Grant && (
-				<Overlay centered onClose={closeModal} open>
+			{modal !== undefined && modal === Modals.Grant && (
+				<Overlay centered onClose={openGrantInit} open>
 					<GrantVestingTokens onSend={openGrantingModal} />
 				</Overlay>
 			)}
 
-			{/* Page Content */}
-			<div className={styles.Container}>
-				<div className={styles.Buttons}>
-					{/* Connect To Wallet */}
-					{!active && (
-						<FutureButton glow onClick={openConnectWallet}>
-							Connect Wallet
-						</FutureButton>
-					)}
+			{modal !== undefined && modal === Modals.GrantInit && (
+				<FutureButton glow onClick={openGrantModal}>
+					Grant Vesting Token
+				</FutureButton>
+			)}
 
-					{/* Wallet Conected */}
-					{active && (
-						<FutureButton glow onClick={openGrantModal}>
-							Grant Vesting Token
-						</FutureButton>
-					)}
-				</div>
-			</div>
-		</>
+			{modal === undefined && (
+				<FutureButton glow onClick={openConnectWallet}>
+					Connect Wallet
+				</FutureButton>
+			)}
+	</div>
 	);
 };
 
