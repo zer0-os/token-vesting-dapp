@@ -1,0 +1,28 @@
+.Container {
+	width: 100vw;
+	height: 100vh;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+}
+
+.Buttons > *:not(:first-child) {
+	margin-top: 18px;
+}
+
+.Profile {
+	width: 56px;
+	height: 56px;
+	margin: 0 auto;
+	border-radius: 50%;
+
+	cursor: pointer;
+
+	transition: transform var(--animation-time-medium) ease-in-out;
+}
+
+.Profile:hover {
+	transform: scale(1.1);
+}
