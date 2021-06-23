@@ -341,14 +341,12 @@ export const VestingControl: React.FC<Props> = (props) => {
 					<Box className={classes.item}>
 						<Grid container direction="row">
 							<Grid item>
-								<Button
-									variant="contained"
-									color="primary"
-									disabled={releaseState.state !== TransactionState.Pending}
+								<FutureButton
+									glow={releaseState.state === TransactionState.Pending}
 									onClick={onPressRelease}
 								>
-									{`Release Tokens`}
-								</Button>
+									Release Tokens
+								</FutureButton>
 							</Grid>
 							{releaseState.state === TransactionState.Submitting ? (
 								<Grid item style={{ paddingLeft: '16px' }}>
