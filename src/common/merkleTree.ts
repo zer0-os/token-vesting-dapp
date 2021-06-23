@@ -11,8 +11,8 @@ const merkleFiles: { [address: string]: string } = {
 	'0xB7dFcb421412F16B25DDd4AD4bdd73D0883136D8':
 		'https://ipfs.io/ipfs/QmVu6ZhopK9CfpkpuJwbR31ndriThJpkVvyitk7LGU2WsQ',
 	// brett site
-	'0x225D8d719d03301bE8247B2Fe3f4E8eBB4440d2e':
-		'https://ipfs.io/ipfs/QmPjaEd6Ko7uA8zMXdGgwHRq9kosLfJCq8mqQT4onq4XH9'
+	'0x1d308f379c94e668Ef90328bF0C11dFFbd5055E9':
+		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH'
 };
 
 export const getVestingMerkleTree = async (
