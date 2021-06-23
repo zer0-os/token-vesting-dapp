@@ -17,6 +17,7 @@ enum Modals {
 	ConnectToWallet,
 	GrantInit,
 	Grant,
+	Confirm,
 	Granting,
 	Granted,
 }
@@ -48,6 +49,7 @@ const GrantVestedTokens: React.FC = () => {
 		// Grant flow
 		const openGrantInit = () => setModal(Modals.GrantInit);
 		const openGrantModal = () => setModal(Modals.Grant);
+		const openConfirm = () => setModal(Modals.Confirm);
 		const openGrantingModal = () => setModal(Modals.Granting);
 		const openGrantedModal = () => setModal(Modals.Granted);
 
@@ -72,9 +74,52 @@ const GrantVestedTokens: React.FC = () => {
 				</Overlay>
 			)}
 
+			{/* Grant Menu */}
 			{modal !== undefined && modal === Modals.Grant && (
-				<Overlay centered onClose={openGrantInit} open>
-					<GrantVestingTokens onSend={openGrantingModal} />
+					<GrantVestingTokens onSend={openConfirm}/>
+			)}
+
+			{modal !== undefined && modal === Modals.Confirm && (
+				<Overlay centered onClose={openGrantModal} open>
+					<div className={`${styles.confirmModal} blur border-pink-glow border-rounded`}>
+						<h1 className="glow-text-white">Are you sure?</h1>
+
+						<div style={{
+							marginTop: '40px',
+							marginBottom: '42px',
+						}}>
+							<hr className='glow'/>
+						</div>
+
+						<p style={{
+							textAlign: 'center',
+						}}>
+							This transaction is about to be seared <br/> upon the Blockchain. 
+							There’s no going back.
+						</p>
+
+						<div style={{
+								textAlign: 'center',
+								marginTop: '40px',
+							}}>
+							<div style={{
+								display: 'inline-block',
+								marginRight: '40px'
+							}}>
+								<FutureButton alt onClick={openGrantModal} glow>
+									Cancel
+								</FutureButton>
+							</div>
+
+							<div style={{
+								display: 'inline-block',
+							}}>
+								<FutureButton onClick={openGrantingModal} glow>
+									Grant
+								</FutureButton>
+							</div>
+						</div>
+					</div>
 				</Overlay>
 			)}
 
@@ -84,8 +129,9 @@ const GrantVestedTokens: React.FC = () => {
 				</FutureButton>
 			)}
 
+			{/* First View - Connect Wallet */}
 			{modal === undefined && (
-				<FutureButton glow onClick={openConnectWallet}>
+				<FutureButton glow onClick={openGrantInit}>
 					Connect Wallet
 				</FutureButton>
 			)}

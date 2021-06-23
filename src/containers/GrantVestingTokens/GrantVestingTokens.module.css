@@ -1,13 +1,6 @@
+/* Generic */
+
 .Container {
-	width: 100vw;
-	height: 100vh;
-
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.confirmModal{
 	flex-direction: column;
 	justify-content: center;
 
@@ -18,7 +11,19 @@
 	background: var(--background-blue-card-wilder);
 }
 
-.confirmModal h1 {
+.Container > section:first-of-type {
+	margin-top: 40px;
+}
+
+.Container > section:not(:first-of-type) {
+	margin-top: 70px;
+}
+
+.Container > section > *:not(:first-child) {
+	margin-top: 16px;
+}
+
+.Container h1 {
 	width: 100%;
 
 	font-size: 36px;
@@ -26,12 +31,12 @@
 	text-align: center;
 }
 
-.confirmModal h2 {
+.Container h2 {
 	font-size: 18px;
 	font-weight: 700;
 }
 
-.confirmModal p {
-	font-size: 24px;
+.Container p {
+	font-size: 18px;
 	line-height: 21.6px;
 }

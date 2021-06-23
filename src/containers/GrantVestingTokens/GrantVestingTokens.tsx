@@ -2,36 +2,19 @@
 import React, { useState } from 'react';
 
 //- Components Imports
-import { ContainerGral, ContainerPopup } from 'containers/index';
-import {
-	FutureButton,
-	RecipientButton,
-	TextInput,
-	InputTest,
-	EthInput,
-} from 'components/index';
+import { EtherInput, FutureButton } from 'components';
 
-import './GrantVestingTokens.css';
-
-//- Styles
-const addRecipientStyle: React.CSSProperties = {
-	color: 'white',
-	borderRadius: '5px',
-	border: 'none',
-};
-
-const TotalGrantedStyle: React.CSSProperties = {
-	color: 'white',
-	backgroundColor: 'rgba(30, 81, 128, 1)',
-	borderRadius: '5px',
-	border: 'none',
-};
+//- Styles Imports
+import '../../styles/main.css';
+import styles from './GrantVestingTokens.module.css';
 
 type GrantVestingTokensProps = {
 	onSend: () => void;
 };
 
-const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
+const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ 
+	onSend,
+ }) => {
 	const [contract, catchInput] = useState('');
 	const [address, catchAddress] = useState('');
 	const [amount, catchAmount] = useState('');
@@ -41,155 +24,132 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 	////////////
 
 	return (
-		<ContainerPopup
-			title={'Grand Vesting Tokens'}
-			childrens={
-				<>
-					<hr className="glow" />
+		<form className={`${styles.Container} blur border-pink-glow border-rounded`}>
+			<h1 className="glow-text-white"
+				style={{
+					marginBottom: '56px'
+				}}>Grant Vesting Tokens</h1>
 
+			<div>
+				<hr className='glow'/>
+			</div>
+
+			<section>
+				<h2 className="glow-text-blue">Ethereum vesting contract address you wish to grant from:</h2>
+
+				<EtherInput ethlogo 
+						alphanumeric
+						placeholder={'Vesting Contract Address'} 
+						onChange={value => catchInput(value)}
+						text={contract}
+				/>
+			</section>
+
+			<div 
+				style={{
+					marginTop: '34px'
+				}}>
+				<hr className='glow'/>
+			</div>
+
+			<section 
+				style={{
+					marginTop: '26px'
+				}}>
+				<h2 className="glow-text-blue"> 
+					Ethereum address you wish to grant vesting tokens to:
+				</h2>
+
+				<div
+					style={{
+						marginTop: '24px'
+					}}>
 					<div
 						style={{
 							display: 'inline-block',
-							width: '100%',
-							marginTop: '20px',
-							textAlign: 'left',
-						}}
-					>
-						<p
-							style={{
-								fontSize: '1.2em',
-								textShadow: '0px 0px 20px rgba(60, 161, 255, 0.8)',
-							}}
-						>
-							Ethereum vesting contract address you wish to grant from:
-						</p>
-					</div>
+							width: '381px'
+						}}>
 
-					<EthInput
-						title={'hello'}
-						text={'0x1wjlasdi98sdff099sdwiioasoidijjafs8'}
-						copyButton
-						static
-					/>
-
-					<hr className="glow" />
-
-					<div
-						style={{
-							display: 'inline-block',
-							width: '100%',
-							marginTop: '20px',
-							textAlign: 'left',
-						}}
-					>
-						<p
-							style={{
-								fontSize: '1.2em',
-								textShadow: '0px 0px 10px rgba(60, 161, 255, 0.8)',
-							}}
-						>
-							Ethereum address you wish to grant vesting tokens to:
-						</p>
-					</div>
-
-					{/*SCROLL DIV */}
-					<div className="scrollDiv">
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-					</div>
-
-					<div
-						style={{
-							textAlign: 'initial',
-						}}
-					>
-						{/* Input Recipient Address */}
-						<TextInput
-							onChange={(text) => {
-								catchAddress(text);
-							}}
-							alphanumeric={true}
+						<EtherInput 
+							ethlogo 
+							alphanumeric
+							placeholder={'Recipient Address'} 
+							onChange={value => catchAddress(value)}
 							text={address}
-							placeholder={'Recipient Address'}
-							ethlogo
-							style={{
-								float: 'left',
-								width: '70%',
-								opacity: '0.8',
-								marginTop: '10px',
-							}}
-						/>
-
-						{/* Input Amount */}
-						<TextInput
-							onChange={(text) => {
-								catchAmount(text);
-							}}
-							numeric={true}
-							text={amount}
-							placeholder={'Amount'}
-							style={{
-								float: 'right',
-								width: '25%',
-								opacity: '0.8',
-								marginTop: '10px',
-							}}
 						/>
 					</div>
 
 					<div
 						style={{
-							position: 'relative',
-						}}
-					>
-						<RecipientButton
-							style={addRecipientStyle}
-							children={'+ Add Recipient'}
+							display: 'inline-block',
+							width: '160px',
+							marginLeft: '16px' 
+						}}>
+						<EtherInput 
+							numeric
+							placeholder={'Amount'} 
+							onChange={value => catchAmount(value)}
+							text={amount}
 						/>
-
-						<p
-							style={{
-								position: 'absolute',
-								top: '10px',
-								right: '195px',
-								fontSize: '14px',
-								textShadow: '0px 0px 10px rgba(60, 161, 255, 0.7)',
-								opacity: '0.7',
-							}}
-						>
-							Total Granted
-						</p>
-
-						<p
-							style={{
-								position: 'absolute',
-								top: '6px',
-								right: '17px',
-								fontSize: '24px',
-								textShadow: '0px 0px 10px rgba(255, 255, 255, 0.7)',
-							}}
-						>
-							10,000.00 TEST
-						</p>
 					</div>
+				</div>
 
-					<FutureButton children={'Send'} glow onClick={onSend} />
-				</>
-			}
-			style={{
-				paddingLeft: '50px',
-				paddingRight: '50px',
-				margin: '0 auto',
-			}}
-		/>
+				<div>
+					<button className="flatButton"
+							style={{
+								display: 'inline-block',
+								width: '142px',
+								height: '35px',
+								backgroundColor: 'rgba(60, 161, 255, 0.15)',
+								borderRadius: '8px',
+								margin: '16px',
+							}}>
+						<p className="glow-text-white"
+							style={{
+								color: '#FFFFFF',
+								marginTop: '8px',
+								fontSize: '16px',
+						}}>+ Add Recipient</p>
+					</button>
+
+					<div
+						style={{
+							display: 'inline-block',
+							justifyItems: 'center',
+							float: 'right',
+							margin: '20px'
+						}}>
+						<p className="glow-text-blue"
+						 	style={{
+								display: 'inline-block',
+								marginRight: '8px',
+								fontSize: '14px',
+								color: 'rgba(128, 128, 128, 1)'
+						}}>Total Granted</p>
+
+						<p className="glow-text-white"
+						 style={{
+							display: 'inline-block',
+							fontSize: '24px',
+						}}>0.00 TEST</p>
+					</div>
+				</div>
+			</section>
+
+			<div style={{
+				display: 'inline-block',
+				width: '100%',
+				textAlign: 'center',
+			}}>
+				<div style={{
+					display: 'inline-block',
+				}}>
+					<FutureButton onClick={onSend} glow>
+						Send
+					</FutureButton>
+				</div>
+			</div>
+		</form>
 	);
 };
 
