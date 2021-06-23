@@ -300,8 +300,11 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}
 
 		if (vesting.vestedTokens !== null && vesting.releasableTokens !== null) {
-			const alreadyReleased = vesting.vestedTokens.sub(
-				vesting.releasableTokens,
+			const alreadyReleased = truncateDecimals(
+				ethers.utils.formatEther(
+					vesting.vestedTokens.sub(vesting.releasableTokens),
+				),
+				4,
 			);
 
 			const amountVested = truncateDecimals(
