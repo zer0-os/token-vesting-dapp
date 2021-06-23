@@ -1,7 +1,7 @@
 //- React Imports
 import React from 'react';
 
-import { Button } from '@material-ui/core';
+import { FutureButton, TextButton } from 'components';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import { getLogger, Maybe } from '../util';
@@ -13,7 +13,7 @@ const logger = getLogger(`components::ConnectButton`);
 
 export const ConnectButton: React.FC = () => {
 	const context = useWeb3React<ethers.providers.Web3Provider>();
-	const { active } = context;
+	const { active, account } = context;
 
 	let button: Maybe<React.ReactFragment>;
 
@@ -29,15 +29,19 @@ export const ConnectButton: React.FC = () => {
 
 	if (!active) {
 		button = (
-			<Button variant="contained" color="primary" onClick={onConnect}>
+			<FutureButton style={{ margin: '0 auto' }} glow onClick={onConnect}>
 				Connect Metamask
-			</Button>
+			</FutureButton>
 		);
 	} else {
 		button = (
-			<Button variant="outlined" color="secondary" onClick={onDisconnect}>
-				Disconnect Metamask
-			</Button>
+			<>
+				<div style={{ display: 'flex' }}>
+					<TextButton style={{ margin: '6px auto' }} onClick={onDisconnect}>
+						Disconnect from Metamask
+					</TextButton>
+				</div>
+			</>
 		);
 	}
 

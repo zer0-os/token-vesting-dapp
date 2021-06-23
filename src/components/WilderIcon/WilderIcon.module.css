@@ -1,0 +1,12 @@
+.Wilder {
+	height: 56px;
+	width: 56px;
+
+	background: linear-gradient(180deg, #1c4358 0%, #2a0047 100%);
+	border-radius: 50%;
+}
+
+.Wilder img {
+	width: 100%;
+	height: 100%;
+}

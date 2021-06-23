@@ -26,6 +26,8 @@ import { useWeb3React } from '@web3-react/core';
 import moment from 'moment';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 
+import { EthInput, ArrowLink, FutureButton } from 'components';
+
 interface Props {
 	account: string;
 	network: Network;
@@ -121,12 +123,22 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.item}>
-				<b>Token Contract: </b>
-				<a
-					target="_blank"
-					rel="noreferrer"
-					href={etherscanLink}
-				>{`${vesting.token}`}</a>
+				<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+					<h2>Token Contract</h2>
+					<ArrowLink
+						style={{ textAlign: 'right', marginRight: 16 }}
+						href={etherscanLink}
+					>
+						View on Etherscan
+					</ArrowLink>
+				</div>
+				<EthInput
+					static
+					text={vesting.token ?? ''}
+					style={{ marginBottom: 8 }}
+					title={'Token Contract'}
+					copyButton
+				/>
 			</Box>,
 		);
 	}
@@ -137,12 +149,22 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.item}>
-				<b>Vesting Contract: </b>
-				<a
-					target="_blank"
-					rel="noreferrer"
-					href={etherscanLink}
-				>{`${contracts.vesting.address}`}</a>
+				<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+					<h2>Vesting Contract</h2>
+					<ArrowLink
+						style={{ textAlign: 'right', marginRight: 16 }}
+						href={etherscanLink}
+					>
+						View on Etherscan
+					</ArrowLink>
+				</div>
+				<EthInput
+					static
+					text={contracts.vesting.address ?? ''}
+					style={{ marginBottom: 8 }}
+					title={'Vesting Contract'}
+					copyButton
+				/>
 			</Box>,
 		);
 	}
@@ -150,8 +172,14 @@ export const VestingControl: React.FC<Props> = (props) => {
 	if (vesting.hasAward && vesting.awardedTokens) {
 		items.push(
 			<Box className={classes.item}>
-				You have been awarded
-				{` ${ethers.utils.formatEther(vesting.awardedTokens)}`} tokens
+				<hr className="glow" style={{ marginBottom: 16 }} />
+				<h2>
+					You have been awarded
+					{` ${Number(
+						ethers.utils.formatEther(vesting.awardedTokens),
+					).toLocaleString()}`}{' '}
+					tokens
+				</h2>
 			</Box>,
 		);
 
@@ -200,19 +228,20 @@ export const VestingControl: React.FC<Props> = (props) => {
 			items.push(
 				<Box
 					className={classes.item}
+					style={{ lineHeight: '21.6px' }}
 				>{`Tokens will start to become releasable after a cliff on ${cliffHuman} (${cliffDurationHuman} after vesting begins)`}</Box>,
 			);
 
 			items.push(
-				<Box
-					className={classes.item}
-				>{`${firstAvailable} will be available at the cliff`}</Box>,
+				<Box className={classes.item}>{`${Number(
+					firstAvailable,
+				).toLocaleString()} will be available at the cliff`}</Box>,
 			);
 
 			items.push(
-				<Box
-					className={classes.item}
-				>{`Tokens vest at approximately ${approxPerMonth}/month after the cliff`}</Box>,
+				<Box className={classes.item}>{`Tokens vest at approximately ${Number(
+					approxPerMonth,
+				).toLocaleString()}/month after the cliff`}</Box>,
 			);
 		}
 
@@ -224,14 +253,13 @@ export const VestingControl: React.FC<Props> = (props) => {
 					</Box>
 					<Grid container direction="row">
 						<Grid item>
-							<Button
-								variant="contained"
-								color="primary"
-								disabled={claimState.state !== TransactionState.Pending}
+							<FutureButton
+								style={{ marginTop: 16, marginBottom: 16 }}
+								glow={claimState.state === TransactionState.Pending}
 								onClick={onPressClaim}
 							>
 								Claim Vesting Token Award
-							</Button>
+							</FutureButton>
 						</Grid>
 						{claimState.state === TransactionState.Submitting ? (
 							<Grid item style={{ paddingLeft: '16px' }}>
@@ -248,7 +276,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 							</Grid>
 						) : null}
 					</Grid>
-					{claimState.error ? <Box>Error: {`${claimState.error}`}</Box> : null}
+					{/* {claimState.error ? <Box>Error: {`${claimState.error}`}</Box> : null} */}
 				</React.Fragment>
 			);
 
@@ -260,14 +288,12 @@ export const VestingControl: React.FC<Props> = (props) => {
 				}`;
 				items.push(
 					<Box className={classes.viewTxBox}>
-						<Button
-							target="_blank"
-							rel="noreferrer"
-							href={claimEtherscanLink}
-							variant="outlined"
+						<FutureButton
+							glow
+							onClick={() => window.open(claimEtherscanLink, '_blank')}
 						>
 							View Claim Transaction
-						</Button>
+						</FutureButton>
 					</Box>,
 				);
 			}
@@ -289,19 +315,25 @@ export const VestingControl: React.FC<Props> = (props) => {
 			);
 
 			items.push(
-				<Box
-					className={classes.item}
-				>{`${amountVested} tokens have vested so far.`}</Box>,
+				<Box style={{ marginTop: 24 }} className={classes.item}>
+					<h2>{`${Number(
+						amountVested,
+					).toLocaleString()} tokens have vested so far.`}</h2>
+				</Box>,
 			);
 			items.push(
-				<Box
-					className={classes.item}
-				>{`${alreadyReleased} have already been released.`}</Box>,
+				<Box className={classes.item}>
+					<h2>{`${Number(
+						alreadyReleased,
+					).toLocaleString()} have already been released.`}</h2>
+				</Box>,
 			);
 			items.push(
-				<Box
-					className={classes.item}
-				>{`${amountReleasable} can be released.`}</Box>,
+				<Box className={classes.item}>
+					<h2>{`${Number(
+						amountReleasable,
+					).toLocaleString()} can be released.`}</h2>
+				</Box>,
 			);
 
 			if (Number(amountReleasable) > 0.001 && vesting.hasClaimed) {
@@ -309,19 +341,17 @@ export const VestingControl: React.FC<Props> = (props) => {
 					<Box className={classes.item}>
 						<Grid container direction="row">
 							<Grid item>
-								<Button
-									variant="contained"
-									color="primary"
-									disabled={releaseState.state !== TransactionState.Pending}
+								<FutureButton
+									glow={releaseState.state === TransactionState.Pending}
 									onClick={onPressRelease}
 								>
-									{`Release Tokens`}
-								</Button>
+									Release Tokens
+								</FutureButton>
 							</Grid>
 							{releaseState.state === TransactionState.Submitting ? (
 								<Grid item style={{ paddingLeft: '16px' }}>
 									<Box>
-										Waiting to submit <CircularProgress size={24} />
+										<CircularProgress size={24} />
 									</Box>
 								</Grid>
 							) : null}
@@ -350,21 +380,19 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.viewTxBox}>
-				<Button
-					target="_blank"
-					rel="noreferrer"
-					href={releaseEtherscanLink}
-					variant="outlined"
+				<FutureButton
+					glow
+					onClick={() => window.open(releaseEtherscanLink, '_blank')}
 				>
 					View Release Transaction
-				</Button>
+				</FutureButton>
 			</Box>,
 		);
 	}
 
 	return (
 		<React.Fragment>
-			<Grid container className={classes.root}>
+			<Grid container className={classes.root} style={{ paddingBottom: 64 }}>
 				{items.map((e: React.ReactFragment, index: number) => {
 					return (
 						<Grid item key={index} style={{ width: '100%' }}>

@@ -2,6 +2,8 @@ import { Box, Container, Grid, makeStyles } from '@material-ui/core';
 import { useWeb3React } from '@web3-react/core';
 import { ethers } from 'ethers';
 import React from 'react';
+
+import { WilderIcon } from 'components';
 import { ConnectButton } from '../components/ConnectButton';
 import { VestingModule } from '../components/VestingModule';
 import { Maybe } from '../util';
@@ -9,11 +11,15 @@ import { Maybe } from '../util';
 const useStyles = makeStyles({
 	page: {
 		padding: '16px',
-		background: '#FAFAFA',
 	},
 	header: {
 		padding: '16px',
 		textAlign: 'center',
+	},
+	headerText: {
+		fontSize: '36px',
+		fontWeight: 'bold',
+		marginTop: '24px',
 	},
 	body: {
 		padding: '16px',
@@ -37,14 +43,14 @@ export const MainPage: React.FC = () => {
 	return (
 		<React.Fragment>
 			<Container maxWidth="sm" className={classes.page}>
-				<Box className={classes.header}>
-					<h1>$WILD Token Vesting</h1>
+				<Box className={`${classes.header} glow-text-white`}>
+					<WilderIcon style={{ margin: '0 auto' }} />
+					<h1 className={classes.headerText}>$WILD Token Vesting</h1>
 				</Box>
 				<Box className={classes.body}>
 					<Grid container direction="column">
 						<Grid item>
 							<ConnectButton />
-							{!active ? <p>Please connect your wallet</p> : null}
 						</Grid>
 
 						<Grid item className={classes.vestingModule}>

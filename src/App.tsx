@@ -1,6 +1,15 @@
+//- Global Stylesheets
+import 'styles/reset.css';
+import 'styles/main.css';
+import 'styles/ztoken.css';
+
+//- React Imports
+import { HashRouter, Route } from 'react-router-dom';
+
 import { Web3ReactProvider } from '@web3-react/core';
-import { MainPage } from './pages/Main';
 import { ethers } from 'ethers';
+
+import { ClaimVestedTokens, MainPage } from 'pages';
 
 // Web3 library to query
 function getLibrary(provider: any): ethers.providers.Web3Provider {
@@ -13,6 +22,11 @@ function App() {
 	return (
 		<Web3ReactProvider getLibrary={getLibrary}>
 			<MainPage />
+			{/* <HashRouter>
+				<Route exact path={'/claim'}>
+					<ClaimVestedTokens />
+				</Route>
+			</HashRouter> */}
 		</Web3ReactProvider>
 	);
 }
