@@ -172,7 +172,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 	if (vesting.hasAward && vesting.awardedTokens) {
 		items.push(
 			<Box className={classes.item}>
-				<hr className="glow" style={{ marginBottom: 24 }} />
+				<hr className="glow" style={{ marginBottom: 16 }} />
 				<h2>
 					You have been awarded
 					{` ${Number(
@@ -288,14 +288,12 @@ export const VestingControl: React.FC<Props> = (props) => {
 				}`;
 				items.push(
 					<Box className={classes.viewTxBox}>
-						<Button
-							target="_blank"
-							rel="noreferrer"
-							href={claimEtherscanLink}
-							variant="outlined"
+						<FutureButton
+							glow
+							onClick={() => window.open(claimEtherscanLink, '_blank')}
 						>
 							View Claim Transaction
-						</Button>
+						</FutureButton>
 					</Box>,
 				);
 			}
@@ -317,7 +315,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 			);
 
 			items.push(
-				<Box className={classes.item}>
+				<Box style={{ marginTop: 24 }} className={classes.item}>
 					<h2>{`${Number(
 						amountVested,
 					).toLocaleString()} tokens have vested so far.`}</h2>
@@ -384,14 +382,12 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.viewTxBox}>
-				<Button
-					target="_blank"
-					rel="noreferrer"
-					href={releaseEtherscanLink}
-					variant="outlined"
+				<FutureButton
+					glow
+					onClick={() => window.open(releaseEtherscanLink, '_blank')}
 				>
 					View Release Transaction
-				</Button>
+				</FutureButton>
 			</Box>,
 		);
 	}
