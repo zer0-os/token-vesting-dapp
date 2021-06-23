@@ -39,21 +39,7 @@ export const VestingModule: React.FC<Props> = (props) => {
 						copyButton
 						title={'Current Account'}
 					/>
-					<Grid container>
-						{supported && (
-							<Grid item>
-								<h2>Network</h2>
-								{`${network} `}
-							</Grid>
-						)}
-						{!supported ? (
-							<Grid item>
-								<b style={{ color: 'var(--color-error)' }}>
-									Unsupported Network - Please switch networks in Metamask
-								</b>
-							</Grid>
-						) : null}
-					</Grid>
+
 					<Grid item>{contents}</Grid>
 				</Grid>
 			</Grid>
