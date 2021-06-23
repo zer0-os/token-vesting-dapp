@@ -3,6 +3,7 @@ import React from 'react';
 import { getNetworkFromChainId, isSupportedNetwork } from '../common';
 import { Maybe } from '../util';
 import { VestingControl } from './VestingControl';
+import { EthInput, ArrowLink, TextButton } from 'components';
 
 interface Props {
 	account: string;
@@ -28,28 +29,31 @@ export const VestingModule: React.FC<Props> = (props) => {
 	return (
 		<React.Fragment>
 			<Grid container className={classes.root}>
-				<Grid item>
-					<p>
-						<b>Current Account: </b>
-						{`${props.account}`}
-					</p>
+				<hr style={{ width: '100%', marginBottom: 32 }} className="glow" />
+				<Grid item style={{ width: '100%' }}>
+					<h2>Current Account</h2>
+					<EthInput
+						style={{ marginTop: 8, marginBottom: 16 }}
+						static
+						text={props.account || ''}
+						copyButton
+						title={'Current Account'}
+					/>
 					<Grid container>
-						<Grid item>
-							<b>Network: </b>
-							{`${network} `}
-						</Grid>
+						{supported && (
+							<Grid item>
+								<h2>Network</h2>
+								{`${network} `}
+							</Grid>
+						)}
 						{!supported ? (
-							<Grid item style={{ paddingLeft: '32px' }}>
-								<b style={{ color: 'red' }}>Unsupported Network</b>
+							<Grid item>
+								<b style={{ color: 'var(--color-error)' }}>
+									Unsupported Network - Please switch networks in Metamask
+								</b>
 							</Grid>
 						) : null}
 					</Grid>
-					{!supported ? (
-						<Grid item>
-							<h3>Unsupported Network</h3>
-							<p>Please connect to a different network</p>
-						</Grid>
-					) : null}
 					<Grid item>{contents}</Grid>
 				</Grid>
 			</Grid>

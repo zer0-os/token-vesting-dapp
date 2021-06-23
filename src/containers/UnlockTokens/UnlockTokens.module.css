@@ -1,0 +1,51 @@
+/* Generic */
+
+.Container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+	width: 645px;
+	padding: 34.5px 40px 40px 40px;
+
+	background: var(--background-blue-card-wilder);
+}
+
+.Container > section:first-of-type {
+	margin-top: 24px;
+}
+
+.Container > section:not(:first-of-type) {
+	margin-top: 70px;
+}
+
+.Container > section > *:not(:first-child) {
+	margin-top: 16px;
+}
+
+.Container h1 {
+	width: 100%;
+
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}
+
+.Container h2 {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.Container p {
+	font-size: 18px;
+	line-height: 21.6px;
+}
+
+.Amount {
+	display: block;
+	margin: 32px 0 !important;
+
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}

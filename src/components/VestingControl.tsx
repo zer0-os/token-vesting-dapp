@@ -26,6 +26,8 @@ import { useWeb3React } from '@web3-react/core';
 import moment from 'moment';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
 
+import { EthInput, ArrowLink } from 'components';
+
 interface Props {
 	account: string;
 	network: Network;
@@ -121,12 +123,10 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.item}>
-				<b>Token Contract: </b>
-				<a
-					target="_blank"
-					rel="noreferrer"
-					href={etherscanLink}
-				>{`${vesting.token}`}</a>
+				<b>
+					<h2>Token Contract</h2>
+				</b>
+				<ArrowLink href={etherscanLink}>View on Etherscan</ArrowLink>
 			</Box>,
 		);
 	}
@@ -137,12 +137,22 @@ export const VestingControl: React.FC<Props> = (props) => {
 		}`;
 		items.push(
 			<Box className={classes.item}>
-				<b>Vesting Contract: </b>
-				<a
-					target="_blank"
-					rel="noreferrer"
-					href={etherscanLink}
-				>{`${contracts.vesting.address}`}</a>
+				<div style={{ display: 'flex', justifyContent: 'space-between' }}>
+					<h2>Vesting Contract</h2>
+					<ArrowLink
+						style={{ textAlign: 'right', marginRight: 16 }}
+						href={etherscanLink}
+					>
+						View on Etherscan
+					</ArrowLink>
+				</div>
+				<EthInput
+					static
+					text={contracts.vesting.address ?? ''}
+					style={{ marginBottom: 8 }}
+					title={'Vesting Contract'}
+					copyButton
+				/>
 			</Box>,
 		);
 	}
