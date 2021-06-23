@@ -130,12 +130,12 @@
 	top: calc(-100% - 6px);
 }
 
-.Timeline > div > span {
+.Timeline > div > div > span {
 	left: 50%;
 	transform: translate(-50%);
 }
 
-.Timeline > div:first-of-type > span {
+.Timeline > div:first-of-type > div > span {
 	left: 0;
 	transform: translate(0);
 }
@@ -151,6 +151,10 @@
 	background: var(--color-accent-1);
 
 	cursor: pointer;
+}
+
+.Timeline > div:last-of-type > span {
+	right: 0;
 }
 
 .Amount {

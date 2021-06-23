@@ -4,23 +4,60 @@ import React, { useState } from 'react';
 //- Component Imports
 import { FutureButton, WilderIcon, HoverTooltip } from 'components';
 
+//- Library Imports
+import moment from 'moment';
+import { ClaimVestingInterface } from 'util/index';
+import { useBlockTimestamp } from 'hooks/useBlockTimestamp';
+import {
+	getBlocksPerDay,
+	getEtherscanUriForNetwork,
+	getNetworkFromChainId,
+	getSecondsPerBlock,
+	Network,
+} from 'common/index';
+
 //- Style Imports
 import styles from './ReleaseTokens.module.css';
 
 type props = {
+	network: Network;
 	onRelease: () => void;
+	vesting: ClaimVestingInterface;
 };
 
-const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
+const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
+	// Calculate key dates
+	const { blockNumber, blockTimestamp } = useBlockTimestamp();
+
+	const secondsPerBlock = getSecondsPerBlock(network);
+	const blocksUntilStart = blockNumber ? vesting.start - blockNumber : 0;
+
+	console.log(vesting);
+
+	// Start
+	const startTime = blockTimestamp
+		? blockTimestamp + blocksUntilStart * secondsPerBlock
+		: 0;
+	const startTimeHuman = moment(startTime * 1000).toLocaleString();
+
+	const cliffTime = startTime + vesting.cliff * secondsPerBlock;
+	const cliffHuman = moment(cliffTime * 1000).toLocaleString();
+
+	const halfTime = startTime + (vesting.duration / 2) * secondsPerBlock;
+	const halfHuman = moment(halfTime * 1000).toLocaleString();
+
+	const endTime = startTime + vesting.duration * secondsPerBlock;
+	const endHuman = moment(endTime * 1000).toLocaleString();
+
 	//////////////////
 	// State & Refs //
 	//////////////////
 
 	// Data
-	const claimed = 250000;
-	const vested = 750000;
+	const claimed = vesting.claimed;
+	const vested = vesting.vested;
 	const toRelease = vested - claimed;
-	const total = 1000000;
+	const total = vesting.total;
 
 	const dateStart = 1623290784;
 	const dateCliff = 1623291084;
@@ -89,9 +126,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{startTimeHuman}
 								</p>
 							}
 						>
@@ -110,9 +145,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{cliffHuman}
 								</p>
 							}
 						>
@@ -131,9 +164,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{halfHuman}
 								</p>
 							}
 						>
@@ -152,9 +183,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{endHuman}
 								</p>
 							}
 						>
