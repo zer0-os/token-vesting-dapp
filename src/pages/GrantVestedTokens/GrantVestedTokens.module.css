@@ -7,6 +7,12 @@
 	align-items: center;
 }
 
+.gvt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .confirmModal{
 	flex-direction: column;
 	justify-content: center;

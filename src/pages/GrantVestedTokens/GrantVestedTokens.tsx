@@ -13,6 +13,15 @@ import { GrantVestingTokens } from 'containers';
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
 
+const imageStyle: React.CSSProperties = {
+	display: 'inline-block',
+	width: '56px',
+	height: '56px',
+	margin: '25px',
+	backgroundSize: 'contain',
+	backgroundImage: 'url(../assets/user.png)',
+}
+
 enum Modals {
 	ConnectToWallet,
 	GrantInit,
@@ -54,32 +63,72 @@ const GrantVestedTokens: React.FC = () => {
 		const openGrantedModal = () => setModal(Modals.Granted);
 
 	return (
-	<div className={styles.Container}>
+	<>
 
 			{modal !== undefined && modal === Modals.ConnectToWallet && (
+			<div className={styles.Container}>
 				<Overlay centered onClose={closeModal} open>
 					<ConnectToWallet onConnect={openGrantInit} />
 				</Overlay>
+			</div>
 			)}
 
 			{modal !== undefined && modal === Modals.Granted && (
-				<Overlay onClose={openGrantInit} open>
-					<p>Granted</p>
-				</Overlay>
+			<div className={styles.Container}>
+				<div className={`${styles.confirmModal} blur border-pink-glow border-rounded`}>
+					<h1 className="glow-text-blue"
+						style={{
+							color: 'var(--color-green-2)'
+						}}>Granted</h1>
+
+					<div style={{
+						marginTop: '40px',
+						marginBottom: '42px',
+					}}>
+						<hr className='glow'/>
+					</div>
+
+					<p style={{
+						textAlign: 'center',
+					}}>
+						10,000.00 TEST Tokens were successfully<br/>granted.
+					</p>
+
+					<div style={{
+							textAlign: 'center',
+							marginTop: '40px',
+						}}>
+						<div style={{
+							display: 'inline-block',
+						}}>
+							<FutureButton onClick={openGrantInit} glow>
+								Dismiss
+							</FutureButton>
+						</div>
+					</div>
+				</div>
+			</div>
 			)}
 
 			{modal !== undefined && modal === Modals.Granting && (
-				<Overlay onClose={openGrantInit} open>
-					<FutureButton onClick={openGrantedModal}>Granting</FutureButton>
+			<div className={styles.Container}>
+				<Overlay centered onClose={openGrantedModal} open>
+				<div className={`${styles.confirmModal} blur border-pink-glow border-rounded`}>
+					<h1 className="glow-text-white">Granting...</h1>
+				</div>
 				</Overlay>
+			</div>
 			)}
 
 			{/* Grant Menu */}
 			{modal !== undefined && modal === Modals.Grant && (
-					<GrantVestingTokens onSend={openConfirm}/>
+			<div className={styles.gvt}>
+				<GrantVestingTokens onSend={openConfirm}/>
+			</div>
 			)}
 
 			{modal !== undefined && modal === Modals.Confirm && (
+			<div className={styles.Container}>
 				<Overlay centered onClose={openGrantModal} open>
 					<div className={`${styles.confirmModal} blur border-pink-glow border-rounded`}>
 						<h1 className="glow-text-white">Are you sure?</h1>
@@ -121,21 +170,31 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					</div>
 				</Overlay>
+			</div>
 			)}
 
 			{modal !== undefined && modal === Modals.GrantInit && (
+			<div className={styles.Container}>
+				<div style={{
+					textAlign: 'center',
+				}}>
+				<div style={imageStyle}/>
 				<FutureButton glow onClick={openGrantModal}>
-					Grant Vesting Token
+						Grant Vesting Token
 				</FutureButton>
+				</div>
+			</div>
 			)}
 
 			{/* First View - Connect Wallet */}
 			{modal === undefined && (
+			<div className={styles.Container}>
 				<FutureButton glow onClick={openGrantInit}>
 					Connect Wallet
 				</FutureButton>
+			</div>
 			)}
-	</div>
+	</>
 	);
 };
 
