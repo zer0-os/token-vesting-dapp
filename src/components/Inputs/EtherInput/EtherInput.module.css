@@ -46,9 +46,9 @@
 
 .title > span {
 	position: absolute;
-	top: 6px;
-	left: 24px;
-	color: var(--color-grey);
+	top: 10px;
+	left: 25px;
+	color: var(--color-grey-lighter);
 	font-size: 12px;
 }
 
@@ -132,9 +132,6 @@
 }
 
 .ethlogo > span {
-	position: absolute;
-	top: 6px;
-	left: 54px;
-	color: var(--color-grey);
-	font-size: 12px;
+	top: 10px;
+	left: 55px;
 }

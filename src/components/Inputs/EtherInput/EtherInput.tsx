@@ -55,10 +55,12 @@ const EtherInput: React.FC<TextInputProps> = ({
 	};
 
 	return (
-		<div className={`${styles.Container} 
+		<div
+			className={`${styles.Container} 
 						${ethlogo ? styles.ethlogo : ''}
 						${text ? styles.title : ''}
-						`}>
+						`}
+		>
 			{multiline && (
 				<textarea
 					className={`${styles.TextInput} border-blue ${
@@ -74,24 +76,20 @@ const EtherInput: React.FC<TextInputProps> = ({
 				/>
 			)}
 			{!multiline && (
-			<>
-				{ethlogo && (
-					<img alt="ethereum icon" src={ethIcon} />
-				)}
-				{text && (
-					<span>{placeholder}</span>
-				)}
-				<input
-					type={type ? type : ''}
-					className={`${styles.TextInput} border-blue ${
-						error ? styles.Error : ''
-					}`}
-					onChange={handleChange}
-					style={style}
-					placeholder={placeholder}
-					value={text ? text : ''}
-				/>
-			</>
+				<>
+					{ethlogo && <img alt="ethereum icon" src={ethIcon} />}
+					{text && <span>{placeholder}</span>}
+					<input
+						type={type ? type : ''}
+						className={`${styles.TextInput} border-blue ${
+							error ? styles.Error : ''
+						}`}
+						onChange={handleChange}
+						style={style}
+						placeholder={placeholder}
+						value={text ? text : ''}
+					/>
+				</>
 			)}
 			{error && errorText && (
 				<span className={styles.ErrorMessage}>{errorText}</span>
