@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import styles from './EthInput.module.css';
 
 import ethIcon from './assets/eth.svg';
 
 const EthInput = (props) => {
-	const [text, setText] = useState(props.text || '');
+	const [text, setText] = React.useState('');
+
+	React.useEffect(() => {
+		setText(props.text);
+	}, [props.text]);
 
 	const copyContractToClipboard = () => {
 		navigator.clipboard.writeText(props.text);
