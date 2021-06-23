@@ -14,8 +14,8 @@
 
 .wallet > span {
 	position: absolute;
-	top: 6px;
-	left: 54px;
+	top: 10px;
+	left: 55px;
 	color: var(--color-accent-1);
 	font-size: 12px;
 }

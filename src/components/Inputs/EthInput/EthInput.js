@@ -8,7 +8,7 @@ const EthInput = (props) => {
 	const [text, setText] = useState(props.text || '');
 
 	const copyContractToClipboard = () => {
-		navigator.clipboard.writeText(props.value);
+		navigator.clipboard.writeText(props.text);
 	};
 
 	return (
@@ -16,6 +16,7 @@ const EthInput = (props) => {
 			<img alt="ethereum icon" src={ethIcon} />
 			<span>{props.title ?? 'Ethereum Address'}</span>
 			<input
+				spellCheck="false"
 				onChange={(event) => {
 					if (!props.static) setText(event.target.value);
 				}}

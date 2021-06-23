@@ -5,6 +5,14 @@ import React, { useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 import { getNetworkFromChainId, isSupportedNetwork } from 'common';
+import { useContracts } from 'hooks/useContracts';
+import { useRefresh } from 'hooks/useRefresh';
+import { useBlockTimestamp } from 'hooks/useBlockTimestamp';
+import { useMerkleVesting } from 'hooks/useMerkleVesting';
+import {
+	TransactionState,
+	useTransactionState,
+} from 'hooks/useTransactionState';
 
 //- Library Imports
 import { randomImage } from 'lib/Random';
@@ -33,6 +41,22 @@ const ClaimVestedTokens: React.FC = () => {
 
 	const network = getNetworkFromChainId(chainId ?? 0);
 	const supported = isSupportedNetwork(network);
+
+	const { refreshToken, refresh } = useRefresh();
+	const { blockNumber, blockTimestamp } = useBlockTimestamp();
+
+	const contracts = useContracts();
+	const vestingContract = contracts!.vesting;
+	const vesting = useMerkleVesting(
+		vestingContract,
+		account ?? '',
+		refreshToken,
+	);
+
+	const claimState = useTransactionState();
+	const releaseState = useTransactionState();
+
+	console.log(claimState, releaseState);
 
 	//////////////////
 	// State & Refs //
