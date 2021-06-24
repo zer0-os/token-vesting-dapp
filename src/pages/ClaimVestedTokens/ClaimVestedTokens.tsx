@@ -4,26 +4,20 @@ import React, { useState, useEffect } from 'react';
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
-import { getNetworkFromChainId, isSupportedNetwork } from 'common';
+import { getNetworkFromChainId } from 'common';
+import { ethers } from 'ethers';
+
+//- Library Imports
+import { suggestWildToken } from 'lib/suggestToken';
+import { getLogger, ClaimVestingInterface } from 'util/index';
 import { useContracts } from 'hooks/useContracts';
 import { useRefresh } from 'hooks/useRefresh';
-import { useBlockTimestamp } from 'hooks/useBlockTimestamp';
+import useNotification from 'hooks/useNotification';
 import { useMerkleVesting } from 'hooks/useMerkleVesting';
 import {
 	TransactionState,
 	useTransactionState,
 } from 'hooks/useTransactionState';
-import { ethers } from 'ethers';
-
-//- Library Imports
-import { randomImage } from 'lib/Random';
-import { suggestWildToken } from 'lib/suggestToken';
-import {
-	estimateVestedAmount,
-	getLogger,
-	truncateDecimals,
-	ClaimVestingInterface,
-} from 'util/index';
 
 //- Component & Container Imports
 import {
@@ -54,7 +48,7 @@ const ClaimVestedTokens: React.FC = () => {
 
 	// Wallet data
 	const walletContext = useWeb3React<Web3Provider>();
-	const { account, active, chainId } = walletContext;
+	const { account, active } = walletContext;
 
 	const context = useWeb3React();
 
@@ -72,9 +66,10 @@ const ClaimVestedTokens: React.FC = () => {
 	// State & Refs //
 	//////////////////
 
+	const { addNotification } = useNotification();
+
 	// Page state
 	const [modal, setModal] = useState<number | undefined>(undefined);
-	const [areTokensUnlocked, setAreTokensUnlocked] = useState(false);
 	const [claimInterfaceProps, setClaimInterfaceProps] = useState<
 		ClaimVestingInterface | undefined
 	>();
@@ -141,6 +136,8 @@ const ClaimVestedTokens: React.FC = () => {
 		releaseState.setError(undefined);
 		releaseState.setState(TransactionState.Submitting);
 
+		const claimAmount = toNumber(vesting.releasableTokens);
+
 		try {
 			const tx = await vesting.releaseTokens();
 
@@ -155,6 +152,8 @@ const ClaimVestedTokens: React.FC = () => {
 		}
 
 		releaseState.setState(TransactionState.Pending);
+
+		addNotification(`Successfully claimed ${claimAmount} WILD tokens`);
 
 		refresh();
 	};
@@ -176,6 +175,8 @@ const ClaimVestedTokens: React.FC = () => {
 			claimState.setState(TransactionState.Pending);
 			return;
 		}
+
+		addNotification('Successfully unlocked tokens');
 
 		claimState.setState(TransactionState.Completed);
 		closeModal();

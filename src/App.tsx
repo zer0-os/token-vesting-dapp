@@ -7,8 +7,14 @@ import 'styles/ztoken.css';
 import { Web3ReactProvider } from '@web3-react/core';
 import { ethers } from 'ethers';
 
+//- Library Imports
+import NotificationProvider from 'providers/NotificationProvider';
+
+//- Component Imports
+import { NotificationDrawer } from 'components';
+
 //- Page Imports
-import { ClaimVestedTokens, MainPage } from 'pages';
+import { ClaimVestedTokens } from 'pages';
 
 // Web3 library to query
 function getLibrary(provider: any): ethers.providers.Web3Provider {
@@ -19,10 +25,13 @@ function getLibrary(provider: any): ethers.providers.Web3Provider {
 
 function App() {
 	return (
-		<Web3ReactProvider getLibrary={getLibrary}>
-			{/* @TODO Move this into a router when GrantVestedTokens is finished */}
-			<ClaimVestedTokens />
-		</Web3ReactProvider>
+		<NotificationProvider>
+			<Web3ReactProvider getLibrary={getLibrary}>
+				<NotificationDrawer />
+				{/* @TODO Move this into a router when GrantVestedTokens is finished */}
+				<ClaimVestedTokens />
+			</Web3ReactProvider>
+		</NotificationProvider>
 	);
 }
 
