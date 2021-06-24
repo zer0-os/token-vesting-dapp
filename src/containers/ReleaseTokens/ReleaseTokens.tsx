@@ -23,9 +23,15 @@ type props = {
 	network: Network;
 	onRelease: () => void;
 	vesting: ClaimVestingInterface;
+	isLoading?: boolean;
 };
 
-const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
+const ReleaseTokens: React.FC<props> = ({
+	network,
+	onRelease,
+	vesting,
+	isLoading,
+}) => {
 	// Calculate key dates
 	const { blockNumber, blockTimestamp } = useBlockTimestamp();
 
@@ -60,13 +66,7 @@ const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
 	const toRelease = vested - claimed;
 	const total = vesting.total;
 
-	const dateStart = 1623290784;
-	const dateCliff = 1623291084;
-
 	const token = 'WILD';
-	const amountToRelease = 500000;
-
-	const [errors, setErrors] = useState<string[]>([]);
 
 	///////////////
 	// Functions //
@@ -75,12 +75,7 @@ const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
 	// @TODO change from any type
 	const releaseTokens = (event: any) => {
 		event.preventDefault(); // Prevent default form submit
-		if (amountToRelease) {
-			setErrors([]);
-			if (onRelease) onRelease();
-		} else {
-			setErrors(['amount']);
-		}
+		if (onRelease) onRelease();
 	};
 
 	/////////////////////
@@ -208,6 +203,7 @@ const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
 					onClick={() => {}}
 					glow
 					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
+					loading={isLoading}
 				>
 					Release Tokens
 				</FutureButton>

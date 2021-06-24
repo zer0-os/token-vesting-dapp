@@ -176,6 +176,7 @@ const ClaimVestedTokens: React.FC = () => {
 			{claimInterfaceProps && (
 				<Overlay centered open={modal === Modals.Claim} onClose={closeModal}>
 					<ReleaseTokens
+						isLoading={releaseState.isSubmitting || releaseState.isProcessing}
 						network={network}
 						vesting={claimInterfaceProps}
 						onRelease={release}
