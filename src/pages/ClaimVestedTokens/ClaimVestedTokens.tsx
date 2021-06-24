@@ -84,15 +84,21 @@ const ClaimVestedTokens: React.FC = () => {
 	///////////////
 
 	useEffect(() => {
-		if (context?.library?.provider) {
+		if (
+			vesting.vestedTokens &&
+			vesting.releasableTokens &&
+			vesting.awardedTokens &&
+			vesting.vestingParams
+		) {
+			setClaimInterfaceProps({
+				claimed: toNumber(vesting.vestedTokens.sub(vesting.releasableTokens)),
+				vested: toNumber(vesting.vestedTokens),
+				total: toNumber(vesting.awardedTokens),
+				start: vesting.vestingParams.start,
+				duration: vesting.vestingParams.duration,
+				cliff: vesting.vestingParams.cliff,
+			});
 		}
-	}, [active]);
-
-	useEffect(() => {
-		console.log(vesting.vestedTokens !== undefined);
-		console.log(vesting.releasableTokens !== undefined);
-		console.log(vesting.awardedTokens !== undefined);
-		console.log(vesting.vestingParams !== undefined);
 	}, [
 		vesting.vestedTokens,
 		vesting.releasableTokens,
@@ -151,7 +157,6 @@ const ClaimVestedTokens: React.FC = () => {
 		releaseState.setState(TransactionState.Pending);
 
 		refresh();
-		closeModal();
 	};
 
 	const unlock = async () => {
