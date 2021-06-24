@@ -62,7 +62,7 @@ const ReleaseTokens: React.FC<props> = ({
 
 	// Data
 	const claimed = vesting.claimed;
-	const vested = vesting.total;
+	const vested = vesting.vested;
 	const toRelease = vested - claimed;
 	const total = vesting.total;
 
