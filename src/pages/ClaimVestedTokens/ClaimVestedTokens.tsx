@@ -29,7 +29,7 @@ import {
 import {
 	ConnectToWallet,
 	FutureButton,
-	Image,
+	TextButton,
 	Overlay,
 	WilderIcon,
 	LoadingSpinner,
@@ -85,9 +85,22 @@ const ClaimVestedTokens: React.FC = () => {
 
 	useEffect(() => {
 		if (context?.library?.provider) {
-			// suggestWildToken(context.library.provider);
 		}
 	}, [active]);
+
+	useEffect(() => {
+		console.log(vesting.vestedTokens !== undefined);
+		console.log(vesting.releasableTokens !== undefined);
+		console.log(vesting.awardedTokens !== undefined);
+		console.log(vesting.vestingParams !== undefined);
+	}, [
+		vesting.vestedTokens,
+		vesting.releasableTokens,
+		vesting.awardedTokens,
+		vesting.vestingParams,
+	]);
+
+	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
@@ -98,7 +111,6 @@ const ClaimVestedTokens: React.FC = () => {
 		} else if (vesting.hasClaimed === true) {
 			// Open claim modal
 			if (
-				vesting.vestedTokens &&
 				vesting.vestedTokens &&
 				vesting.releasableTokens &&
 				vesting.awardedTokens &&
@@ -167,8 +179,6 @@ const ClaimVestedTokens: React.FC = () => {
 	// Modals
 	const closeModal = () => setModal(undefined);
 	const openConnectToWalletModal = () => setModal(Modals.ConnectToWallet);
-	const openClaimModal = () => setModal(Modals.Claim);
-	const openUnlockModal = () => setModal(Modals.Unlock);
 
 	return (
 		<>
@@ -231,15 +241,28 @@ const ClaimVestedTokens: React.FC = () => {
 
 							{/* Action Button */}
 							{vesting.token !== null && vesting.hasAward === true && (
-								<FutureButton
-									glow={vesting.awardedTokens !== undefined}
-									onClick={onButtonClick}
-								>
-									{vesting.hasClaimed === false &&
-										vesting.awardedTokens &&
-										'Unlock Tokens'}
-									{vesting.hasClaimed === true && 'Claim Tokens'}
-								</FutureButton>
+								<>
+									<FutureButton
+										style={{ margin: '24px auto' }}
+										glow={vesting.awardedTokens !== undefined}
+										onClick={onButtonClick}
+									>
+										{vesting.hasClaimed === false &&
+											vesting.awardedTokens &&
+											'Unlock Tokens'}
+										{vesting.hasClaimed === true && 'Claim Tokens'}
+									</FutureButton>
+									<TextButton
+										style={{
+											margin: '24px auto',
+											textAlign: 'center',
+											paddingLeft: 13,
+										}}
+										onClick={addWildToMetamask}
+									>
+										Add WILD token to Metamask
+									</TextButton>
+								</>
 							)}
 
 							{/* No tokens message */}
