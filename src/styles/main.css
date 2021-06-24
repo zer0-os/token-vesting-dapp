@@ -399,7 +399,7 @@ nav {
  *
  */
 @media only screen and (max-width: 660px) {
-	#root {
+	/* #root {
 		opacity: 0;
 	}
 
@@ -422,7 +422,7 @@ nav {
 		font-weight: 700;
 		text-align: center;
 		line-height: 22px;
-	}
+	} */
 }
 
 /*

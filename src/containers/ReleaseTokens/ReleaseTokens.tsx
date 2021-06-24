@@ -1,34 +1,84 @@
 //- React Imports
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 //- Component Imports
 import { FutureButton, WilderIcon, HoverTooltip } from 'components';
+
+//- Library Imports
+import moment from 'moment';
+import { ClaimVestingInterface } from 'util/index';
+import { useBlockTimestamp } from 'hooks/useBlockTimestamp';
+import {
+	getBlocksPerDay,
+	getEtherscanUriForNetwork,
+	getNetworkFromChainId,
+	getSecondsPerBlock,
+	Network,
+} from 'common/index';
 
 //- Style Imports
 import styles from './ReleaseTokens.module.css';
 
 type props = {
+	network: Network;
 	onRelease: () => void;
+	vesting: ClaimVestingInterface;
+	isLoading?: boolean;
 };
 
-const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
+const ReleaseTokens: React.FC<props> = ({
+	network,
+	onRelease,
+	vesting,
+	isLoading,
+}) => {
+	// Calculate key dates
+	const { blockNumber, blockTimestamp } = useBlockTimestamp();
+
+	const secondsPerBlock = getSecondsPerBlock(network);
+	const blocksUntilStart = blockNumber ? vesting.start - blockNumber : 0;
+
+	// Start
+	const startTime = blockTimestamp
+		? blockTimestamp + blocksUntilStart * secondsPerBlock
+		: 0;
+	const startTimeHuman = moment(startTime * 1000).toLocaleString();
+
+	// Cliff
+	const cliffTime = startTime + vesting.cliff * secondsPerBlock;
+	const cliffHuman = moment(cliffTime * 1000).toLocaleString();
+
+	// 50%
+	const halfTime = startTime + (vesting.duration / 2) * secondsPerBlock;
+	const halfHuman = moment(halfTime * 1000).toLocaleString();
+
+	// 100%
+	const endTime = startTime + vesting.duration * secondsPerBlock;
+	const endHuman = moment(endTime * 1000).toLocaleString();
+
 	//////////////////
 	// State & Refs //
 	//////////////////
 
 	// Data
-	const claimed = 250000;
-	const vested = 750000;
+	const claimed = vesting.claimed;
+	const vested = vesting.vested;
 	const toRelease = vested - claimed;
-	const total = 1000000;
-
-	const dateStart = 1623290784;
-	const dateCliff = 1623291084;
+	const total = vesting.total;
 
 	const token = 'WILD';
-	const amountToRelease = 500000;
 
-	const [errors, setErrors] = useState<string[]>([]);
+	// Label refs
+	const claimedLabel = useRef<HTMLSpanElement>(null);
+	const vestedLabel = useRef<HTMLSpanElement>(null);
+	const totalLabel = useRef<HTMLSpanElement>(null);
+	const [claimedText, setClaimedText] = useState(
+		`${claimed.toLocaleString()} Claimed`,
+	);
+	const [vestedText, setVestedText] = useState(
+		`${vested.toLocaleString()} Vested`,
+	);
+	const [totalText, setTotalText] = useState(`${total.toLocaleString()} Total`);
 
 	///////////////
 	// Functions //
@@ -37,13 +87,55 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 	// @TODO change from any type
 	const releaseTokens = (event: any) => {
 		event.preventDefault(); // Prevent default form submit
-		if (amountToRelease) {
-			setErrors([]);
-			if (onRelease) onRelease();
-		} else {
-			setErrors(['amount']);
-		}
+		if (isLoading) return;
+		if (onRelease) onRelease();
 	};
+
+	/////////////
+	// Effects //
+	/////////////
+
+	useEffect(() => {
+		if (claimedLabel.current && vestedLabel.current && totalLabel.current) {
+			const c = claimedLabel.current.getBoundingClientRect();
+			const v = vestedLabel.current.getBoundingClientRect();
+			const t = totalLabel.current.getBoundingClientRect();
+
+			const cConflictsWithV = c.left + c.width >= v.left;
+			const vConflictsWithT = v.left + v.width >= t.left;
+
+			var cText = '';
+			var vText = '';
+			var tText = '';
+
+			// If there are no clashes
+			if (claimed === vested && vested === total) {
+				cText = '';
+				vText = '';
+				tText = `${vested.toLocaleString()} Vested of ${total.toLocaleString()} Total`;
+			} else if (!cConflictsWithV && !vConflictsWithT) {
+				cText = `${claimed.toLocaleString()} Claimed`;
+				vText = `${vested.toLocaleString()} Vested`;
+				tText = `${total.toLocaleString()} Total`;
+			} else if (cConflictsWithV && vConflictsWithT) {
+				tText = `${claimed.toLocaleString()} Claimed of ${total.toLocaleString()} Total`;
+			} else {
+				if (cConflictsWithV) {
+					cText = '';
+					vText = `${claimed.toLocaleString()} Claimed of ${vested.toLocaleString()} Vested`;
+					tText = `${total.toLocaleString()} Total`;
+				} else if (vConflictsWithT) {
+					cText = `${claimed.toLocaleString()} Claimed`;
+					vText = '';
+					tText = `${vested.toLocaleString()} Vested of ${total.toLocaleString()} Total`;
+				}
+			}
+
+			setClaimedText(cText);
+			setVestedText(vText);
+			setTotalText(tText);
+		}
+	}, [claimed, vested, total]);
 
 	/////////////////////
 	// React Fragments //
@@ -64,14 +156,14 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 					<div className={styles.ProgressBar}>
 						{/* Claimed bar */}
 						<div style={{ width: `${(claimed / total) * 100}%` }}>
-							<span>{claimed.toLocaleString()} Claimed</span>
+							<span ref={claimedLabel}>{claimedText}</span>
 						</div>
 						{/* Vested bar */}
 						<div style={{ width: `${(vested / total) * 100}%` }}>
-							<span>{vested.toLocaleString()} Vested</span>
+							<span ref={vestedLabel}>{vestedText}</span>
 						</div>
 						{/* Total label */}
-						<span>{total.toLocaleString()} Total</span>
+						<span ref={totalLabel}>{totalText}</span>
 					</div>
 				</div>
 			</section>
@@ -89,9 +181,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{startTimeHuman}
 								</p>
 							}
 						>
@@ -110,9 +200,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{cliffHuman}
 								</p>
 							}
 						>
@@ -131,9 +219,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{halfHuman}
 								</p>
 							}
 						>
@@ -152,9 +238,7 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 										lineHeight: '24px',
 									}}
 								>
-									Wed 29 June 2021
-									<br />
-									19:06PM
+									{endHuman}
 								</p>
 							}
 						>
@@ -171,14 +255,20 @@ const ReleaseTokens: React.FC<props> = ({ onRelease }) => {
 				</span>
 				<p>
 					You can release tokens that have vested but not yet been claimed.
-					You’ve claimed {claimed.toLocaleString()} out of{' '}
-					{vested.toLocaleString()} vested tokens, so you can release up to{' '}
-					{toRelease.toLocaleString()} now.
+					<br />
+					<br />
+					You have claimed <b>{((claimed / total) * 100).toFixed(2)}%</b> of
+					your vested tokens.
+					<br />
+					<br />
+					You are eligible to release <b>{toRelease.toLocaleString()}</b> tokens
+					now.
 				</p>
 				<FutureButton
 					onClick={() => {}}
 					glow
 					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
+					loading={isLoading}
 				>
 					Release Tokens
 				</FutureButton>

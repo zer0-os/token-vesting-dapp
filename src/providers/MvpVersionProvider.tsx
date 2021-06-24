@@ -10,27 +10,27 @@ type MvpVersionProviderType = {
 };
 
 // Console message to let users know they can switch MVP versions
-console.log(
-	'%cHello fellow devs and tinkerers! If you would like to try different versions of this dapp, production() or prototype()\nCurrent Mode: Production',
-	'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
-);
+// console.log(
+// 	'%cHello fellow devs and tinkerers! If you would like to try different versions of this dapp, production() or prototype()\nCurrent Mode: Production',
+// 	'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
+// );
 
 const MvpVersionProvider: React.FC<MvpVersionProviderType> = ({ children }) => {
 	const [mvpVersion, set] = useState(1);
 
 	const production = () => {
-		console.log(
-			'%cYou have switched to production mode',
-			'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
-		);
+		// console.log(
+		// 	'%cYou have switched to production mode',
+		// 	'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
+		// );
 		set(1);
 	};
 
 	const prototype = () => {
-		console.log(
-			'%cYou have switched to prototype mode',
-			'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
-		);
+		// console.log(
+		// 	'%cYou have switched to prototype mode',
+		// 	'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
+		// );
 		set(3);
 	};
 
@@ -38,10 +38,10 @@ const MvpVersionProvider: React.FC<MvpVersionProviderType> = ({ children }) => {
 		if (version > 3 || version < 1) {
 			return console.warn('Invalid MVP version - valid values are 1, 2, and 3');
 		}
-		console.log(
-			'%cMVP: ' + version,
-			'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
-		);
+		// console.log(
+		// 	'%cMVP: ' + version,
+		// 	'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
+		// );
 		set(version);
 	};
 

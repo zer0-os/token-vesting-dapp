@@ -3,13 +3,18 @@ import 'styles/reset.css';
 import 'styles/main.css';
 import 'styles/ztoken.css';
 
-//- React Imports
-import { HashRouter, Route } from 'react-router-dom';
-
+//- Web3 Imports
 import { Web3ReactProvider } from '@web3-react/core';
 import { ethers } from 'ethers';
 
-import { ClaimVestedTokens, MainPage } from 'pages';
+//- Library Imports
+import NotificationProvider from 'providers/NotificationProvider';
+
+//- Component Imports
+import { NotificationDrawer } from 'components';
+
+//- Page Imports
+import { ClaimVestedTokens } from 'pages';
 
 // Web3 library to query
 function getLibrary(provider: any): ethers.providers.Web3Provider {
@@ -20,14 +25,13 @@ function getLibrary(provider: any): ethers.providers.Web3Provider {
 
 function App() {
 	return (
-		<Web3ReactProvider getLibrary={getLibrary}>
-			<MainPage />
-			{/* <HashRouter>
-				<Route exact path={'/claim'}>
-					<ClaimVestedTokens />
-				</Route>
-			</HashRouter> */}
-		</Web3ReactProvider>
+		<NotificationProvider>
+			<Web3ReactProvider getLibrary={getLibrary}>
+				<NotificationDrawer />
+				{/* @TODO Move this into a router when GrantVestedTokens is finished */}
+				<ClaimVestedTokens />
+			</Web3ReactProvider>
+		</NotificationProvider>
 	);
 }
 

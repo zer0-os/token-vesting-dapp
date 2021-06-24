@@ -23,3 +23,12 @@ export interface ContractAddresses {
 export interface Contracts {
 	vesting: MerkleTokenVesting;
 }
+
+export interface ClaimVestingInterface {
+	claimed: number;
+	vested: number;
+	total: number;
+	start: number;
+	duration: number;
+	cliff: number;
+}

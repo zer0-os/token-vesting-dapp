@@ -9,15 +9,21 @@ import styles from './UnlockTokens.module.css';
 
 type UnlockTokensProps = {
 	onUnlock: () => void;
+	isLoading?: boolean;
+	numTokens: number;
 };
 
-const UnlockTokens: React.FC<UnlockTokensProps> = ({ onUnlock }) => {
+const UnlockTokens: React.FC<UnlockTokensProps> = ({
+	onUnlock,
+	numTokens,
+	isLoading,
+}) => {
 	//////////////////
 	// State & Refs //
 	//////////////////
 
 	// Data
-	const total = 1000000;
+	const total = Number(numTokens).toLocaleString();
 	const token = 'WILD';
 
 	///////////////
@@ -36,16 +42,17 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({ onUnlock }) => {
 			</h1>
 			<section>
 				<span className={styles.Amount}>
-					{token} {total.toLocaleString()}
+					{token} {total}
 				</span>
 				<p>
-					You have been granted 1,000,000 Wild Tokens, which must be unlocked
+					You have been granted {total} Wild Tokens, which must be unlocked
 					before you can claim them. Unlocking is the process of signing the
 					token issue and only needs to be done once. It incurs GAS fees.
 				</p>
 				<FutureButton
 					onClick={unlock}
 					glow
+					loading={isLoading}
 					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
 				>
 					Unlock Tokens
