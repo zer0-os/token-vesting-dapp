@@ -32,20 +32,21 @@ const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
 	const secondsPerBlock = getSecondsPerBlock(network);
 	const blocksUntilStart = blockNumber ? vesting.start - blockNumber : 0;
 
-	console.log(vesting);
-
 	// Start
 	const startTime = blockTimestamp
 		? blockTimestamp + blocksUntilStart * secondsPerBlock
 		: 0;
 	const startTimeHuman = moment(startTime * 1000).toLocaleString();
 
+	// Cliff
 	const cliffTime = startTime + vesting.cliff * secondsPerBlock;
 	const cliffHuman = moment(cliffTime * 1000).toLocaleString();
 
+	// 50%
 	const halfTime = startTime + (vesting.duration / 2) * secondsPerBlock;
 	const halfHuman = moment(halfTime * 1000).toLocaleString();
 
+	// 100%
 	const endTime = startTime + vesting.duration * secondsPerBlock;
 	const endHuman = moment(endTime * 1000).toLocaleString();
 
@@ -199,10 +200,9 @@ const ReleaseTokens: React.FC<props> = ({ network, onRelease, vesting }) => {
 					{token} {toRelease.toLocaleString()}
 				</span>
 				<p>
-					You can release tokens that have vested but not yet been claimed.
-					You’ve claimed {claimed.toLocaleString()} out of{' '}
-					{vested.toLocaleString()} vested tokens, so you can release up to{' '}
-					{toRelease.toLocaleString()} now.
+					You can release tokens that have vested but not yet been claimed. You
+					have claimed {((claimed / total) * 100).toFixed(2)}% of your vested
+					tokens. You can release {toRelease.toLocaleString()} tokens now.
 				</p>
 				<FutureButton
 					onClick={() => {}}

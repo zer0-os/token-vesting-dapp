@@ -1,5 +1,5 @@
 //- React Imports
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
@@ -17,6 +17,7 @@ import { ethers } from 'ethers';
 
 //- Library Imports
 import { randomImage } from 'lib/Random';
+import { suggestWildToken } from 'lib/suggestToken';
 import {
 	estimateVestedAmount,
 	getLogger,
@@ -31,6 +32,7 @@ import {
 	Image,
 	Overlay,
 	WilderIcon,
+	LoadingSpinner,
 } from 'components';
 import { ReleaseTokens, UnlockTokens } from 'containers';
 
@@ -80,6 +82,12 @@ const ClaimVestedTokens: React.FC = () => {
 	///////////////
 	// Functions //
 	///////////////
+
+	useEffect(() => {
+		if (context?.library?.provider) {
+			// suggestWildToken(context.library.provider);
+		}
+	}, [active]);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
@@ -147,7 +155,6 @@ const ClaimVestedTokens: React.FC = () => {
 
 			await tx.wait();
 		} catch (e) {
-			console.log(e);
 			claimState.setError(e.message ? e.message : e);
 			claimState.setState(TransactionState.Pending);
 			return;
@@ -178,6 +185,7 @@ const ClaimVestedTokens: React.FC = () => {
 
 			<Overlay centered open={modal === Modals.Unlock} onClose={closeModal}>
 				<UnlockTokens
+					isLoading={claimState.isSubmitting || claimState.isProcessing}
 					numTokens={
 						vesting.awardedTokens
 							? Number(ethers.utils.formatEther(vesting.awardedTokens))
@@ -212,13 +220,31 @@ const ClaimVestedTokens: React.FC = () => {
 								className={styles.Profile}
 								onClick={openConnectToWalletModal}
 							/>
-							{vesting.token !== null && vesting.hasAward && (
-								<FutureButton glow onClick={onButtonClick}>
-									{vesting.hasClaimed === false && 'Claim Tokens'}
-									{vesting.hasClaimed === true && 'Unlock Tokens'}
+
+							{/* Loading Icon */}
+							{vesting.token === null && vesting.hasAward !== false && (
+								<div style={{ display: 'flex', justifyContent: 'center' }}>
+									<LoadingSpinner />
+								</div>
+							)}
+
+							{/* Action Button */}
+							{vesting.token !== null && vesting.hasAward === true && (
+								<FutureButton
+									glow={vesting.awardedTokens !== undefined}
+									onClick={onButtonClick}
+								>
+									{vesting.hasClaimed === false &&
+										vesting.awardedTokens &&
+										'Unlock Tokens'}
+									{vesting.hasClaimed === true && 'Claim Tokens'}
 								</FutureButton>
 							)}
-							{!vesting.hasAward && <h2>You have no tokens to claim</h2>}
+
+							{/* No tokens message */}
+							{vesting.hasAward === false && (
+								<h2>You have no tokens to claim</h2>
+							)}
 						</>
 					)}
 				</main>

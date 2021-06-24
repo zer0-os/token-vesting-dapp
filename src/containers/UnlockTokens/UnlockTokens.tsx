@@ -9,10 +9,15 @@ import styles from './UnlockTokens.module.css';
 
 type UnlockTokensProps = {
 	onUnlock: () => void;
+	isLoading?: boolean;
 	numTokens: number;
 };
 
-const UnlockTokens: React.FC<UnlockTokensProps> = ({ onUnlock, numTokens }) => {
+const UnlockTokens: React.FC<UnlockTokensProps> = ({
+	onUnlock,
+	numTokens,
+	isLoading,
+}) => {
 	//////////////////
 	// State & Refs //
 	//////////////////
@@ -47,6 +52,7 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({ onUnlock, numTokens }) => {
 				<FutureButton
 					onClick={unlock}
 					glow
+					loading={isLoading}
 					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
 				>
 					Unlock Tokens

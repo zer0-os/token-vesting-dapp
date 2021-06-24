@@ -36,6 +36,7 @@ export { default as CopyInput } from './CopyInput/CopyInput.js';
 export { default as HorizontalScroll } from './HorizontalScroll/HorizontalScroll';
 export { default as HoverTooltip } from './HoverTooltip/HoverTooltip';
 export { default as Image } from './Image/Image';
+export { default as LoadingSpinner } from './LoadingSpinner/LoadingSpinner';
 export { default as Member } from './Member/Member';
 export { default as Notification } from './Notification/Notification';
 export { default as NotificationDrawer } from './NotificationDrawer/NotificationDrawer';
