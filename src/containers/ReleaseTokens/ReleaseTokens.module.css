@@ -149,8 +149,6 @@
 	border-radius: 50%;
 
 	background: var(--color-accent-1);
-
-	cursor: pointer;
 }
 
 .Timeline > div:last-of-type > span {

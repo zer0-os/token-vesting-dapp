@@ -25,6 +25,8 @@
 	border-radius: var(--box-radius);
 	transform: translateX(-50%);
 
+	cursor: default;
+
 	z-index: 10;
 }
 
