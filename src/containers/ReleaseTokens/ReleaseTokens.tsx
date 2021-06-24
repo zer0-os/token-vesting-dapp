@@ -87,6 +87,7 @@ const ReleaseTokens: React.FC<props> = ({
 	// @TODO change from any type
 	const releaseTokens = (event: any) => {
 		event.preventDefault(); // Prevent default form submit
+		if (isLoading) return;
 		if (onRelease) onRelease();
 	};
 
