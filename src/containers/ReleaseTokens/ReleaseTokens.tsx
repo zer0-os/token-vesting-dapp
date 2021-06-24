@@ -62,7 +62,7 @@ const ReleaseTokens: React.FC<props> = ({
 
 	// Data
 	const claimed = vesting.claimed;
-	const vested = vesting.vested;
+	const vested = vesting.total;
 	const toRelease = vested - claimed;
 	const total = vesting.total;
 
@@ -108,7 +108,11 @@ const ReleaseTokens: React.FC<props> = ({
 			var tText = '';
 
 			// If there are no clashes
-			if (!cConflictsWithV && !vConflictsWithT) {
+			if (claimed === vested && vested === total) {
+				cText = '';
+				vText = '';
+				tText = `${vested.toLocaleString()} Vested of ${total.toLocaleString()} Total`;
+			} else if (!cConflictsWithV && !vConflictsWithT) {
 				cText = `${claimed.toLocaleString()} Claimed`;
 				vText = `${vested.toLocaleString()} Vested`;
 				tText = `${total.toLocaleString()} Total`;
