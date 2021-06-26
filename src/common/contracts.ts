@@ -14,7 +14,7 @@ type ContractAddressMap = {
 
 const contractAddresses: ContractAddressMap = {
 	[Network.Mainnet]: {
-		vesting: process.env.REACT_APP_VESTING_CONTRACT,
+		vesting: [process.env.REACT_APP_VESTING_CONTRACT],
 	},
 	[Network.Kovan]: {
 		vesting: [
