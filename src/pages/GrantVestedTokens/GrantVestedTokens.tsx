@@ -85,11 +85,21 @@ const GrantVestedTokens: React.FC = () => {
 			}]);
 		}
 
-		const [amount, catchAmount] = useState('0.00');
-
-		
+		const [amounte, catchAmount] = useState('0.00');
 
 		//- Catch and summarise the amount every time has been render
+		useEffect(() => {
+			let summarise = 0;
+			
+			values.map((i) => {
+				if(i.amount !== '' && parseInt(i.amount) !== NaN){
+					summarise = summarise + parseInt(i.amount);
+					catchAmount(String(summarise) + '.00');
+				}else if(i.amount == ''){
+					catchAmount('0.00');
+				}
+			});
+		})
 
 	////////////
 	// Render //
@@ -124,7 +134,7 @@ const GrantVestedTokens: React.FC = () => {
 					<p style={{
 						textAlign: 'center',
 					}}>
-						{amount} TEST Tokens were successfully<br/>granted.
+						{amounte} TEST Tokens were successfully<br/>granted.
 					</p>
 
 					<div style={{
@@ -210,7 +220,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					))}
 
-					amount={amount}
+					amount={amounte}
 
 					onAddRecipient={handleClick}
 					onSend={openConfirm}/>
