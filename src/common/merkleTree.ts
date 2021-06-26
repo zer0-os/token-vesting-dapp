@@ -12,7 +12,18 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmVu6ZhopK9CfpkpuJwbR31ndriThJpkVvyitk7LGU2WsQ',
 	// brett site
 	'0xa779DBc87366C46A51b87CBB0F8be497FE84C511':
-		'https://ipfs.io/ipfs/QmbakE2GeWcSCXWob4hdkVU3VKmStLuFjvdDr6B77bhhAd'
+		'https://ipfs.io/ipfs/QmbakE2GeWcSCXWob4hdkVU3VKmStLuFjvdDr6B77bhhAd',
+	//Leo contract 1
+	'0x1625DB76d379A6D06bd9bcAcC0D3d51078B825aF':
+		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
+	//Leo contract 2
+	'0x4B1b5A459bbD5c5406562c0839cb2586c1C66aBa':
+		'https://ipfs.io/ipfs/QmZ7gpkxijGHLec8UngyU1Jiu74qrg8w9h34i62cNm9Z8Q',
+	//Leo contract 3
+	'0x3a340D9591b31374e55CEb1f95c08d2aaC91Be24':
+		'https://ipfs.io/ipfs/QmRAK2ACP2Xpg7LLQxP74t1941Da24GDeubFUq9bcYJzuX',
+	//Leo contract 4
+		
 };
 
 export const getVestingMerkleTree = async (
