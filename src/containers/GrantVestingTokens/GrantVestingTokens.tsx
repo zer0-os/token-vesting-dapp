@@ -85,7 +85,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 					Ethereum address you wish to grant vesting tokens to:
 				</h2>
 
-			<div className="scroll">
+			<div className={styles.scroll}>
 				{setInputs}
 				
 				<div>

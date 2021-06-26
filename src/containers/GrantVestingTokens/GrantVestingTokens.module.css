@@ -44,5 +44,10 @@
 /*- Scroll Container -*/
 
 .scroll{
-	
+	max-height: 384px;
+	overflow: scroll;
+}
+
+.scroll::-webkit-scrollbar {
+    display: none;
 }
