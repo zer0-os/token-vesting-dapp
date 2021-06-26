@@ -7,11 +7,12 @@ import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 import { useEagerConnect } from 'lib/hooks/provider-hooks';
 
 //- Component Imports
-import { FutureButton, Overlay, ConnectToWallet } from 'components';
+import { FutureButton, Overlay, ConnectToWallet, EtherInput } from 'components';
 import { GrantVestingTokens } from 'containers';
 
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
+import { number } from 'zod';
 
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
@@ -62,6 +63,38 @@ const GrantVestedTokens: React.FC = () => {
 		const openGrantingModal = () => setModal(Modals.Granting);
 		const openGrantedModal = () => setModal(Modals.Granted);
 
+	/////////////////////
+	// Inputs Function //
+	/////////////////////
+
+		//- Variable that Catch the Contract Address
+		const [contract, catchContract] = useState('');
+
+		//- Set variable that render the number of Inputs
+		//- The first Input ID is 0
+		const [values, setValues] = useState([{id: 0, address: '', amount: ''}]);
+
+		//- Function that create new Input
+		const handleClick = (event: MouseEvent) => {
+			event.preventDefault();
+
+			setValues([... values, {
+				id: values.length,
+				address: '',
+				amount:	'',
+			}]);
+		}
+
+		const [amount, catchAmount] = useState('0.00');
+
+		
+
+		//- Catch and summarise the amount every time has been render
+
+	////////////
+	// Render //
+	////////////
+
 	return (
 	<>
 
@@ -91,7 +124,7 @@ const GrantVestedTokens: React.FC = () => {
 					<p style={{
 						textAlign: 'center',
 					}}>
-						10,000.00 TEST Tokens were successfully<br/>granted.
+						{amount} TEST Tokens were successfully<br/>granted.
 					</p>
 
 					<div style={{
@@ -123,7 +156,64 @@ const GrantVestedTokens: React.FC = () => {
 			{/* Grant Menu */}
 			{modal !== undefined && modal === Modals.Grant && (
 			<div className={styles.gvt}>
-				<GrantVestingTokens onSend={openConfirm}/>
+				<GrantVestingTokens 
+					varContract={contract}
+					onCatchContract={catchContract}
+					setInputs={
+					
+					//- Render the Inputs that the Variable 
+					values.map(input => (
+						<div
+							key={input.id}
+							style={{
+							marginTop: '24px',
+							display: 'flex',
+							justifyContent: 'space-between',
+							}}
+						>
+							<div
+							style={{
+							width: '381px',
+							}}
+							>
+								<EtherInput
+									ethlogo
+									alphanumeric
+									placeholder={'Recipient Address'}
+									onChange={(value) => {
+										let change = [...values];
+										let item = {...change[input.id], address: value};
+										change[input.id] = item;
+										setValues(change);
+									}}
+									text={input.address}
+								/>
+							</div>
+
+							<div
+								style={{
+								width: '160px',
+							}}
+							>
+								<EtherInput
+									numeric
+									placeholder={'Amount'}
+									onChange={(value) => {
+										let change = [...values];
+										let item = {...change[input.id], amount: value};
+										change[input.id] = item;
+										setValues(change);
+									}}
+									text={input.amount}
+								/>
+							</div>
+						</div>
+					))}
+
+					amount={amount}
+
+					onAddRecipient={handleClick}
+					onSend={openConfirm}/>
 			</div>
 			)}
 

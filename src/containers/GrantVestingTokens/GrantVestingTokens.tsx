@@ -1,5 +1,5 @@
 //- GVT MAIN MENU -//
-import React, { useState } from 'react';
+import React, { useState, MouseEvent } from 'react';
 
 //- Components Imports
 import { EtherInput, FutureButton } from 'components';
@@ -9,64 +9,29 @@ import '../../styles/main.css';
 import styles from './GrantVestingTokens.module.css';
 
 type GrantVestingTokensProps = {
+	varContract: string;
+	onCatchContract: (value:string) => void;
+
+	setInputs: React.ReactNode;
+
+	amount: string;
+
 	onSend: () => void;
+	onAddRecipient?: any;
 };
 
-const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
-	const [contract, catchInput] = useState('');
-	const [address, catchAddress] = useState('');
-	const [amount, catchAmount] = useState('');
+const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ 
 
-	var num = 2;
+	varContract,
+	onCatchContract,
 
-	function Inputs(){
-		var enputs = [];
+	setInputs,
+	
+	amount,
 
-		for(var i = 0; i < num; i++){
-			enputs.push(
-				<div
-					style={{
-						marginTop: '24px',
-						display: 'flex',
-						justifyContent: 'space-between',
-					}}
-				>
-					<div
-						style={{
-							width: '381px',
-						}}
-					>
-						<EtherInput
-							ethlogo
-							alphanumeric
-							placeholder={'Recipient Address'}
-							onChange={(value) => catchAddress(value)}
-							text={address}
-						/>
-					</div>
-
-					<div
-						style={{
-							width: '160px',
-						}}
-					>
-						<EtherInput
-							numeric
-							placeholder={'Amount'}
-							onChange={(value) => catchAmount(value)}
-							text={amount}
-						/>
-					</div>
-				</div>
-			)
-		}
-
-		return(
-		<>
-			{enputs}
-		</>
-		)
-	}
+	onSend,
+	onAddRecipient,
+}) => {
 
 	////////////
 	// RENDER //
@@ -98,8 +63,8 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 					ethlogo
 					alphanumeric
 					placeholder={'Vesting Contract Address'}
-					onChange={(value) => catchInput(value)}
-					text={contract}
+					onChange={(value) => onCatchContract(value)}
+					text={varContract}
 				/>
 			</section>
 
@@ -120,45 +85,12 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 					Ethereum address you wish to grant vesting tokens to:
 				</h2>
 
-				<Inputs/>
-
-				<div
-					style={{
-						marginTop: '24px',
-						display: 'flex',
-						justifyContent: 'space-between',
-					}}
-				>
-					<div
-						style={{
-							width: '381px',
-						}}
-					>
-						<EtherInput
-							ethlogo
-							alphanumeric
-							placeholder={'Recipient Address'}
-							onChange={(value) => catchAddress(value)}
-							text={address}
-						/>
-					</div>
-
-					<div
-						style={{
-							width: '160px',
-						}}
-					>
-						<EtherInput
-							numeric
-							placeholder={'Amount'}
-							onChange={(value) => catchAmount(value)}
-							text={amount}
-						/>
-					</div>
-				</div>
+			<div className="scroll">
+				{setInputs}
 				
 				<div>
 					<button
+						id="buttonAdd"
 						className="flatButton"
 						style={{
 							display: 'inline-block',
@@ -168,7 +100,6 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 							borderRadius: '8px',
 							margin: '16px',
 						}}
-						onClick={() => {}}
 					>
 						<p
 							className="glow-text-white"
@@ -177,6 +108,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 								marginTop: '8px',
 								fontSize: '16px',
 							}}
+							onClick={onAddRecipient}
 						>
 							+ Add Recipient
 						</p>
@@ -209,10 +141,11 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
 								fontSize: '24px',
 							}}
 						>
-							0.00 TEST
+							{amount} TEST
 						</p>
 					</div>
 				</div>
+			</div>
 			</section>
 
 			<div
