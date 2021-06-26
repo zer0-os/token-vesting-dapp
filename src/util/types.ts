@@ -17,7 +17,7 @@ export type Maybe<T> = T | undefined | null;
 export type MaybeNull<T> = T | null;
 
 export interface ContractAddresses {
-	vesting: string;
+	vesting: string[];
 }
 
 export interface Contracts {
