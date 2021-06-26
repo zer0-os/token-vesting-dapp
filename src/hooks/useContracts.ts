@@ -35,12 +35,14 @@ export function useContracts(): Maybe<Contracts> {
 			throw Error(`Chain id not supported`);
 		}
 
-		if (!ethers.utils.isAddress(contracts.vesting)) {
-			throw Error(`invalid vesting contract address`);
+		for (var i = 0; i < contracts.vesting.length; i++) {
+			if (!ethers.utils.isAddress(contracts.vesting[i])) {
+				throw Error(`invalid vesting contract address ` + contracts.vesting[i]);
+			}
 		}
 
 		const vestingContract = MerkleTokenVesting__factory.connect(
-			contracts.vesting,
+			contracts.vesting[0],
 			signer,
 		);
 
