@@ -29,7 +29,7 @@ function App() {
 			<Web3ReactProvider getLibrary={getLibrary}>
 				<NotificationDrawer />
 				{/* @TODO Move this into a router when GrantVestedTokens is finished */}
-				<ClaimVestedTokens />
+				<GrantVestedTokens />
 			</Web3ReactProvider>
 		</NotificationProvider>
 	);
