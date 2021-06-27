@@ -254,9 +254,6 @@ const ReleaseTokens: React.FC<props> = ({
 					{token} {toRelease.toLocaleString()}
 				</span>
 				<p>
-					You can release tokens that have vested but not yet been claimed.
-					<br />
-					<br />
 					You have claimed <b>{((claimed / total) * 100).toFixed(2)}%</b> of
 					your vested tokens.
 					<br />
