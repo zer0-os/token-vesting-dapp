@@ -14,7 +14,7 @@ import NotificationProvider from 'providers/NotificationProvider';
 import { NotificationDrawer } from 'components';
 
 //- Page Imports
-import { ClaimVestedTokens } from 'pages';
+import { ClaimVestedTokens, GrantVestedTokens } from 'pages';
 
 // Web3 library to query
 function getLibrary(provider: any): ethers.providers.Web3Provider {

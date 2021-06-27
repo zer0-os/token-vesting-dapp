@@ -1,0 +1,53 @@
+/* Generic */
+
+.Container {
+	flex-direction: column;
+	justify-content: center;
+
+	width: 640px;
+	padding: 34.5px 40px 40px 40px;
+	margin: 160px;
+
+	background: var(--background-blue-card-wilder);
+}
+
+.Container > section:first-of-type {
+	margin-top: 40px;
+}
+
+.Container > section:not(:first-of-type) {
+	margin-top: 70px;
+}
+
+.Container > section > *:not(:first-child) {
+	margin-top: 16px;
+}
+
+.Container h1 {
+	width: 100%;
+
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}
+
+.Container h2 {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.Container p {
+	font-size: 18px;
+	line-height: 21.6px;
+}
+
+/*- Scroll Container -*/
+
+.scroll{
+	max-height: 384px;
+	overflow: scroll;
+}
+
+.scroll::-webkit-scrollbar {
+    display: none;
+}
