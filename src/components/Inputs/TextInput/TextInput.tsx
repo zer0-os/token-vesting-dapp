@@ -70,26 +70,6 @@ const TextInput: React.FC<TextInputProps> = ({
 
 	return (
 		<div className={styles.Container}>
-			{ethlogo && title && (
-				<>
-				<div style={imageStyle}/>
-				<p style={titleStyle}>
-					{titletext}
-				</p>
-				<input
-					type={type ? type : ''}
-					className={`
-						${styles.TextInput} 
-						${styles.ethlogo} border-blue 
-						${error ? styles.Error : ''}`}
-					onChange={handleChange}
-					style={style}
-					placeholder={placeholder}
-					value={text ? text : ''}
-				/>
-				</>
-			)}
-
 			{ethlogo && !title && (
 				<>
 				<div style={imageStyle}/>
