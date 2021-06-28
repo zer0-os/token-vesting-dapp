@@ -5,7 +5,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { FutureButton, WilderIcon, HoverTooltip } from 'components';
 
 //- Library Imports
-import moment from 'moment';
 import { ClaimVestingInterface } from 'util/index';
 import { useBlockTimestamp } from 'hooks/useBlockTimestamp';
 import {
@@ -38,23 +37,36 @@ const ReleaseTokens: React.FC<props> = ({
 	const secondsPerBlock = getSecondsPerBlock(network);
 	const blocksUntilStart = blockNumber ? vesting.start - blockNumber : 0;
 
+	const format = (date: Date) => {
+		return (
+			date.toLocaleDateString(undefined, {
+				weekday: 'long',
+				year: 'numeric',
+				month: 'long',
+				day: 'numeric',
+			}) +
+			' at ' +
+			date.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' })
+		);
+	};
+
 	// Start
 	const startTime = blockTimestamp
 		? blockTimestamp + blocksUntilStart * secondsPerBlock
 		: 0;
-	const startTimeHuman = moment(startTime * 1000).toLocaleString();
+	const startTimeHuman = format(new Date(startTime * 1000));
 
 	// Cliff
 	const cliffTime = startTime + vesting.cliff * secondsPerBlock;
-	const cliffHuman = moment(cliffTime * 1000).toLocaleString();
+	const cliffHuman = format(new Date(cliffTime * 1000));
 
 	// 50%
 	const halfTime = startTime + (vesting.duration / 2) * secondsPerBlock;
-	const halfHuman = moment(halfTime * 1000).toLocaleString();
+	const halfHuman = format(new Date(halfTime * 1000));
 
 	// 100%
 	const endTime = startTime + vesting.duration * secondsPerBlock;
-	const endHuman = moment(endTime * 1000).toLocaleString();
+	const endHuman = format(new Date(endTime * 1000));
 
 	//////////////////
 	// State & Refs //
