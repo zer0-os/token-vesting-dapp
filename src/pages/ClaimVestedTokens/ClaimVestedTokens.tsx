@@ -56,7 +56,8 @@ const ClaimVestedTokens: React.FC = () => {
 
   const [contractNumber,setContractNumber] = useState(0);
 
-	//Hardcoded declare of array of addresses
+	//Hardcoded declare of array of addresses, contracts must be in same order in all arrays
+	//if not, displayed addresses wont be the same
 	const contracts = [
 		useContracts(0),
 		useContracts(1),
@@ -73,11 +74,19 @@ const ClaimVestedTokens: React.FC = () => {
 		useMerkleVesting(vestingContract[0], account, refreshToken),
 		useMerkleVesting(vestingContract[1], account, refreshToken),
 		useMerkleVesting(vestingContract[2], account, refreshToken),
-		useMerkleVesting(vestingContract[3], account, refreshToken),
+		useMerkleVesting(vestingContract[3], account, refreshToken)
 	];
-	//Initialize vesting with first by default (needs to change later with a "has award" filter)
-	var vesting = vestingArray[0]; 
 
+	//Initialize vesting with first by default
+	var vesting = vestingArray[0]; 
+	//It stores the index of the  array addresses with awards
+	var awardedIndex: number[] = [];
+	var i = 0;
+	checkAddresses();
+	//If awardedIndex has a first value use that, if not, there arent awarded contracts buttons wont render
+	if(awardedIndex.length > 0)
+	vesting = vestingArray[awardedIndex[0]];
+		
 	const network = getNetworkFromChainId(context.chainId!);
 
 	const claimState = useTransactionState();
@@ -99,8 +108,16 @@ const ClaimVestedTokens: React.FC = () => {
 	// Functions //
 	///////////////
 
+
+//runs if account its changed
+  useEffect(() => {
+		checkAddresses();
+  }, [vesting.token]);
+
 	useEffect(() => {
-		vesting = vestingArray[contractNumber]; //this line updates the current reference to the contract
+		//if there isnt any other contract to toggle, you dont need to update the current contract
+		if(awardedIndex.length > 0) 
+		vesting = vestingArray[awardedIndex[contractNumber]];
 		if (
 			vesting.vestedTokens &&
 			vesting.releasableTokens &&
@@ -124,11 +141,30 @@ const ClaimVestedTokens: React.FC = () => {
 		contractNumber,
 	]);
 
+	//checks if the addresses have awards
+	function checkAddresses () {
+		i = 0;
+		//If an address has awards, the contract will save the index and start with one of that addresses
+		while(i<vestingArray.length){
+			if(vestingArray[i].hasAward){
+				awardedIndex.push(i);
+				console.log(i + " position have award");
+			}
+			i++;
+		}
+	}
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
+  const contractToggle = () =>{
+		setContractNumber(contractNumber + 1);
+		if(contractNumber == awardedIndex.length -1)
+			setContractNumber(0);
+	}
+	
 	const onButtonClick = () => {
+		console.log(contracts[awardedIndex[contractNumber]]);
 		if (vesting.hasClaimed === false && vesting.awardedTokens) {
 			// Open unlock modal
 			setModal(Modals.Unlock);
@@ -305,15 +341,7 @@ const ClaimVestedTokens: React.FC = () => {
 									<FutureButton
 										style={{ margin: '24px auto' }}
 										glow={vesting.awardedTokens !== undefined}
-										onClick={() => {
-											console.log("Contract Number its: " + contractNumber);
-											if(contractNumber == 3){
-												setContractNumber(0);
-											}
-											else{
-												setContractNumber(contractNumber + 1);
-											}
-										}}
+										onClick={contractToggle}
 									>
 										{vesting.hasClaimed === false &&
 											vesting.awardedTokens &&
@@ -324,7 +352,7 @@ const ClaimVestedTokens: React.FC = () => {
 										glow={vesting.awardedTokens !== undefined}
 										onClick={() => {}}
 									>
-										{'Vesting Contract: ' + contracts[contractNumber]?.vesting.address}
+										{'Vesting Contract: ' + contracts[awardedIndex[contractNumber]]?.vesting.address}
 									</TextButton>
 
 								</>
