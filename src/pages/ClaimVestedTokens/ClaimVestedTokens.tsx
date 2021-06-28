@@ -86,10 +86,9 @@ const ClaimVestedTokens: React.FC = () => {
 	var i = 0;
 	checkAddresses();
 	//If awardedIndex has a first value use that, if not, there arent awarded contracts buttons wont render
-	if(awardedIndex.length > 0){
+	if(awardedIndex.length > 0)
 		vesting = vestingArray[awardedIndex[0]];
-		console.log("changed to awarded first one")
-	};
+
 		
 	const network = getNetworkFromChainId(context.chainId!);
 
@@ -150,10 +149,8 @@ const ClaimVestedTokens: React.FC = () => {
 		i = 0;
 		//If an address has awards, the contract will save the index and start with one of that addresses
 		while(i<vestingArray.length){
-			if(vestingArray[i].hasAward){
+			if(vestingArray[i].hasAward)
 				awardedIndex.push(i);
-				console.log(i + " position have award");
-			}
 			i++;
 		}
 	}
