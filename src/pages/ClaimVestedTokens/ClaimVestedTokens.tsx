@@ -64,12 +64,14 @@ const ClaimVestedTokens: React.FC = () => {
 		useContracts(2),
 		useContracts(3)
 	];
+
 	const vestingContract = [
 		contracts[0]!.vesting,
 		contracts[1]!.vesting,
 		contracts[2]!.vesting,
 		contracts[3]!.vesting
 	];
+
 	const vestingArray = [
 		useMerkleVesting(vestingContract[0], account, refreshToken),
 		useMerkleVesting(vestingContract[1], account, refreshToken),
@@ -84,8 +86,10 @@ const ClaimVestedTokens: React.FC = () => {
 	var i = 0;
 	checkAddresses();
 	//If awardedIndex has a first value use that, if not, there arent awarded contracts buttons wont render
-	if(awardedIndex.length > 0)
-	vesting = vestingArray[awardedIndex[0]];
+	if(awardedIndex.length > 0){
+		vesting = vestingArray[awardedIndex[0]];
+		console.log("changed to awarded first one")
+	};
 		
 	const network = getNetworkFromChainId(context.chainId!);
 
@@ -164,7 +168,8 @@ const ClaimVestedTokens: React.FC = () => {
 	}
 	
 	const onButtonClick = () => {
-		console.log(contracts[awardedIndex[contractNumber]]);
+		if(awardedIndex.length > 0) 
+		vesting = vestingArray[awardedIndex[contractNumber]];
 		if (vesting.hasClaimed === false && vesting.awardedTokens) {
 			// Open unlock modal
 			setModal(Modals.Unlock);
@@ -191,6 +196,8 @@ const ClaimVestedTokens: React.FC = () => {
 	};
 
 	const release = async () => {
+		if(awardedIndex.length > 0) 
+		vesting = vestingArray[awardedIndex[contractNumber]];
 		logger.debug(`User attempting to release tokens`);
 		releaseState.setError(undefined);
 		releaseState.setState(TransactionState.Submitting);
@@ -218,13 +225,14 @@ const ClaimVestedTokens: React.FC = () => {
 	};
 
 	const unlock = async () => {
+		if(awardedIndex.length > 0) 
+		vesting = vestingArray[awardedIndex[contractNumber]];
 		logger.debug(`User attempting to claim tokens`);
 		claimState.setError(undefined);
 		claimState.setState(TransactionState.Submitting);
 
 		try {
 			const tx = await vesting.claimAward();
-
 			claimState.setState(TransactionState.Processing);
 			claimState.setHash(tx.hash);
 
