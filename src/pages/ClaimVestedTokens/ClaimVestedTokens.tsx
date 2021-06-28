@@ -101,8 +101,6 @@ const ClaimVestedTokens: React.FC = () => {
 
 	useEffect(() => {
 		vesting = vestingArray[contractNumber]; //this line updates the current reference to the contract
-		console.log(contracts[contractNumber]?.vesting.address);
-		console.log("selectNumber" + contractNumber);
 		if (
 			vesting.vestedTokens &&
 			vesting.releasableTokens &&
@@ -299,6 +297,37 @@ const ClaimVestedTokens: React.FC = () => {
 							{/* No tokens message */}
 							{vesting.hasAward === false && (
 								<h2>You have no tokens to claim</h2>
+							)}
+
+							{/* Toggle contract Button */}
+							{vesting.token !== null && (
+								<>
+									<FutureButton
+										style={{ margin: '24px auto' }}
+										glow={vesting.awardedTokens !== undefined}
+										onClick={() => {
+											console.log("Contract Number its: " + contractNumber);
+											if(contractNumber == 3){
+												setContractNumber(0);
+											}
+											else{
+												setContractNumber(contractNumber + 1);
+											}
+										}}
+									>
+										{vesting.hasClaimed === false &&
+											vesting.awardedTokens &&
+											'Toggle Contract'}
+									</FutureButton>
+									<TextButton
+										style={{ margin: '24px auto' }}
+										glow={vesting.awardedTokens !== undefined}
+										onClick={() => {}}
+									>
+										{'Vesting Contract: ' + contracts[contractNumber]?.vesting.address}
+									</TextButton>
+
+								</>
 							)}
 						</>
 					)}
