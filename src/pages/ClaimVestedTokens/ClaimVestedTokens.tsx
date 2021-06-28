@@ -87,7 +87,7 @@ const ClaimVestedTokens: React.FC = () => {
 	checkAddresses();
 	//If awardedIndex has a first value use that, if not, there arent awarded contracts buttons wont render
 	if(awardedIndex.length > 0)
-		vesting = vestingArray[awardedIndex[0]];
+		vesting = vestingArray[awardedIndex[contractNumber]];
 
 		
 	const network = getNetworkFromChainId(context.chainId!);
@@ -165,8 +165,7 @@ const ClaimVestedTokens: React.FC = () => {
 	}
 	
 	const onButtonClick = () => {
-		if(awardedIndex.length > 0) 
-		vesting = vestingArray[awardedIndex[contractNumber]];
+
 		if (vesting.hasClaimed === false && vesting.awardedTokens) {
 			// Open unlock modal
 			setModal(Modals.Unlock);
@@ -193,8 +192,7 @@ const ClaimVestedTokens: React.FC = () => {
 	};
 
 	const release = async () => {
-		if(awardedIndex.length > 0) 
-		vesting = vestingArray[awardedIndex[contractNumber]];
+
 		logger.debug(`User attempting to release tokens`);
 		releaseState.setError(undefined);
 		releaseState.setState(TransactionState.Submitting);
@@ -222,8 +220,7 @@ const ClaimVestedTokens: React.FC = () => {
 	};
 
 	const unlock = async () => {
-		if(awardedIndex.length > 0) 
-		vesting = vestingArray[awardedIndex[contractNumber]];
+
 		logger.debug(`User attempting to claim tokens`);
 		claimState.setError(undefined);
 		claimState.setState(TransactionState.Submitting);
