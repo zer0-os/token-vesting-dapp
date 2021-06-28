@@ -53,9 +53,30 @@ const ClaimVestedTokens: React.FC = () => {
 	const context = useWeb3React();
 
 	const { refreshToken, refresh } = useRefresh();
-	const contracts = useContracts();
-	const vestingContract = contracts!.vesting;
-	const vesting = useMerkleVesting(vestingContract, account, refreshToken);
+
+  const [contractNumber,setContractNumber] = useState(0);
+
+	//Hardcoded declare of array of addresses
+	const contracts = [
+		useContracts(0),
+		useContracts(1),
+		useContracts(2),
+		useContracts(3)
+	];
+	const vestingContract = [
+		contracts[0]!.vesting,
+		contracts[1]!.vesting,
+		contracts[2]!.vesting,
+		contracts[3]!.vesting
+	];
+	const vestingArray = [
+		useMerkleVesting(vestingContract[0], account, refreshToken),
+		useMerkleVesting(vestingContract[1], account, refreshToken),
+		useMerkleVesting(vestingContract[2], account, refreshToken),
+		useMerkleVesting(vestingContract[3], account, refreshToken),
+	];
+	//Initialize vesting with first by default (needs to change later with a "has award" filter)
+	var vesting = vestingArray[0]; 
 
 	const network = getNetworkFromChainId(context.chainId!);
 
@@ -79,6 +100,9 @@ const ClaimVestedTokens: React.FC = () => {
 	///////////////
 
 	useEffect(() => {
+		vesting = vestingArray[contractNumber]; //this line updates the current reference to the contract
+		console.log(contracts[contractNumber]?.vesting.address);
+		console.log("selectNumber" + contractNumber);
 		if (
 			vesting.vestedTokens &&
 			vesting.releasableTokens &&
@@ -99,6 +123,7 @@ const ClaimVestedTokens: React.FC = () => {
 		vesting.releasableTokens,
 		vesting.awardedTokens,
 		vesting.vestingParams,
+		contractNumber,
 	]);
 
 	const addWildToMetamask = () => suggestWildToken(context.library);

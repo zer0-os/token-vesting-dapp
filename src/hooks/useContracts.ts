@@ -9,7 +9,7 @@ import {
 import { MerkleTokenVesting__factory } from '../contracts/types';
 import { ContractAddresses, Contracts, Maybe } from '../util';
 
-export function useContracts(): Maybe<Contracts> {
+export function useContracts(contractNumber: number): Maybe<Contracts> {
 	const context = useWeb3React<ethers.providers.Web3Provider>();
 
 	const { library, active, chainId } = context;
@@ -42,7 +42,7 @@ export function useContracts(): Maybe<Contracts> {
 		}
 
 		const vestingContract = MerkleTokenVesting__factory.connect(
-			contracts.vesting[0],
+			contracts.vesting[contractNumber],
 			signer,
 		);
 

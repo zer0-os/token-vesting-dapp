@@ -48,7 +48,10 @@ const useStyles = makeStyles({
 export const VestingControl: React.FC<Props> = (props) => {
 	const context = useWeb3React();
 	const classes = useStyles();
-	const contracts = useContracts();
+
+	//This lines must be changed so the user can set with ui 
+	//wich contract wants to send transactions, hardcoded actually to test
+	const contracts = useContracts(0);
 	const vestingContract = contracts!.vesting;
 	const { refreshToken, refresh } = useRefresh();
 	const vesting = useMerkleVesting(
