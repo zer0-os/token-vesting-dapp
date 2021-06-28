@@ -100,7 +100,7 @@ const ReleaseTokens: React.FC<props> = ({
 	const releaseTokens = (event: any) => {
 		event.preventDefault(); // Prevent default form submit
 		if (isLoading) return;
-		if (onRelease) onRelease();
+		if (onRelease && toRelease > 0) onRelease();
 	};
 
 	/////////////
@@ -275,7 +275,7 @@ const ReleaseTokens: React.FC<props> = ({
 				</p>
 				<FutureButton
 					onClick={() => {}}
-					glow
+					glow={toRelease > 0}
 					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
 					loading={isLoading}
 				>
