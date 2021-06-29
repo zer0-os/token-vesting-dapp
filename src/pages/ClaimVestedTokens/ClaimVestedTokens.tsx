@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
-import { getNetworkFromChainId } from 'common';
+import { getNetworkFromChainId , getContractAddressesForNetwork, defaultNetwork } from 'common';
 import { ethers } from 'ethers';
 
 //- Library Imports
@@ -32,6 +32,7 @@ import { ReleaseTokens, UnlockTokens } from 'containers';
 
 //- Style Imports
 import styles from './ClaimVestedTokens.module.css';
+import { MerkleTokenVesting } from 'contracts/types';
 
 const logger = getLogger(`components::ClaimVestedTokens`);
 
@@ -56,44 +57,31 @@ const ClaimVestedTokens: React.FC = () => {
 
   const [contractNumber,setContractNumber] = useState(0);
 
-	//Hardcoded declare of array of addresses, contracts must be in same order in all arrays
-	//if not, displayed addresses wont be the same
-	const contracts = [
-		useContracts(0),
-		useContracts(1),
-		useContracts(2),
-		useContracts(3)
-	];
-
-	const vestingContract = [
-		contracts[0]!.vesting,
-		contracts[1]!.vesting,
-		contracts[2]!.vesting,
-		contracts[3]!.vesting
-	];
-
-	const vestingArray = [
-		useMerkleVesting(vestingContract[0], account, refreshToken),
-		useMerkleVesting(vestingContract[1], account, refreshToken),
-		useMerkleVesting(vestingContract[2], account, refreshToken),
-		useMerkleVesting(vestingContract[3], account, refreshToken)
-	];
-
-	//Initialize vesting with first by default
-	var vesting = vestingArray[0]; 
-	//It stores the index of the  array addresses with awards
-	var awardedIndex: number[] = [];
-	var i = 0;
-	checkAddresses();
-	//If awardedIndex has a first value use that, if not, there arent awarded contracts buttons wont render
-	if(awardedIndex.length > 0)
-		vesting = vestingArray[awardedIndex[contractNumber]];
-
-		
 	const network = getNetworkFromChainId(context.chainId!);
 
 	const claimState = useTransactionState();
 	const releaseState = useTransactionState();
+
+	const contracts = [];
+	const vestingContract = [];
+	const vestingArray:any[] = [];
+	
+	var numberOfAddresses:number = getContractAddressesForNetwork(defaultNetwork).vesting.length;
+	if(account)
+	numberOfAddresses = getContractAddressesForNetwork(defaultNetwork).vesting.length;
+  
+  for(var k = 0; k<numberOfAddresses;k++){
+	 contracts[k] = HookGetContract(k);
+	 vestingContract[k] = contracts[k]!.vesting;
+	 vestingArray[k] = HookGetMerkleVesting(vestingContract[k],account,refreshToken);
+  }
+
+  var vesting = vestingArray[0]; 
+  var awardedIndex: number[] = [];
+  var i = 0;
+  checkAddresses();
+  if(awardedIndex.length > 0)
+	vesting = vestingArray[awardedIndex[contractNumber]];
 
 	//////////////////
 	// State & Refs //
@@ -143,6 +131,19 @@ const ClaimVestedTokens: React.FC = () => {
 		vesting.vestingParams,
 		contractNumber,
 	]);
+
+	function HookGetMerkleVesting(
+		merkleArg: MerkleTokenVesting,
+		accountArg:string|null|undefined,
+		refreshTokenArg:number
+		){
+		var merkleToReturn = useMerkleVesting(merkleArg,accountArg,refreshTokenArg);
+		return merkleToReturn;
+	}
+	function HookGetContract(indexNumber: number){
+		var contractToReturn = useContracts(indexNumber);
+		return contractToReturn;
+	}
 
 	//checks if the addresses have awards
 	function checkAddresses () {
