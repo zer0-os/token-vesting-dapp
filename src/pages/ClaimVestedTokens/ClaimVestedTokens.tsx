@@ -67,9 +67,10 @@ const ClaimVestedTokens: React.FC = () => {
 	const vestingArray:any[] = [];
 	
 	var numberOfAddresses:number = getContractAddressesForNetwork(defaultNetwork).vesting.length;
+
 	if(account)
-	numberOfAddresses = getContractAddressesForNetwork(defaultNetwork).vesting.length;
-  
+  numberOfAddresses = getContractAddressesForNetwork(getNetworkFromChainId(context.chainId!)).vesting.length;
+	
   for(var k = 0; k<numberOfAddresses;k++){
 	 contracts[k] = HookGetContract(k);
 	 vestingContract[k] = contracts[k]!.vesting;
