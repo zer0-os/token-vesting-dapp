@@ -69,7 +69,7 @@ const ClaimVestedTokens: React.FC = () => {
 	var numberOfAddresses:number = getContractAddressesForNetwork(defaultNetwork).vesting.length;
 
 	if(account)
-  numberOfAddresses = getContractAddressesForNetwork(getNetworkFromChainId(context.chainId!)).vesting.length;
+  numberOfAddresses = getContractAddressesForNetwork(network).vesting.length;
 	
   for(var k = 0; k<numberOfAddresses;k++){
 	 contracts[k] = HookGetContract(k);
