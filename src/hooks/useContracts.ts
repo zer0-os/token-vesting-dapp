@@ -9,11 +9,11 @@ import {
 import { MerkleTokenVesting__factory } from '../contracts/types';
 import { ContractAddresses, Contracts, Maybe } from '../util';
 
-export function useContracts(contractNumber: number): Maybe<Contracts> {
+export function useContracts(): Maybe<Contracts[]> {
 	const context = useWeb3React<ethers.providers.Web3Provider>();
 
 	const { library, active, chainId } = context;
-	const contract = React.useMemo((): Contracts | null => {
+	const contract = React.useMemo((): Contracts[] | null => {
 		let contracts: Maybe<ContractAddresses>;
 		let signer: ethers.VoidSigner | ethers.Signer = new ethers.VoidSigner(
 			ethers.constants.AddressZero,
@@ -35,20 +35,23 @@ export function useContracts(contractNumber: number): Maybe<Contracts> {
 			throw Error(`Chain id not supported`);
 		}
 
-		for (var i = 0; i < contracts.vesting.length; i++) {
+		for (let i = 0; i < contracts.vesting.length; i++) {
 			if (!ethers.utils.isAddress(contracts.vesting[i])) {
 				throw Error(`invalid vesting contract address ` + contracts.vesting[i]);
 			}
 		}
 
-		const vestingContract = MerkleTokenVesting__factory.connect(
-			contracts.vesting[contractNumber],
-			signer,
-		);
+		let vestingContract: Contracts[] = [];
+		for (let k = 0; k < contracts.vesting.length; k++) {
+			vestingContract[k] = {
+				vesting: MerkleTokenVesting__factory.connect(
+					contracts.vesting[k],
+					signer,
+				),
+			};
+		}
+		return vestingContract;
 
-		return {
-			vesting: vestingContract,
-		};
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [active, library, chainId]);
 	return contract;

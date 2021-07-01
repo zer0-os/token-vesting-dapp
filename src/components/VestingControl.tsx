@@ -25,7 +25,7 @@ import { useRefresh } from '../hooks/useRefresh';
 import { useWeb3React } from '@web3-react/core';
 import moment from 'moment';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
-
+import { ContractAddresses, Contracts, Maybe } from '../util';
 import { EthInput, ArrowLink, FutureButton } from 'components';
 
 interface Props {
@@ -51,8 +51,8 @@ export const VestingControl: React.FC<Props> = (props) => {
 
 	//This lines must be changed so the user can set with ui 
 	//wich contract wants to send transactions, hardcoded actually to test
-	const contracts = useContracts(0);
-	const vestingContract = contracts!.vesting;
+	const contracts: Maybe<Contracts[]> = useContracts();
+	const vestingContract = contracts![0].vesting;
 	const { refreshToken, refresh } = useRefresh();
 	const vesting = useMerkleVesting(
 		vestingContract,
@@ -146,9 +146,9 @@ export const VestingControl: React.FC<Props> = (props) => {
 		);
 	}
 
-	if (contracts?.vesting) {
+	if (contracts![0].vesting) {
 		const etherscanLink = `${getEtherscanUriForNetwork(network)}address/${
-			contracts.vesting.address
+			contracts![0].vesting.address
 		}`;
 		items.push(
 			<Box className={classes.item}>
@@ -163,7 +163,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 				</div>
 				<EthInput
 					static
-					text={contracts.vesting.address ?? ''}
+					text={contracts![0].vesting.address ?? ''}
 					style={{ marginBottom: 8 }}
 					title={'Vesting Contract'}
 					copyButton

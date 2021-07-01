@@ -22,14 +22,18 @@ export const useMerkleVesting = (
 
 	const [hasAward, setHasAward] = React.useState<MaybeNull<boolean>>(null);
 	const [hasClaimed, setHasClaimed] = React.useState<MaybeNull<boolean>>(null);
-	const [awardedTokens, setAwardedTokens] =
-		React.useState<MaybeNull<BigNumber>>(null);
-	const [vestedTokens, setVestedTokens] =
-		React.useState<MaybeNull<BigNumber>>(null);
-	const [releasableTokens, setReleasableTokens] =
-		React.useState<MaybeNull<BigNumber>>(null);
-	const [vestingParams, setVestingParams] =
-		React.useState<MaybeNull<VestingParams>>(null);
+	const [awardedTokens, setAwardedTokens] = React.useState<
+		MaybeNull<BigNumber>
+	>(null);
+	const [vestedTokens, setVestedTokens] = React.useState<MaybeNull<BigNumber>>(
+		null,
+	);
+	const [releasableTokens, setReleasableTokens] = React.useState<
+		MaybeNull<BigNumber>
+	>(null);
+	const [vestingParams, setVestingParams] = React.useState<
+		MaybeNull<VestingParams>
+	>(null);
 	const [token, setToken] = React.useState<MaybeNull<string>>(null);
 
 	React.useEffect(() => {
