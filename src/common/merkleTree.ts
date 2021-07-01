@@ -23,7 +23,9 @@ const merkleFiles: { [address: string]: string } = {
 	'0x3a340D9591b31374e55CEb1f95c08d2aaC91Be24':
 		'https://ipfs.io/ipfs/QmRAK2ACP2Xpg7LLQxP74t1941Da24GDeubFUq9bcYJzuX',
 	//Leo contract 4
-		
+	'0xd90520824daeD187B088D8d14512B611Bfbd5759':
+		'https://ipfs.io/ipfs/QmUQgDSja2k4dnrqjnYYkoqXpNqcYwXWWfnjQFertM4MYA',
+	//Leo contract 5
 };
 
 export const getVestingMerkleTree = async (
