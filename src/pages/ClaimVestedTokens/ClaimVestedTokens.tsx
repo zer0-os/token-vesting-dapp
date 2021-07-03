@@ -96,10 +96,7 @@ const ClaimVestedTokens: React.FC = () => {
 	// Functions //
 	///////////////
 
-	//runs if account its changed
-
 	useEffect(() => {
-		//if there isnt any other contract to toggle, you dont need to update the current contract
 		if (
 			vesting.vestedTokens &&
 			vesting.releasableTokens &&
@@ -123,7 +120,7 @@ const ClaimVestedTokens: React.FC = () => {
 		contractNumber,
 	]);
 
-	//checks if the addresses have awards
+
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
