@@ -6,8 +6,6 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 import {
 	getNetworkFromChainId,
-	getContractAddressesForNetwork,
-	defaultNetwork,
 } from 'common';
 import { ethers } from 'ethers';
 
@@ -18,7 +16,7 @@ import { useContracts } from 'hooks/useContracts';
 import { useRefresh } from 'hooks/useRefresh';
 import useNotification from 'hooks/useNotification';
 import { useMerkleVesting } from 'hooks/useMerkleVesting';
-import { ContractAddresses, Contracts, Maybe } from '../../util';
+import { Contracts, Maybe } from '../../util';
 import {
 	TransactionState,
 	useTransactionState,
@@ -37,7 +35,6 @@ import { ReleaseTokens, UnlockTokens } from 'containers';
 
 //- Style Imports
 import styles from './ClaimVestedTokens.module.css';
-import { MerkleTokenVesting } from 'contracts/types';
 
 const logger = getLogger(`components::ClaimVestedTokens`);
 
@@ -68,28 +65,20 @@ const ClaimVestedTokens: React.FC = () => {
 	const releaseState = useTransactionState();
 
 	const contracts: Maybe<Contracts[]> = useContracts();
-	const vestingContract = [];
-	const vestingArray: any[] = [];
 
-	let addressNumber: number = getContractAddressesForNetwork(defaultNetwork)
-		.vesting.length;
-	if (account)
-		addressNumber = getContractAddressesForNetwork(network).vesting.length;
+	let vesting: any = {
+		token: null,
+		hasAward: null,
+		vestingParams: null,
+		hasClaimed: null,
+		awardedTokens: null,
+		vestedTokens: null,
+		releasableTokens: null,
+		claimAward: null,
+		releaseTokens: null,
+	};
 
-	for (let k = 0; k < addressNumber; k++) {
-		vestingArray[k] = HookGetMerkleVesting(
-			contracts![k].vesting!,
-			account,
-			refreshToken,
-		);
-	}
-
-	let vesting = vestingArray[0];
-
-	let awardedIndex: number[] = [];
-	checkAddresses();
-	if (awardedIndex.length > 0)
-		vesting = vestingArray[awardedIndex[contractNumber]];
+	vesting = useMerkleVesting(contracts![contractNumber], account, refreshToken);
 
 	//////////////////
 	// State & Refs //
@@ -108,14 +97,9 @@ const ClaimVestedTokens: React.FC = () => {
 	///////////////
 
 	//runs if account its changed
-	useEffect(() => {
-		checkAddresses();
-	}, [vesting.token]);
 
 	useEffect(() => {
 		//if there isnt any other contract to toggle, you dont need to update the current contract
-		if (awardedIndex.length > 0)
-			vesting = vestingArray[awardedIndex[contractNumber]];
 		if (
 			vesting.vestedTokens &&
 			vesting.releasableTokens &&
@@ -139,35 +123,14 @@ const ClaimVestedTokens: React.FC = () => {
 		contractNumber,
 	]);
 
-	function HookGetMerkleVesting(
-		merkleArg: MerkleTokenVesting,
-		accountArg: string | null | undefined,
-		refreshTokenArg: number,
-	) {
-		let merkleToReturn = useMerkleVesting(
-			merkleArg,
-			accountArg,
-			refreshTokenArg,
-		);
-		return merkleToReturn;
-	}
-
 	//checks if the addresses have awards
-	function checkAddresses() {
-		let i = 0;
-		//If an address has awards, the contract will save the index and start with one of that addresses
-		while (i < vestingArray.length) {
-			if (vestingArray[i].hasAward) awardedIndex.push(i);
-			i++;
-		}
-	}
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
 	const contractToggle = () => {
 		setContractNumber(contractNumber + 1);
-		if (contractNumber === awardedIndex.length - 1) setContractNumber(0);
+		if (contractNumber === contracts!.length - 1) setContractNumber(0);
 	};
 
 	const onButtonClick = () => {
@@ -348,9 +311,7 @@ const ClaimVestedTokens: React.FC = () => {
 										glow={vesting.awardedTokens !== undefined}
 										onClick={contractToggle}
 									>
-										{vesting.hasClaimed === false &&
-											vesting.awardedTokens &&
-											'Toggle Contract'}
+										{'Toggle Contract'}
 									</FutureButton>
 									<TextButton
 										style={{ margin: '24px auto' }}
@@ -358,7 +319,7 @@ const ClaimVestedTokens: React.FC = () => {
 										onClick={() => {}}
 									>
 										{'Vesting Contract: ' +
-											contracts![awardedIndex[contractNumber]]?.vesting.address}
+											contracts![contractNumber]?.vesting.address}
 									</TextButton>
 								</>
 							)}

@@ -1,8 +1,13 @@
 import { BigNumber } from '@ethersproject/bignumber';
 import { ethers } from 'ethers';
 import React from 'react';
-import { MerkleTokenVesting } from '../contracts/types';
-import { estimateVestedAmount, getLogger, Maybe, MaybeNull } from '../util';
+import {
+	Contracts,
+	estimateVestedAmount,
+	getLogger,
+	Maybe,
+	MaybeNull,
+} from '../util';
 import { useVestingMerkleTree } from './useVestingMerkleTree';
 
 const logger = getLogger(`hooks::useMerkleVesting`);
@@ -14,7 +19,7 @@ interface VestingParams {
 }
 
 export const useMerkleVesting = (
-	contract: MerkleTokenVesting,
+	contract: Contracts,
 	user: Maybe<string>,
 	refreshToken?: number,
 ) => {
@@ -70,12 +75,14 @@ export const useMerkleVesting = (
 		let subscribed = true;
 		const fetchValuesFromContract = async () => {
 			try {
-				const claimed = await contract.isClaimed(userClaim.index);
-				const tokenAddress = await contract.targetToken();
+				const claimed = await contract.vesting.isClaimed(userClaim.index);
+				const tokenAddress = await contract.vesting.targetToken();
 
-				const start = (await contract.vestingStart()).toNumber();
-				const duration = (await contract.vestingDuration()).toNumber();
-				const cliff = (await contract.vestingCliff()).sub(start).toNumber();
+				const start = (await contract.vesting.vestingStart()).toNumber();
+				const duration = (await contract.vesting.vestingDuration()).toNumber();
+				const cliff = (await contract.vesting.vestingCliff())
+					.sub(start)
+					.toNumber();
 
 				if (subscribed) {
 					setHasClaimed(claimed);
@@ -87,7 +94,7 @@ export const useMerkleVesting = (
 				if (!claimed) {
 					logger.debug(`User has not yet claimed award.`);
 
-					const currentBlock = await contract.provider.getBlockNumber();
+					const currentBlock = await contract.vesting.provider.getBlockNumber();
 
 					const amountVested = estimateVestedAmount(
 						currentBlock,
@@ -106,8 +113,8 @@ export const useMerkleVesting = (
 				}
 
 				// Find out from smart contract how much has vested
-				const vested = await contract.getVestedAmount(user);
-				const releasable = await contract.getReleasableAmount(user);
+				const vested = await contract.vesting.getVestedAmount(user);
+				const releasable = await contract.vesting.getReleasableAmount(user);
 
 				logger.debug(`Finished fetching all vesting data from smart contract.`);
 
@@ -146,7 +153,7 @@ export const useMerkleVesting = (
 			`Claiming award. user=${user} ${JSON.stringify(userClaim, null, 2)}`,
 		);
 
-		const tx = await contract.claimAward(
+		const tx = await contract.vesting.claimAward(
 			userClaim.index,
 			user,
 			userClaim.amount,
@@ -162,7 +169,7 @@ export const useMerkleVesting = (
 			throw Error(`No user`);
 		}
 
-		const tx = await contract.release(user);
+		const tx = await contract.vesting.release(user);
 
 		return tx;
 	};

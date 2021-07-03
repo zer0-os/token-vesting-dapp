@@ -1,11 +1,10 @@
 import React from 'react';
 import { getVestingMerkleTree } from '../common';
-import { MerkleTokenVesting } from '../contracts/types';
-import { getLogger, Maybe, VestingMerkleTree } from '../util';
+import { Contracts, getLogger, Maybe, VestingMerkleTree } from '../util';
 
 const logger = getLogger(`hooks::useVestingMerkleTree`);
 
-export const useVestingMerkleTree = (contract: MerkleTokenVesting) => {
+export const useVestingMerkleTree = (contract: Contracts) => {
 	const [merkleTree, setMerkleTree] = React.useState<
 		Maybe<VestingMerkleTree>
 	>();
@@ -13,19 +12,21 @@ export const useVestingMerkleTree = (contract: MerkleTokenVesting) => {
 	React.useEffect(() => {
 		const getTree = async () => {
 			try {
-				const tree = await getVestingMerkleTree(contract.address);
+				const tree = await getVestingMerkleTree(contract.vesting.address);
 				setMerkleTree(tree);
 				logger.debug(
-					`Finished loading vesting merkle tree for ${contract.address}`,
+					`Finished loading vesting merkle tree for ${contract.vesting.address}`,
 				);
 			} catch (e) {
-				logger.error(`Unable to get merkle tree for ${contract.address}`);
+				logger.error(
+					`Unable to get merkle tree for ${contract.vesting.address}`,
+				);
 				logger.debug(e);
 			}
 		};
 
 		getTree();
-	}, [contract.address]);
+	}, [contract.vesting.address]);
 
 	return {
 		merkleTree,

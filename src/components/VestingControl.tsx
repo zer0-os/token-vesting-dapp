@@ -25,7 +25,7 @@ import { useRefresh } from '../hooks/useRefresh';
 import { useWeb3React } from '@web3-react/core';
 import moment from 'moment';
 import { useBlockTimestamp } from '../hooks/useBlockTimestamp';
-import { ContractAddresses, Contracts, Maybe } from '../util';
+import { Contracts, Maybe } from '../util';
 import { EthInput, ArrowLink, FutureButton } from 'components';
 
 interface Props {
@@ -52,7 +52,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 	//This lines must be changed so the user can set with ui 
 	//wich contract wants to send transactions, hardcoded actually to test
 	const contracts: Maybe<Contracts[]> = useContracts();
-	const vestingContract = contracts![0].vesting;
+	const vestingContract = contracts![0];
 	const { refreshToken, refresh } = useRefresh();
 	const vesting = useMerkleVesting(
 		vestingContract,
