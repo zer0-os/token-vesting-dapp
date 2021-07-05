@@ -5,9 +5,20 @@ import React, { useState, useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 
+//- Contract Connection Imports
+import { ethers } from 'ethers';
+
 //- Component Imports
-import { FutureButton, Overlay, ConnectToWallet, EtherInput } from 'components';
+import {
+	FutureButton,
+	Overlay,
+	ConnectToWallet,
+	EtherInput
+} from 'components';
 import { GrantVestingTokens } from 'containers';
+
+//- Hooks Import
+import { useGrantContract } from 'hooks/useGrantContract';
 
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
@@ -30,6 +41,12 @@ enum Modals {
 	Granted,
 }
 
+declare global {
+	interface Window {
+		ethereum: any;
+	}
+}
+
 const GrantVestedTokens: React.FC = () => {
 	//////////////////
 	// State & Refs //
@@ -41,6 +58,8 @@ const GrantVestedTokens: React.FC = () => {
 	//- Wallet Data
 	const walletContext = useWeb3React<Web3Provider>();
 	const { account, active, chainId } = walletContext;
+
+	const context = useWeb3React();
 
 	useEffect(() => { }, [active]);
 
@@ -101,6 +120,9 @@ const GrantVestedTokens: React.FC = () => {
 			}
 		});
 	});
+
+	let faso = useGrantContract('0xC5c9AFF8457A7943169ba7F6937861060C03Be2E');
+	console.log(faso);
 
 	////////////
 	// Render //
