@@ -360,14 +360,13 @@ export function useGrantContract(address: string) {
     const signer = provider.getSigner();
     console.log('Signer Cached');
 
-    try {
-      //Connect with provider
-      let contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-      return contract;
-    } catch (e) {
-      throw Error('Contract Failed - ' + e)
-    }
+    //Connect with provider and get methods
+    let contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+    return contract;
 
+  } else {
+    console.error('Address Error - The contract address must be 42 characters long');
+    return 'Error';
   }
 }
 

@@ -80,6 +80,15 @@ const GrantVestedTokens: React.FC = () => {
 	const openGrantingModal = () => setModal(Modals.Granting);
 	const openGrantedModal = () => setModal(Modals.Granted);
 
+	//- Check Transaction and set the Modal
+	const CheckTransaction = () => {
+		let check = useGrantContract(contract);
+
+		if (check !== 'Error') {
+			openConfirm();
+		}
+	}
+
 	/////////////////////
 	// Inputs Function //
 	/////////////////////
@@ -120,9 +129,6 @@ const GrantVestedTokens: React.FC = () => {
 			}
 		});
 	});
-
-	let faso = useGrantContract('0xC5c9AFF8457A7943169ba7F6937861060C03Be2E');
-	console.log(faso);
 
 	////////////
 	// Render //
@@ -255,7 +261,7 @@ const GrantVestedTokens: React.FC = () => {
 								}
 								amount={amounte}
 								onAddRecipient={handleClick}
-								onSend={openConfirm}
+								onSend={CheckTransaction}
 							/>
 						</div>
 					)}

@@ -36,7 +36,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 	////////////
 
 	return (
-		<form
+		<div
 			className={`${styles.Container} blur border-pink-glow border-rounded`}
 		>
 			<h1
@@ -163,7 +163,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 					</FutureButton>
 				</div>
 			</div>
-		</form>
+		</div>
 	);
 };
 
