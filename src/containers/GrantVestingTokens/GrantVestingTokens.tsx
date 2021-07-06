@@ -86,7 +86,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 				<div className={styles.scroll}>
 					{setInputs}
 
-					<div>
+					<div style={{ marginTop: '10px' }}>
 						<button
 							id="buttonAdd"
 							className="flatButton"
@@ -96,7 +96,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 								height: '35px',
 								backgroundColor: 'rgba(60, 161, 255, 0.15)',
 								borderRadius: '8px',
-								margin: '16px',
+								margin: '16px 0px 16px 16px',
 							}}
 						>
 							<p
@@ -156,7 +156,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 				<div
 					style={{
 						display: 'inline-block',
-						marginTop: '20px',
+						marginTop: '10px',
 					}}
 				>
 					<FutureButton onClick={onSend} glow>

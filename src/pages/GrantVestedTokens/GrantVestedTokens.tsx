@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 
 //- Contract Connection Imports
-import { ethers } from 'ethers';
+import { ethers, utils } from 'ethers';
 
 //- Component Imports
 import {
@@ -25,6 +25,7 @@ import { useGrantContract } from 'hooks/useGrantContract';
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
 import { useOwner } from 'hooks/useOwner';
+import { TokenVestingController } from 'contracts/types';
 
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
@@ -86,13 +87,32 @@ const GrantVestedTokens: React.FC = () => {
 
 	const openNotAuthorized = () => setModal(Modals.NotAuthorized);
 
+	////////////////////////
+	// Transaction Values //
+	////////////////////////
+	const addressToSend = new Array;
+	const amountToSend = new Array;
+	const boolToSend = new Array;
+
 	//- Check Transaction and set the Modal
 	const CheckTransaction = () => {
-		let check = useGrantContract(contract);
+		values.forEach((i) => {
+			addressToSend.push(i.address);
+			amountToSend.push(utils.parseEther(i.amount).toString());
+			boolToSend.push(false);
+			console.log(addressToSend);
+			console.log(amountToSend);
+			console.log(boolToSend);
+		});
 
-		if (check !== 'Error') {
-			openConfirm();
-		}
+		openConfirm();
+	}
+
+	//- Send Transaction
+	const SendTransaction = async () => {
+		const grantContract: TokenVestingController = await useGrantContract(contract);
+
+		grantContract.grantTokens(addressToSend, amountToSend, boolToSend);
 	}
 
 	//- Set Owner State
@@ -104,7 +124,7 @@ const GrantVestedTokens: React.FC = () => {
 		} else if (owner == 2) {
 			openNotAuthorized();
 		}
-	}, [owner])
+	}, [owner]);
 
 	/////////////////////
 	// Inputs Function //
@@ -151,17 +171,6 @@ const GrantVestedTokens: React.FC = () => {
 			}
 		});
 	}, [values]);
-
-	////////////////////////
-	// Transaction Values //
-	////////////////////////
-	const [addressToSend, setAddressToSend] = useState([{}]);
-	const [amountToSend, setAmountToSend] = useState([{}]);
-	const [boolToSend, setBoolToSend] = useState([{}]);
-
-	const createValues = () => {
-
-	}
 
 	////////////
 	// Render //
@@ -347,7 +356,7 @@ const GrantVestedTokens: React.FC = () => {
 												display: 'inline-block',
 											}}
 										>
-											<FutureButton onClick={openGrantingModal} glow>
+											<FutureButton onClick={SendTransaction} glow>
 												Grant
 											</FutureButton>
 										</div>
