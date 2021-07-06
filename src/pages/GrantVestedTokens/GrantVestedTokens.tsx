@@ -8,7 +8,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 
 //- Contract Connection Imports
-import { ethers, utils } from 'ethers';
+import { logger, utils } from 'ethers';
 
 //- Component Imports
 import {
@@ -21,6 +21,7 @@ import { GrantVestingTokens } from 'containers';
 
 //- Hooks Import
 import { useGrantContract } from 'hooks/useGrantContract';
+import { TransactionState, useTransactionState } from 'hooks/useTransactionState';
 
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
@@ -60,11 +61,11 @@ const GrantVestedTokens: React.FC = () => {
 	// - Page State
 	const [modal, setModal] = useState<number | undefined>(undefined);
 
+	const transactionState = useTransactionState();
+
 	//- Wallet Data
 	const walletContext = useWeb3React<Web3Provider>();
 	const { account, active, chainId } = walletContext;
-
-	const context = useWeb3React();
 
 	useEffect(() => { }, [active]);
 
@@ -90,29 +91,68 @@ const GrantVestedTokens: React.FC = () => {
 	////////////////////////
 	// Transaction Values //
 	////////////////////////
-	const addressToSend = new Array;
-	const amountToSend = new Array;
-	const boolToSend = new Array;
+	const addressToSend: string[] = [];
+	const amountToSend: string[] = [];
+	const boolToSend: boolean[] = [];
+
+	const [validate, validateValues] = useState<number | undefined>(undefined);
 
 	//- Check Transaction and set the Modal
 	const CheckTransaction = () => {
-		values.forEach((i) => {
-			addressToSend.push(i.address);
-			amountToSend.push(utils.parseEther(i.amount).toString());
-			boolToSend.push(false);
-			console.log(addressToSend);
-			console.log(amountToSend);
-			console.log(boolToSend);
-		});
 
-		openConfirm();
+		enum checker {
+			Done,
+			FailContract,
+			FailAddress,
+			FailAmount,
+		}
+
+		if (contract.length !== 42) {
+			console.error('You must set a Contract with 42 characteres to Grant.');
+			validateValues(checker.FailContract);
+		} else if (values.find(i => i.address == '' || i.address == undefined)) {
+			console.error('You must complete all the Recipient Address to Grant.');
+			validateValues(checker.FailAddress);
+		} else if (values.find(i => i.amount == '' || i.amount == undefined || i.amount == '0')) {
+			console.error('You must complete all the Amount to Grant.');
+			validateValues(checker.FailAmount);
+		} else {
+			openConfirm();
+		}
 	}
 
 	//- Send Transaction
 	const SendTransaction = async () => {
 		const grantContract: TokenVestingController = await useGrantContract(contract);
 
-		grantContract.grantTokens(addressToSend, amountToSend, boolToSend);
+		values.forEach((i) => {
+			addressToSend.push(i.address);
+			amountToSend.push(utils.parseEther(i.amount).toString());
+			boolToSend.push(false);
+		});
+
+		console.log(addressToSend);
+		console.log(amountToSend);
+		console.log(boolToSend);
+
+		logger.debug('User attempting to Grant Tokens');
+		transactionState.setError(undefined);
+		transactionState.setState(TransactionState.Submitting);
+
+		try {
+			const tx = await grantContract.grantTokens(addressToSend, amountToSend, boolToSend);
+
+			openGrantingModal();
+			//transactionState.setState(TransactionState.Processing);
+
+			await tx.wait();
+		} catch (e) {
+			transactionState.setError(e.message ? e.message : e);
+			transactionState.setState(TransactionState.Pending);
+			return;
+		}
+
+		openGrantedModal();
 	}
 
 	//- Set Owner State
@@ -180,7 +220,56 @@ const GrantVestedTokens: React.FC = () => {
 		<>
 			{active && (
 				<>
-					{modal !== undefined && modal === Modals.Granted && (
+					{modal !== undefined && modal === Modals.NotAuthorized && (
+						<div className={styles.Container}>
+							<div
+								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
+							>
+								<h1
+									className="glow-text-white"
+								>
+									Oops!
+								</h1>
+
+								<div
+									style={{
+										marginTop: '40px',
+										marginBottom: '42px',
+									}}
+								>
+									<hr className="glow" />
+								</div>
+
+								<p
+									style={{
+										textAlign: 'center',
+									}}
+								>
+									You are not authorized to grant TEST <br />
+									vesting tokens to another address.
+								</p>
+
+								<div
+									style={{
+										textAlign: 'center',
+										marginTop: '40px',
+									}}
+								>
+									<div
+										style={{
+											display: 'inline-block',
+										}}
+									>
+										<FutureButton onClick={openConnectWallet} glow>
+											Dismiss
+										</FutureButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+
+					{modal !== undefined && modal === Modals.Granted && owner == 1 && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -233,7 +322,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Granting && (
+					{modal !== undefined && modal === Modals.Granting && owner == 1 && (
 						<div className={styles.Container}>
 							<Overlay centered onClose={openGrantedModal} open>
 								<div
@@ -246,7 +335,7 @@ const GrantVestedTokens: React.FC = () => {
 					)}
 
 					{/* Grant Menu */}
-					{modal !== undefined && modal === Modals.Grant && (
+					{modal !== undefined && modal === Modals.Grant && owner == 1 && (
 						<div className={styles.gvt}>
 							<GrantVestingTokens
 								varContract={contract}
@@ -308,7 +397,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Confirm && (
+					{modal !== undefined && modal === Modals.Confirm && owner == 1 && (
 						<div className={styles.Container}>
 							<Overlay centered onClose={openGrantModal} open>
 								<div
@@ -366,7 +455,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.GrantInit && (
+					{modal !== undefined && modal === Modals.GrantInit && owner == 1 && (
 						<div className={styles.Container}>
 							<div
 								style={{
