@@ -156,6 +156,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 				<div
 					style={{
 						display: 'inline-block',
+						marginTop: '20px',
 					}}
 				>
 					<FutureButton onClick={onSend} glow>

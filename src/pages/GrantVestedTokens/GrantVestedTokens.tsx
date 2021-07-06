@@ -1,3 +1,5 @@
+//- by Alejo Viola
+
 //- React Imports
 import React, { useState, useEffect } from 'react';
 
@@ -22,6 +24,7 @@ import { useGrantContract } from 'hooks/useGrantContract';
 
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
+import { useOwner } from 'hooks/useOwner';
 
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
@@ -39,6 +42,7 @@ enum Modals {
 	Confirm,
 	Granting,
 	Granted,
+	NotAuthorized,
 }
 
 declare global {
@@ -80,6 +84,8 @@ const GrantVestedTokens: React.FC = () => {
 	const openGrantingModal = () => setModal(Modals.Granting);
 	const openGrantedModal = () => setModal(Modals.Granted);
 
+	const openNotAuthorized = () => setModal(Modals.NotAuthorized);
+
 	//- Check Transaction and set the Modal
 	const CheckTransaction = () => {
 		let check = useGrantContract(contract);
@@ -88,6 +94,17 @@ const GrantVestedTokens: React.FC = () => {
 			openConfirm();
 		}
 	}
+
+	//- Set Owner State
+	const owner = useOwner();
+
+	useEffect(() => {
+		if (owner == 1) {
+			openGrantInit();
+		} else if (owner == 2) {
+			openNotAuthorized();
+		}
+	}, [owner])
 
 	/////////////////////
 	// Inputs Function //
@@ -116,6 +133,11 @@ const GrantVestedTokens: React.FC = () => {
 
 	const [amounte, catchAmount] = useState('0.00');
 
+	//- Format Number
+	const formatNumber = (number: number) => {
+		return new Intl.NumberFormat().format(number);
+	}
+
 	//- Catch and summarise the amount every time has been render
 	useEffect(() => {
 		let summarise = 0;
@@ -123,12 +145,23 @@ const GrantVestedTokens: React.FC = () => {
 		values.map((i) => {
 			if (i.amount !== '' && parseInt(i.amount) !== NaN) {
 				summarise = summarise + parseInt(i.amount);
-				catchAmount(String(summarise) + '.00');
+				catchAmount(String(formatNumber(summarise)) + '.00');
 			} else if (i.amount == '') {
-				catchAmount('0.00');
+				catchAmount(String(formatNumber(summarise)) + '.00');
 			}
 		});
-	});
+	}, [values]);
+
+	////////////////////////
+	// Transaction Values //
+	////////////////////////
+	const [addressToSend, setAddressToSend] = useState([{}]);
+	const [amountToSend, setAmountToSend] = useState([{}]);
+	const [boolToSend, setBoolToSend] = useState([{}]);
+
+	const createValues = () => {
+
+	}
 
 	////////////
 	// Render //

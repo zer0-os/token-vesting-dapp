@@ -2,5 +2,7 @@
 /* tslint:disable */
 /* eslint-disable */
 export type { MerkleTokenVesting } from "./MerkleTokenVesting";
+export type { TokenVestingController } from "./TokenVestingController";
 
 export { MerkleTokenVesting__factory } from "./factories/MerkleTokenVesting__factory";
+export { TokenVestingController__factory } from "./factories/TokenVestingController__factory";
