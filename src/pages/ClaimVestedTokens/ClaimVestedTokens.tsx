@@ -66,19 +66,7 @@ const ClaimVestedTokens: React.FC = () => {
 
 	const contracts: Maybe<Contracts[]> = useContracts();
 
-	let vesting: any = {
-		token: null,
-		hasAward: null,
-		vestingParams: null,
-		hasClaimed: null,
-		awardedTokens: null,
-		vestedTokens: null,
-		releasableTokens: null,
-		claimAward: null,
-		releaseTokens: null,
-	};
-
-	vesting = useMerkleVesting(contracts![contractNumber], account, refreshToken);
+	let vesting = useMerkleVesting(contracts![contractNumber], account, refreshToken);
 
 	//////////////////
 	// State & Refs //
