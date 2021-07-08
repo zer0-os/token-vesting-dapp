@@ -55,7 +55,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 	const vestingContract = contracts![0];
 	const { refreshToken, refresh } = useRefresh();
 	const vesting = useMerkleVesting(
-		vestingContract,
+		vestingContract!.vesting,
 		props.account,
 		refreshToken,
 	);

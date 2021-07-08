@@ -4,9 +4,7 @@ import React, { useState, useEffect } from 'react';
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
-import {
-	getNetworkFromChainId,
-} from 'common';
+import { getNetworkFromChainId } from 'common';
 import { ethers } from 'ethers';
 
 //- Library Imports
@@ -66,7 +64,11 @@ const ClaimVestedTokens: React.FC = () => {
 
 	const contracts: Maybe<Contracts[]> = useContracts();
 
-	let vesting = useMerkleVesting(contracts![contractNumber], account, refreshToken);
+	let vesting = useMerkleVesting(
+		contracts![contractNumber].vesting,
+		account,
+		refreshToken,
+	);
 
 	//////////////////
 	// State & Refs //
@@ -107,7 +109,6 @@ const ClaimVestedTokens: React.FC = () => {
 		vesting.vestingParams,
 		contractNumber,
 	]);
-
 
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
