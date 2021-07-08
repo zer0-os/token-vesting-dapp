@@ -42,14 +42,14 @@ export function useContracts(): Maybe<Contracts[]> {
 		}
 
 		let vestingContract: Contracts[] = [];
-		for (let k = 0; k < contracts.vesting.length; k++) {
-			vestingContract[k] = {
-				vesting: MerkleTokenVesting__factory.connect(
-					contracts.vesting[k],
-					signer,
-				),
+
+		contracts.vesting.map(function (element, index) {
+			vestingContract[index] = {
+				vesting: MerkleTokenVesting__factory.connect(element, signer),
 			};
-		}
+			return element;
+		});
+
 		return vestingContract;
 
 		// eslint-disable-next-line react-hooks/exhaustive-deps
