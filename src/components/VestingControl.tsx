@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
 	Box,
 	Button,
@@ -49,13 +49,13 @@ export const VestingControl: React.FC<Props> = (props) => {
 	const context = useWeb3React();
 	const classes = useStyles();
 
-	//This lines must be changed so the user can set with ui 
-	//wich contract wants to send transactions, hardcoded actually to test
+
+	const [contractNumber,setContractNumber] = useState(0);
 	const contracts: Maybe<Contracts[]> = useContracts();
-	const vestingContract = contracts![0];
+	const chosenContract = contracts![contractNumber];
 	const { refreshToken, refresh } = useRefresh();
 	const vesting = useMerkleVesting(
-		vestingContract!.vesting,
+		chosenContract!.vesting,
 		props.account,
 		refreshToken,
 	);
@@ -90,7 +90,8 @@ export const VestingControl: React.FC<Props> = (props) => {
 	};
 
 	const onPressRelease = async () => {
-		logger.debug(`User attempting to release tokens`);
+		logger.debug(`User attempting to  tokens`);
+		console.log(contractNumber)
 		releaseState.setError(undefined);
 		releaseState.setState(TransactionState.Submitting);
 
@@ -146,9 +147,9 @@ export const VestingControl: React.FC<Props> = (props) => {
 		);
 	}
 
-	if (contracts![0].vesting) {
+	if (contracts![contractNumber].vesting) {
 		const etherscanLink = `${getEtherscanUriForNetwork(network)}address/${
-			contracts![0].vesting.address
+			contracts![contractNumber].vesting.address
 		}`;
 		items.push(
 			<Box className={classes.item}>
@@ -163,7 +164,7 @@ export const VestingControl: React.FC<Props> = (props) => {
 				</div>
 				<EthInput
 					static
-					text={contracts![0].vesting.address ?? ''}
+					text={contracts![contractNumber].vesting.address ?? ''}
 					style={{ marginBottom: 8 }}
 					title={'Vesting Contract'}
 					copyButton
