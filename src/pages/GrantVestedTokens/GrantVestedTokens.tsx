@@ -27,6 +27,7 @@ import { TransactionState, useTransactionState } from 'hooks/useTransactionState
 import styles from './GrantVestedTokens.module.css';
 import { useOwner } from 'hooks/useOwner';
 import { TokenVestingController } from 'contracts/types';
+import { GrantContract, Maybe } from '../../util';
 
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
@@ -65,9 +66,14 @@ const GrantVestedTokens: React.FC = () => {
 
 	//- Wallet Data
 	const walletContext = useWeb3React<Web3Provider>();
-	const { account, active, chainId } = walletContext;
+	const { active } = walletContext;
 
 	useEffect(() => { }, [active]);
+
+	//- Variable that Catch the Contract Address
+	const [contract, catchContract] = useState('');
+
+	const grantContract: Maybe<GrantContract> = useGrantContract(contract);
 
 	//////////////
 	// Function //
@@ -123,8 +129,6 @@ const GrantVestedTokens: React.FC = () => {
 
 	//- Send Transaction
 	const SendTransaction = async () => {
-		const grantContract: TokenVestingController = await useGrantContract(contract);
-
 		values.forEach((i) => {
 			addressToSend.push(i.address);
 			amountToSend.push(utils.parseEther(i.amount).toString());
@@ -140,7 +144,7 @@ const GrantVestedTokens: React.FC = () => {
 		transactionState.setState(TransactionState.Submitting);
 
 		try {
-			const tx = await grantContract.grantTokens(addressToSend, amountToSend, boolToSend);
+			const tx = await grantContract!.vesting.grantTokens(addressToSend, amountToSend, boolToSend);
 
 			openGrantingModal();
 			//transactionState.setState(TransactionState.Processing);
@@ -169,9 +173,6 @@ const GrantVestedTokens: React.FC = () => {
 	/////////////////////
 	// Inputs Function //
 	/////////////////////
-
-	//- Variable that Catch the Contract Address
-	const [contract, catchContract] = useState('');
 
 	//- Set variable that render the number of Inputs
 	//- The first Input ID is 0
@@ -324,13 +325,11 @@ const GrantVestedTokens: React.FC = () => {
 
 					{modal !== undefined && modal === Modals.Granting && owner == 1 && (
 						<div className={styles.Container}>
-							<Overlay centered onClose={openGrantedModal} open>
-								<div
-									className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
-								>
-									<h1 className="glow-text-white">Granting...</h1>
-								</div>
-							</Overlay>
+							<div
+								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
+							>
+								<h1 className="glow-text-white">Granting...</h1>
+							</div>
 						</div>
 					)}
 

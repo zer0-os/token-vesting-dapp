@@ -63,9 +63,8 @@ const EtherInput: React.FC<TextInputProps> = ({
 		>
 			{multiline && (
 				<textarea
-					className={`${styles.TextInput} border-blue ${
-						error ? styles.Error : ''
-					}`}
+					className={`${styles.TextInput} border-blue ${error ? styles.Error : ''
+						}`}
 					onChange={handleChange}
 					style={{
 						...style,
@@ -81,9 +80,8 @@ const EtherInput: React.FC<TextInputProps> = ({
 					{text && <span>{placeholder}</span>}
 					<input
 						type={type ? type : ''}
-						className={`${styles.TextInput} border-blue ${
-							error ? styles.Error : ''
-						}`}
+						className={`${styles.TextInput} border-blue ${error ? styles.Error : ''
+							}`}
 						onChange={handleChange}
 						style={style}
 						placeholder={placeholder}
@@ -94,6 +92,8 @@ const EtherInput: React.FC<TextInputProps> = ({
 			{error && errorText && (
 				<span className={styles.ErrorMessage}>{errorText}</span>
 			)}
+
+			<div className={`${styles.colorChart}`}></div>
 		</div>
 	);
 };

@@ -1,6 +1,11 @@
 import { ethers } from 'ethers';
+import { useMemo } from 'react';
 import { TokenVestingController__factory } from 'contracts/types';
 
+import { useWeb3React } from '@web3-react/core';
+
+import { GrantContract, Maybe } from '../util';
+/*
 export function useGrantContract(address: string) {
 
   //Get the contract address
@@ -18,29 +23,46 @@ export function useGrantContract(address: string) {
   );
 
   return grantContract;
+}*/
+
+export function useGrantContract(address: string): Maybe<GrantContract> {
+  const context = useWeb3React<ethers.providers.Web3Provider>();
+
+  const { library, active, chainId } = context;
+  const contract = useMemo((): GrantContract | undefined => {
+
+    let contracts = address;
+    let signer: ethers.VoidSigner | ethers.Signer = new ethers.VoidSigner(
+      ethers.constants.AddressZero,
+    );
+
+    if (library && contracts) {
+      if (!chainId) {
+        //throw Error('No chain id detected');
+      }
+      signer = library.getSigner();
+
+      const grantContract = TokenVestingController__factory.connect(
+        contracts,
+        signer,
+      );
+
+      return {
+        vesting: grantContract,
+      };
+    }
+
+    if (!contracts) {
+      //throw Error('Chain id not supported');
+      return undefined;
+    }
+
+    if (!ethers.utils.isAddress(contracts)) {
+      //throw Error('Invalid vesting contract address');
+      return undefined;
+    }
+
+  }, [address, library, active, chainId]);
+
+  return contract;
 }
-
-/*
-//Connect to Network
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-console.log(provider);
-
-//The contract address
-let CONTRACT_ADDRESS = '0xC5c9AFF8457A7943169ba7F6937861060C03Be2E';
-
-//Get Signer
-const signer = provider.getSigner();
-console.log(signer);
-
-//Connect with provider
-let contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
-console.log(contract);
-
-async function faso() {
-  await contract.grantTokens(['0x1824cE714aEB8d4Ed40afF821e85b2f928b8d0e6'], ['100'], [false]);
-}
-//const txReceipt = txResponse.wait();
-//console.log(txReceipt);
-
-//contract.grantTokens(['0x1824cE714aEB8d4Ed40afF821e85b2f928b8d0e6'], ['100'], [false]);
-*/
