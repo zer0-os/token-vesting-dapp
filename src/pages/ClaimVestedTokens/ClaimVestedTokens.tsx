@@ -56,6 +56,7 @@ const ClaimVestedTokens: React.FC = () => {
 	const { refreshToken, refresh } = useRefresh();
 
 	const [contractNumber, setContractNumber] = useState(0);
+	const [loading, setLoading] = useState(false);
 
 	const network = getNetworkFromChainId(context.chainId!);
 
@@ -110,11 +111,23 @@ const ClaimVestedTokens: React.FC = () => {
 		contractNumber,
 	]);
 
+	//If full fetch happens, change to action button
+	useEffect(() => {
+		setLoading(false);
+	}, [vesting.fullFetchToken]);
+
+	//If half fetch happens and hasnt claimed, change to action button
+	useEffect(() => {
+		if (vesting.hasClaimed === false) setLoading(false);
+	}, [vesting.partialFetchToken]);
+
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
+	//toggle contract, and set the loading icon on
 	const contractToggle = () => {
+		setLoading(true);
 		setContractNumber(contractNumber + 1);
 		if (contractNumber === contracts!.length - 1) setContractNumber(0);
 	};
@@ -250,7 +263,12 @@ const ClaimVestedTokens: React.FC = () => {
 								className={styles.Profile}
 								onClick={openConnectToWalletModal}
 							/>
-
+							{/* Loading Icon when toggle */}
+							{loading === true && vesting.hasAward === true && (
+								<div style={{ display: 'flex', justifyContent: 'center' }}>
+									<LoadingSpinner />
+								</div>
+							)}
 							{/* Loading Icon */}
 							{vesting.token === null && vesting.hasAward !== false && (
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -259,30 +277,32 @@ const ClaimVestedTokens: React.FC = () => {
 							)}
 
 							{/* Action Button */}
-							{vesting.token !== null && vesting.hasAward === true && (
-								<>
-									<FutureButton
-										style={{ margin: '24px auto' }}
-										glow={vesting.awardedTokens !== undefined}
-										onClick={onButtonClick}
-									>
-										{vesting.hasClaimed === false &&
-											vesting.awardedTokens &&
-											'Unlock Tokens'}
-										{vesting.hasClaimed === true && 'Claim Tokens'}
-									</FutureButton>
-									<TextButton
-										style={{
-											margin: '24px auto',
-											textAlign: 'center',
-											paddingLeft: 13,
-										}}
-										onClick={addWildToMetamask}
-									>
-										Add WILD token to Metamask
-									</TextButton>
-								</>
-							)}
+							{vesting.token !== null &&
+								vesting.hasAward === true &&
+								loading === false && (
+									<>
+										<FutureButton
+											style={{ margin: '24px auto' }}
+											glow={vesting.awardedTokens !== undefined}
+											onClick={onButtonClick}
+										>
+											{vesting.hasClaimed === false &&
+												vesting.awardedTokens &&
+												'Unlock Tokens'}
+											{vesting.hasClaimed === true && 'Claim Tokens'}
+										</FutureButton>
+										<TextButton
+											style={{
+												margin: '24px auto',
+												textAlign: 'center',
+												paddingLeft: 13,
+											}}
+											onClick={addWildToMetamask}
+										>
+											Add WILD token to Metamask
+										</TextButton>
+									</>
+								)}
 
 							{/* No tokens message */}
 							{vesting.hasAward === false && (
