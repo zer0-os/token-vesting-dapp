@@ -36,9 +36,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 	////////////
 
 	return (
-		<div
-			className={`${styles.Container} blur border-pink-glow border-rounded`}
-		>
+		<div className={`${styles.Container} blur border-pink-glow border-rounded`}>
 			<h1
 				className="glow-text-white"
 				style={{

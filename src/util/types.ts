@@ -25,7 +25,7 @@ export interface Contracts {
 }
 
 export interface GrantContract {
-	vesting: TokenVestingController;
+	grantableVesting: TokenVestingController;
 }
 
 export interface ClaimVestingInterface {

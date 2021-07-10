@@ -5,64 +5,44 @@ import { TokenVestingController__factory } from 'contracts/types';
 import { useWeb3React } from '@web3-react/core';
 
 import { GrantContract, Maybe } from '../util';
-/*
-export function useGrantContract(address: string) {
 
-  //Get the contract address
-  let CONTRACT_ADDRESS = address;
-
-  //Connect to Network
-  const provider = new ethers.providers.Web3Provider(window.ethereum);
-
-  //Get Signer
-  const signer = provider.getSigner();
-
-  const grantContract = TokenVestingController__factory.connect(
-    CONTRACT_ADDRESS,
-    signer,
-  );
-
-  return grantContract;
-}*/
+//- If returns null, will show an error in the UI
 
 export function useGrantContract(address: string): Maybe<GrantContract> {
-  const context = useWeb3React<ethers.providers.Web3Provider>();
+	const context = useWeb3React<ethers.providers.Web3Provider>();
 
-  const { library, active, chainId } = context;
-  const contract = useMemo((): GrantContract | undefined => {
+	const { library, active, chainId } = context;
+	const contract = useMemo((): Maybe<GrantContract> => {
+		let contracts = address;
+		let signer: ethers.VoidSigner | ethers.Signer = new ethers.VoidSigner(
+			ethers.constants.AddressZero,
+		);
 
-    let contracts = address;
-    let signer: ethers.VoidSigner | ethers.Signer = new ethers.VoidSigner(
-      ethers.constants.AddressZero,
-    );
+		if (!contracts) {
+			return null;
+		}
 
-    if (library && contracts) {
-      if (!chainId) {
-        //throw Error('No chain id detected');
-      }
-      signer = library.getSigner();
+		if (!ethers.utils.isAddress(contracts)) {
+			return null;
+		}
 
-      const grantContract = TokenVestingController__factory.connect(
-        contracts,
-        signer,
-      );
+		if (library && ethers.utils.isAddress(contracts)) {
+			if (!chainId) {
+				return null;
+			} else {
+				signer = library.getSigner();
 
-      return {
-        vesting: grantContract,
-      };
-    }
+				const grantContract = TokenVestingController__factory.connect(
+					contracts,
+					signer,
+				);
 
-    if (!contracts) {
-      //throw Error('Chain id not supported');
-      return undefined;
-    }
+				return {
+					grantableVesting: grantContract,
+				};
+			}
+		}
+	}, [address, library, active, chainId]);
 
-    if (!ethers.utils.isAddress(contracts)) {
-      //throw Error('Invalid vesting contract address');
-      return undefined;
-    }
-
-  }, [address, library, active, chainId]);
-
-  return contract;
+	return contract;
 }

@@ -8,26 +8,25 @@ import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 
 //- Contract Connection Imports
-import { logger, utils } from 'ethers';
+import { ethers, logger, utils } from 'ethers';
 
 //- Component Imports
-import {
-	FutureButton,
-	Overlay,
-	ConnectToWallet,
-	EtherInput
-} from 'components';
+import { FutureButton, Overlay, ConnectToWallet, EtherInput } from 'components';
 import { GrantVestingTokens } from 'containers';
 
 //- Hooks Import
 import { useGrantContract } from 'hooks/useGrantContract';
-import { TransactionState, useTransactionState } from 'hooks/useTransactionState';
+import {
+	TransactionState,
+	useTransactionState,
+} from 'hooks/useTransactionState';
 
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
+
 import { useOwner } from 'hooks/useOwner';
-import { TokenVestingController } from 'contracts/types';
-import { GrantContract, Maybe } from '../../util';
+import { GrantContract } from 'util/types';
+import { Maybe } from '../../util';
 
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
@@ -68,7 +67,7 @@ const GrantVestedTokens: React.FC = () => {
 	const walletContext = useWeb3React<Web3Provider>();
 	const { active } = walletContext;
 
-	useEffect(() => { }, [active]);
+	useEffect(() => {}, [active]);
 
 	//- Variable that Catch the Contract Address
 	const [contract, catchContract] = useState('');
@@ -105,7 +104,6 @@ const GrantVestedTokens: React.FC = () => {
 
 	//- Check Transaction and set the Modal
 	const CheckTransaction = () => {
-
 		enum checker {
 			Done,
 			FailContract,
@@ -113,19 +111,30 @@ const GrantVestedTokens: React.FC = () => {
 			FailAmount,
 		}
 
-		if (contract.length !== 42) {
-			console.error('You must set a Contract with 42 characteres to Grant.');
+		if (!ethers.utils.isAddress(contract)) {
+			console.error('F');
 			validateValues(checker.FailContract);
-		} else if (values.find(i => i.address == '' || i.address == undefined)) {
+		} else if (
+			values.find(
+				(i) =>
+					i.address == '' ||
+					i.address == undefined ||
+					!ethers.utils.isAddress(i.address),
+			)
+		) {
 			console.error('You must complete all the Recipient Address to Grant.');
 			validateValues(checker.FailAddress);
-		} else if (values.find(i => i.amount == '' || i.amount == undefined || i.amount == '0')) {
+		} else if (
+			values.find(
+				(i) => i.amount == '' || i.amount == undefined || i.amount == '0',
+			)
+		) {
 			console.error('You must complete all the Amount to Grant.');
 			validateValues(checker.FailAmount);
 		} else {
 			openConfirm();
 		}
-	}
+	};
 
 	//- Send Transaction
 	const SendTransaction = async () => {
@@ -144,7 +153,11 @@ const GrantVestedTokens: React.FC = () => {
 		transactionState.setState(TransactionState.Submitting);
 
 		try {
-			const tx = await grantContract!.vesting.grantTokens(addressToSend, amountToSend, boolToSend);
+			const tx = await grantContract!.grantableVesting.grantTokens(
+				addressToSend,
+				amountToSend,
+				boolToSend,
+			);
 
 			openGrantingModal();
 			//transactionState.setState(TransactionState.Processing);
@@ -157,7 +170,7 @@ const GrantVestedTokens: React.FC = () => {
 		}
 
 		openGrantedModal();
-	}
+	};
 
 	//- Set Owner State
 	const owner = useOwner();
@@ -197,7 +210,7 @@ const GrantVestedTokens: React.FC = () => {
 	//- Format Number
 	const formatNumber = (number: number) => {
 		return new Intl.NumberFormat().format(number);
-	}
+	};
 
 	//- Catch and summarise the amount every time has been render
 	useEffect(() => {
@@ -226,11 +239,7 @@ const GrantVestedTokens: React.FC = () => {
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
 							>
-								<h1
-									className="glow-text-white"
-								>
-									Oops!
-								</h1>
+								<h1 className="glow-text-white">Oops!</h1>
 
 								<div
 									style={{
