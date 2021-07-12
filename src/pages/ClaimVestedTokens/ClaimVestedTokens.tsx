@@ -114,12 +114,12 @@ const ClaimVestedTokens: React.FC = () => {
 	//If full fetch happens, change to action button
 	useEffect(() => {
 		setLoading(false);
-	}, [vesting.fullFetchToken]);
+	}, [vesting.fullFetch]);
 
 	//If half fetch happens and hasnt claimed, change to action button
 	useEffect(() => {
 		if (vesting.hasClaimed === false) setLoading(false);
-	}, [vesting.partialFetchToken]);
+	}, [vesting.partialFetch]);
 
 	const addWildToMetamask = () => suggestWildToken(context.library);
 

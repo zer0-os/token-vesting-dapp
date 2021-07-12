@@ -35,8 +35,8 @@ export const useMerkleVesting = (
 		MaybeNull<VestingParams>
 	>(null);
 	const [token, setToken] = React.useState<MaybeNull<string>>(null);
-	const [fullFetchToken, setFullFetchToken] = React.useState(0);
-	const [partialFetchToken, setPartialFetchToken] = React.useState(0);
+	const [fullFetch, setFullFetch] = React.useState(false);
+	const [partialFetch, setPartialFetch] = React.useState(false);
 	React.useEffect(() => {
 		if (!merkleTree) {
 			return;
@@ -102,7 +102,8 @@ export const useMerkleVesting = (
 						setVestedTokens(amountVested);
 						setReleasableTokens(amountVested);
 					}
-					setPartialFetchToken(partialFetchToken + 1);
+					setPartialFetch(true);
+					setPartialFetch(false);
 					return;
 				}
 
@@ -120,7 +121,8 @@ export const useMerkleVesting = (
 				logger.error(`Failed to fetch vesting data for ${user}`);
 				logger.debug(e);
 			}
-			setFullFetchToken(fullFetchToken + 1);
+			setFullFetch(true);
+			setFullFetch(false);
 		};
 
 		fetchValuesFromContract();
@@ -176,8 +178,8 @@ export const useMerkleVesting = (
 		awardedTokens,
 		vestedTokens,
 		releasableTokens,
-		fullFetchToken,
-		partialFetchToken,
+		fullFetch,
+		partialFetch,
 		claimAward,
 		releaseTokens,
 	};
