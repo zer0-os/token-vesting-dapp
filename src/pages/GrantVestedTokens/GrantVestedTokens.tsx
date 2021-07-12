@@ -1,7 +1,7 @@
 //- by Alejo Viola
 
 //- React Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
@@ -45,6 +45,7 @@ enum Modals {
 	Granting,
 	Granted,
 	NotAuthorized,
+	Failed,
 }
 
 declare global {
@@ -65,14 +66,24 @@ const GrantVestedTokens: React.FC = () => {
 
 	//- Wallet Data
 	const walletContext = useWeb3React<Web3Provider>();
-	const { active } = walletContext;
+	const { active, account } = walletContext;
 
-	useEffect(() => {}, [active]);
+	useEffect(() => {
+		if (account === undefined && modal !== 0) {
+			setModal(undefined);
+		}
+	}, [active, account, modal]);
 
 	//- Variable that Catch the Contract Address
 	const [contract, catchContract] = useState('');
 
 	const grantContract: Maybe<GrantContract> = useGrantContract(contract);
+
+	//- Set variable that render the number of Inputs
+	//- The first Input ID is 0
+	const [values, setValues] = useState([
+		{ id: 0, address: '', amount: '', button: false },
+	]);
 
 	//////////////
 	// Function //
@@ -90,6 +101,7 @@ const GrantVestedTokens: React.FC = () => {
 	const openConfirm = () => setModal(Modals.Confirm);
 	const openGrantingModal = () => setModal(Modals.Granting);
 	const openGrantedModal = () => setModal(Modals.Granted);
+	const openFailedModal = () => setModal(Modals.Failed);
 
 	const openNotAuthorized = () => setModal(Modals.NotAuthorized);
 
@@ -102,8 +114,8 @@ const GrantVestedTokens: React.FC = () => {
 
 	const [validate, validateValues] = useState<number | undefined>(undefined);
 
-	//- Check Transaction and set the Modal
-	const CheckTransaction = () => {
+	//- Check Values
+	useEffect(() => {
 		enum checker {
 			Done,
 			FailContract,
@@ -112,13 +124,12 @@ const GrantVestedTokens: React.FC = () => {
 		}
 
 		if (!ethers.utils.isAddress(contract)) {
-			console.error('F');
 			validateValues(checker.FailContract);
 		} else if (
 			values.find(
 				(i) =>
-					i.address == '' ||
-					i.address == undefined ||
+					i.address === '' ||
+					i.address === undefined ||
 					!ethers.utils.isAddress(i.address),
 			)
 		) {
@@ -126,15 +137,18 @@ const GrantVestedTokens: React.FC = () => {
 			validateValues(checker.FailAddress);
 		} else if (
 			values.find(
-				(i) => i.amount == '' || i.amount == undefined || i.amount == '0',
+				(i) =>
+					i.amount === '' ||
+					i.amount === undefined ||
+					(i.amount === '0' && Number(i.amount) < 0),
 			)
 		) {
 			console.error('You must complete all the Amount to Grant.');
 			validateValues(checker.FailAmount);
 		} else {
-			openConfirm();
+			validateValues(checker.Done);
 		}
-	};
+	}, [contract, values]);
 
 	//- Send Transaction
 	const SendTransaction = async () => {
@@ -160,12 +174,12 @@ const GrantVestedTokens: React.FC = () => {
 			);
 
 			openGrantingModal();
-			//transactionState.setState(TransactionState.Processing);
 
 			await tx.wait();
 		} catch (e) {
 			transactionState.setError(e.message ? e.message : e);
 			transactionState.setState(TransactionState.Pending);
+			openFailedModal();
 			return;
 		}
 
@@ -176,9 +190,9 @@ const GrantVestedTokens: React.FC = () => {
 	const owner = useOwner();
 
 	useEffect(() => {
-		if (owner == 1) {
+		if (owner === 1) {
 			openGrantInit();
-		} else if (owner == 2) {
+		} else if (owner === 2) {
 			openNotAuthorized();
 		}
 	}, [owner]);
@@ -187,20 +201,21 @@ const GrantVestedTokens: React.FC = () => {
 	// Inputs Function //
 	/////////////////////
 
-	//- Set variable that render the number of Inputs
-	//- The first Input ID is 0
-	const [values, setValues] = useState([{ id: 0, address: '', amount: '' }]);
-
 	//- Function that create new Input
 	const handleClick = (event: MouseEvent) => {
 		event.preventDefault();
+		let change = [...values];
+		change.map((i) => {
+			i.button = false;
+		});
 
 		setValues([
-			...values,
+			...change,
 			{
 				id: values.length,
 				address: '',
 				amount: '',
+				button: true,
 			},
 		]);
 	};
@@ -213,18 +228,35 @@ const GrantVestedTokens: React.FC = () => {
 	};
 
 	//- Catch and summarise the amount every time has been render
-	useEffect(() => {
+	useMemo(() => {
 		let summarise = 0;
+		let change = [...values];
 
 		values.map((i) => {
-			if (i.amount !== '' && parseInt(i.amount) !== NaN) {
+			if (i.amount !== '' && !isNaN(parseInt(i.amount))) {
 				summarise = summarise + parseInt(i.amount);
 				catchAmount(String(formatNumber(summarise)) + '.00');
-			} else if (i.amount == '') {
+			} else if (i.amount === '') {
 				catchAmount(String(formatNumber(summarise)) + '.00');
 			}
+
+			if (i.id === values.length - 1 && i.id !== 0) {
+				change[i.id].button = true;
+			}
+
+			return null;
 		});
+
+		console.log(values);
 	}, [values]);
+
+	//- Delete
+	const runDelete = (id: number) => {
+		let change = [...values];
+		change.splice(id, 1);
+
+		setValues(change);
+	};
 
 	////////////
 	// Render //
@@ -279,7 +311,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Granted && owner == 1 && (
+					{modal !== undefined && modal === Modals.Granted && owner === 1 && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -332,7 +364,58 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Granting && owner == 1 && (
+					{modal !== undefined && modal === Modals.Failed && owner === 1 && (
+						<div className={styles.Container}>
+							<div
+								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
+							>
+								<h1
+									className="glow-text-blue"
+									style={{
+										color: 'var(--color-error)',
+									}}
+								>
+									Failed
+								</h1>
+
+								<div
+									style={{
+										marginTop: '40px',
+										marginBottom: '42px',
+									}}
+								>
+									<hr className="glow" />
+								</div>
+
+								<p
+									style={{
+										textAlign: 'center',
+									}}
+								>
+									Error sending transaction.
+								</p>
+
+								<div
+									style={{
+										textAlign: 'center',
+										marginTop: '40px',
+									}}
+								>
+									<div
+										style={{
+											display: 'inline-block',
+										}}
+									>
+										<FutureButton onClick={openGrantInit} glow>
+											Dismiss
+										</FutureButton>
+									</div>
+								</div>
+							</div>
+						</div>
+					)}
+
+					{modal !== undefined && modal === Modals.Granting && owner === 1 && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -343,11 +426,12 @@ const GrantVestedTokens: React.FC = () => {
 					)}
 
 					{/* Grant Menu */}
-					{modal !== undefined && modal === Modals.Grant && owner == 1 && (
+					{modal !== undefined && modal === Modals.Grant && owner === 1 && (
 						<div className={styles.gvt}>
 							<GrantVestingTokens
 								varContract={contract}
 								onCatchContract={catchContract}
+								validateValues={validate}
 								setInputs={
 									//- Render the Inputs that the Variable
 									values.map((input) => (
@@ -364,18 +448,42 @@ const GrantVestedTokens: React.FC = () => {
 													width: '381px',
 												}}
 											>
-												<EtherInput
-													ethlogo
-													alphanumeric
-													placeholder={'Recipient Address'}
-													onChange={(value) => {
-														let change = [...values];
-														let item = { ...change[input.id], address: value };
-														change[input.id] = item;
-														setValues(change);
-													}}
-													text={input.address}
-												/>
+												{!input.button && (
+													<EtherInput
+														alphanumeric
+														placeholder={'Recipient Address'}
+														ethlogo
+														onChange={(value) => {
+															let change = [...values];
+															let item = {
+																...change[input.id],
+																address: value,
+															};
+															change[input.id] = item;
+															setValues(change);
+														}}
+														text={input.address}
+													/>
+												)}
+
+												{input.button && (
+													<EtherInput
+														alphanumeric
+														placeholder={'Recipient Address'}
+														cross
+														onChange={(value) => {
+															let change = [...values];
+															let item = {
+																...change[input.id],
+																address: value,
+															};
+															change[input.id] = item;
+															setValues(change);
+														}}
+														text={input.address}
+														onDelete={() => runDelete(input.id)}
+													/>
+												)}
 											</div>
 
 											<div
@@ -400,12 +508,12 @@ const GrantVestedTokens: React.FC = () => {
 								}
 								amount={amounte}
 								onAddRecipient={handleClick}
-								onSend={CheckTransaction}
+								onSend={openConfirm}
 							/>
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Confirm && owner == 1 && (
+					{modal !== undefined && modal === Modals.Confirm && owner === 1 && (
 						<div className={styles.Container}>
 							<Overlay centered onClose={openGrantModal} open>
 								<div
@@ -463,7 +571,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.GrantInit && owner == 1 && (
+					{modal !== undefined && modal === Modals.GrantInit && owner === 1 && (
 						<div className={styles.Container}>
 							<div
 								style={{
@@ -489,7 +597,7 @@ const GrantVestedTokens: React.FC = () => {
 			)}
 
 			{/* First View - Connect Wallet */}
-			{!active && modal === undefined && (
+			{!active && modal === undefined && !account && (
 				<>
 					{modal === undefined && (
 						<div className={styles.Container}>

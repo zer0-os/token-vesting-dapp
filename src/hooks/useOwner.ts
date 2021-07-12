@@ -1,7 +1,6 @@
 //- by Alejo Viola and Leo
 
-import React, { useEffect, useState } from 'react';
-import { TokenVestingController } from 'contracts/types';
+import { useEffect, useState } from 'react';
 
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
@@ -18,7 +17,18 @@ export const useOwner = () => {
 	const walletContext = useWeb3React<Web3Provider>();
 	const { account } = walletContext;
 
-	const owner = '0x728f7ee36Fb640535327b2b1C2695854998053A8';
+	const [owner, set] = useState('');
+
+	const setOwner = (address: string) => {
+		console.log(
+			'%cYou have setted the Owner as: ' + address,
+			'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
+		);
+		set(address);
+	};
+
+	// Global function so it can be called in the console
+	(global as any).setOwner = setOwner;
 
 	const [isOwner, setIsOwner] = useState(0);
 

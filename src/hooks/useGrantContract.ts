@@ -11,7 +11,7 @@ import { GrantContract, Maybe } from '../util';
 export function useGrantContract(address: string): Maybe<GrantContract> {
 	const context = useWeb3React<ethers.providers.Web3Provider>();
 
-	const { library, active, chainId } = context;
+	const { library, chainId } = context;
 	const contract = useMemo((): Maybe<GrantContract> => {
 		let contracts = address;
 		let signer: ethers.VoidSigner | ethers.Signer = new ethers.VoidSigner(
@@ -42,7 +42,7 @@ export function useGrantContract(address: string): Maybe<GrantContract> {
 				};
 			}
 		}
-	}, [address, library, active, chainId]);
+	}, [address, library, chainId]);
 
 	return contract;
 }

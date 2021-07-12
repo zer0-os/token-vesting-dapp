@@ -8,6 +8,7 @@ import styles from './EtherInput.module.css';
 import { isAlphanumeric, isNumber } from './validation';
 
 import ethIcon from './assets/eth.svg';
+import cross from './assets/cross.svg';
 
 // TODO: Implement max characters (props.max)
 
@@ -26,10 +27,15 @@ type TextInputProps = {
 
 	ethlogo?: boolean;
 	title?: boolean;
+
+	cross?: boolean;
+	setKey?: number;
+	onDelete?: () => void;
 };
 
 const EtherInput: React.FC<TextInputProps> = ({
 	onChange,
+	onDelete,
 	error,
 	errorText,
 	placeholder,
@@ -42,6 +48,7 @@ const EtherInput: React.FC<TextInputProps> = ({
 	numeric,
 	ethlogo,
 	title,
+	cross,
 }) => {
 	const handleChange = (event: any) => {
 		const newValue = event.target.value;
@@ -59,12 +66,14 @@ const EtherInput: React.FC<TextInputProps> = ({
 			className={`${styles.Container} 
 						${ethlogo ? styles.ethlogo : ''}
 						${text ? styles.title : ''}
+						${cross ? styles.Deleter : ''}
 						`}
 		>
 			{multiline && (
 				<textarea
-					className={`${styles.TextInput} border-blue ${error ? styles.Error : ''
-						}`}
+					className={`${styles.TextInput} border-blue ${
+						error ? styles.Error : ''
+					}`}
 					onChange={handleChange}
 					style={{
 						...style,
@@ -77,11 +86,13 @@ const EtherInput: React.FC<TextInputProps> = ({
 			{!multiline && (
 				<>
 					{ethlogo && <img alt="ethereum icon" src={ethIcon} />}
-					{text && <span>{placeholder}</span>}
+					{cross && <button className={styles.DeleteButton} onClick={onDelete}></button>}
+					{text && (<span className={`${error ? styles.ErrorHolder : styles.GreyHolder}`}>{placeholder}</span>)}
 					<input
 						type={type ? type : ''}
-						className={`${styles.TextInput} border-blue ${error ? styles.Error : ''
-							}`}
+						className={`${styles.TextInput} border-blue ${
+							error ? styles.Error : ''
+						}`}
 						onChange={handleChange}
 						style={style}
 						placeholder={placeholder}
@@ -90,7 +101,9 @@ const EtherInput: React.FC<TextInputProps> = ({
 				</>
 			)}
 			{error && errorText && (
-				<span className={styles.ErrorMessage}>{errorText}</span>
+				<div>
+					<span className={styles.ErrorMessage}>{errorText}</span>
+				</div>
 			)}
 
 			<div className={`${styles.colorChart}`}></div>

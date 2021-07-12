@@ -1,5 +1,5 @@
 //- GVT MAIN MENU -//
-import React, { useState, MouseEvent } from 'react';
+import React, { useEffect } from 'react';
 
 //- Components Imports
 import { EtherInput, FutureButton } from 'components';
@@ -7,6 +7,8 @@ import { EtherInput, FutureButton } from 'components';
 //- Styles Imports
 import '../../styles/main.css';
 import styles from './GrantVestingTokens.module.css';
+import { ethers } from 'ethers';
+import { useState } from 'react';
 
 type GrantVestingTokensProps = {
 	varContract: string;
@@ -18,6 +20,8 @@ type GrantVestingTokensProps = {
 
 	onSend: () => void;
 	onAddRecipient?: any;
+
+	validateValues: number | undefined;
 };
 
 const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
@@ -30,7 +34,23 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 
 	onSend,
 	onAddRecipient,
+
+	validateValues,
 }) => {
+	const [errorState, setError] = useState(false);
+
+	useEffect(() => {
+		if (varContract !== '') {
+			setTimeout(() => {
+				if (ethers.utils.isAddress(varContract)) {
+					setError(false);
+				} else {
+					setError(true);
+				}
+			}, 2000);
+		}
+	}, [varContract]);
+
 	////////////
 	// RENDER //
 	////////////
@@ -55,18 +75,103 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 					Ethereum vesting contract address you wish to grant from:
 				</h2>
 
-				<EtherInput
-					ethlogo
-					alphanumeric
-					placeholder={'Vesting Contract Address'}
-					onChange={(value) => onCatchContract(value)}
-					text={varContract}
-				/>
+				{!errorState && (
+					<EtherInput
+						ethlogo
+						alphanumeric
+						placeholder={'Vesting Contract Address'}
+						onChange={(value) => onCatchContract(value)}
+						text={varContract}
+					/>
+				)}
+
+				{errorState && (
+					<EtherInput
+						ethlogo
+						alphanumeric
+						placeholder={'Vesting Contract Address'}
+						onChange={(value) => onCatchContract(value)}
+						text={varContract}
+						error
+						errorText={'This address is not valid.'}
+					/>
+				)}
+
+				<div style={{ marginTop: '2px' }}>
+					<div
+						style={{
+							display: 'inline-block',
+							margin: '16px 0px 16px 16px',
+						}}
+					>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+							}}
+						>
+							<div
+								style={{
+									display: 'inline-block',
+									width: '50px',
+									height: '50px',
+									backgroundColor: 'rgba(60, 161, 255, 0.15)',
+									borderRadius: '100%',
+									backgroundSize: 'contain',
+									backgroundImage: 'url(../assets/wild.svg)',
+								}}
+							/>
+							<p
+								className="glow-text-white"
+								style={{
+									display: 'flex',
+									fontWeight: 700,
+									justifyContent: 'center',
+									alignItems:'center',
+									margin: '15px 0px 0px 15px'
+								}}
+							>
+								WILD
+							</p>
+						</div>
+					</div>
+
+					<div
+						style={{
+							display: 'inline-block',
+							justifyItems: 'center',
+							float: 'right',
+							margin: '30px 20px 0px 0px',
+						}}
+					>
+						<p
+							className="glow-text-blue"
+							style={{
+								display: 'inline-block',
+								marginRight: '8px',
+								fontSize: '14px',
+								color: 'rgba(128, 128, 128, 1)',
+							}}
+						>
+							Total Available
+						</p>
+
+						<p
+							className="glow-text-white"
+							style={{
+								display: 'inline-block',
+								fontSize: '24px',
+							}}
+						>
+							1,000,000.00 TEST
+						</p>
+					</div>
+				</div>
 			</section>
 
 			<div
 				style={{
-					marginTop: '34px',
+					marginTop: '10px',
 				}}
 			>
 				<hr className="glow" />
@@ -157,9 +262,15 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 						marginTop: '10px',
 					}}
 				>
-					<FutureButton onClick={onSend} glow>
-						Send
-					</FutureButton>
+					{validateValues === 0 && (
+						<FutureButton onClick={onSend} glow>
+							Send
+						</FutureButton>
+					)}
+
+					{validateValues !== 0 && (
+						<FutureButton onClick={() => {}}>Send</FutureButton>
+					)}
 				</div>
 			</div>
 		</div>
