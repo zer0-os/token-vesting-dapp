@@ -1,5 +1,3 @@
-//- by Alejo Viola
-
 //- React Imports
 import React, { useState, useEffect, useMemo } from 'react';
 
@@ -24,10 +22,6 @@ import {
 //- Style Imports
 import styles from './GrantVestedTokens.module.css';
 
-import { useOwner } from 'hooks/useOwner';
-import { GrantContract } from 'util/types';
-import { Maybe } from '../../util';
-
 const imageStyle: React.CSSProperties = {
 	display: 'inline-block',
 	width: '56px',
@@ -44,7 +38,6 @@ enum Modals {
 	Confirm,
 	Granting,
 	Granted,
-	NotAuthorized,
 	Failed,
 }
 
@@ -77,7 +70,7 @@ const GrantVestedTokens: React.FC = () => {
 	//- Variable that Catch the Contract Address
 	const [contract, catchContract] = useState('');
 
-	const grantContract: Maybe<GrantContract> = useGrantContract(contract);
+	const grantContract = useGrantContract(contract);
 
 	//- Set variable that render the number of Inputs
 	//- The first Input ID is 0
@@ -102,8 +95,6 @@ const GrantVestedTokens: React.FC = () => {
 	const openGrantingModal = () => setModal(Modals.Granting);
 	const openGrantedModal = () => setModal(Modals.Granted);
 	const openFailedModal = () => setModal(Modals.Failed);
-
-	const openNotAuthorized = () => setModal(Modals.NotAuthorized);
 
 	////////////////////////
 	// Transaction Values //
@@ -167,7 +158,7 @@ const GrantVestedTokens: React.FC = () => {
 		transactionState.setState(TransactionState.Submitting);
 
 		try {
-			const tx = await grantContract!.grantableVesting.grantTokens(
+			const tx = await grantContract!.contract!.grantableVesting!.grantTokens(
 				addressToSend,
 				amountToSend,
 				boolToSend,
@@ -185,17 +176,6 @@ const GrantVestedTokens: React.FC = () => {
 
 		openGrantedModal();
 	};
-
-	//- Set Owner State
-	const owner = useOwner();
-
-	useEffect(() => {
-		if (owner === 1) {
-			openGrantInit();
-		} else if (owner === 2) {
-			openNotAuthorized();
-		}
-	}, [owner]);
 
 	/////////////////////
 	// Inputs Function //
@@ -246,8 +226,6 @@ const GrantVestedTokens: React.FC = () => {
 
 			return null;
 		});
-
-		console.log(values);
 	}, [values]);
 
 	//- Delete
@@ -266,52 +244,7 @@ const GrantVestedTokens: React.FC = () => {
 		<>
 			{active && (
 				<>
-					{modal !== undefined && modal === Modals.NotAuthorized && (
-						<div className={styles.Container}>
-							<div
-								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
-							>
-								<h1 className="glow-text-white">Oops!</h1>
-
-								<div
-									style={{
-										marginTop: '40px',
-										marginBottom: '42px',
-									}}
-								>
-									<hr className="glow" />
-								</div>
-
-								<p
-									style={{
-										textAlign: 'center',
-									}}
-								>
-									You are not authorized to grant TEST <br />
-									vesting tokens to another address.
-								</p>
-
-								<div
-									style={{
-										textAlign: 'center',
-										marginTop: '40px',
-									}}
-								>
-									<div
-										style={{
-											display: 'inline-block',
-										}}
-									>
-										<FutureButton onClick={openConnectWallet} glow>
-											Dismiss
-										</FutureButton>
-									</div>
-								</div>
-							</div>
-						</div>
-					)}
-
-					{modal !== undefined && modal === Modals.Granted && owner === 1 && (
+					{modal !== undefined && modal === Modals.Granted && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -364,7 +297,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Failed && owner === 1 && (
+					{modal !== undefined && modal === Modals.Failed && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -415,7 +348,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Granting && owner === 1 && (
+					{modal !== undefined && modal === Modals.Granting && (
 						<div className={styles.Container}>
 							<div
 								className={`${styles.confirmModal} blur border-pink-glow border-rounded`}
@@ -426,12 +359,13 @@ const GrantVestedTokens: React.FC = () => {
 					)}
 
 					{/* Grant Menu */}
-					{modal !== undefined && modal === Modals.Grant && owner === 1 && (
+					{modal !== undefined && modal === Modals.Grant && (
 						<div className={styles.gvt}>
 							<GrantVestingTokens
 								varContract={contract}
 								onCatchContract={catchContract}
 								validateValues={validate}
+								textError={grantContract.isError}
 								setInputs={
 									//- Render the Inputs that the Variable
 									values.map((input) => (
@@ -513,7 +447,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.Confirm && owner === 1 && (
+					{modal !== undefined && modal === Modals.Confirm && (
 						<div className={styles.Container}>
 							<Overlay centered onClose={openGrantModal} open>
 								<div
@@ -571,7 +505,7 @@ const GrantVestedTokens: React.FC = () => {
 						</div>
 					)}
 
-					{modal !== undefined && modal === Modals.GrantInit && owner === 1 && (
+					{modal !== undefined && modal === Modals.GrantInit && (
 						<div className={styles.Container}>
 							<div
 								style={{

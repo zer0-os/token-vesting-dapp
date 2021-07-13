@@ -10,6 +10,10 @@ import styles from './GrantVestingTokens.module.css';
 import { ethers } from 'ethers';
 import { useState } from 'react';
 
+//- Web3 Imports
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
+
 type GrantVestingTokensProps = {
 	varContract: string;
 	onCatchContract: (value: string) => void;
@@ -20,6 +24,8 @@ type GrantVestingTokensProps = {
 
 	onSend: () => void;
 	onAddRecipient?: any;
+
+	textError?: string;
 
 	validateValues: number | undefined;
 };
@@ -36,20 +42,26 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 	onAddRecipient,
 
 	validateValues,
+
+	textError,
 }) => {
+	//- Wallet Data
+	const walletContext = useWeb3React<Web3Provider>();
+	const { account } = walletContext;
+
 	const [errorState, setError] = useState(false);
 
 	useEffect(() => {
 		if (varContract !== '') {
 			setTimeout(() => {
-				if (ethers.utils.isAddress(varContract)) {
+				if (textError === 'Checking...') {
 					setError(false);
 				} else {
 					setError(true);
 				}
 			}, 2000);
 		}
-	}, [varContract]);
+	}, [varContract, account, textError]);
 
 	////////////
 	// RENDER //
@@ -93,7 +105,7 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 						onChange={(value) => onCatchContract(value)}
 						text={varContract}
 						error
-						errorText={'This address is not valid.'}
+						errorText={textError}
 					/>
 				)}
 
@@ -127,8 +139,8 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 									display: 'flex',
 									fontWeight: 700,
 									justifyContent: 'center',
-									alignItems:'center',
-									margin: '15px 0px 0px 15px'
+									alignItems: 'center',
+									margin: '15px 0px 0px 15px',
 								}}
 							>
 								WILD
@@ -262,13 +274,17 @@ const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
 						marginTop: '10px',
 					}}
 				>
-					{validateValues === 0 && (
+					{validateValues === 0 && textError === 'Checking...' && (
 						<FutureButton onClick={onSend} glow>
 							Send
 						</FutureButton>
 					)}
 
 					{validateValues !== 0 && (
+						<FutureButton onClick={() => {}}>Send</FutureButton>
+					)}
+
+					{validateValues === 0 && textError !== 'Checking...' && (
 						<FutureButton onClick={() => {}}>Send</FutureButton>
 					)}
 				</div>

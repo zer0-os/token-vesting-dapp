@@ -24,12 +24,6 @@ function getLibrary(provider: any): ethers.providers.Web3Provider {
 }
 
 function App() {
-	// Console message
-	console.log(
-		'%cYou must to set your Owner address to get access.\nUse setOwner(address) function.\nCurrent Owner: undefined',
-		'display: block; border: 3px solid #3ca1ff; border-radius: 7px; padding: 10px; margin: 8px;',
-	);
-
 	return (
 		<NotificationProvider>
 			<Web3ReactProvider getLibrary={getLibrary}>
