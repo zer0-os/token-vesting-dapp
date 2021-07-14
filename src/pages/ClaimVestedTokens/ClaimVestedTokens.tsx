@@ -128,8 +128,9 @@ const ClaimVestedTokens: React.FC = () => {
 	//toggle contract, and set the loading icon on
 	const contractToggle = () => {
 		setLoading(true);
-		setContractNumber(contractNumber + 1);
-		if (contractNumber === contracts!.length - 1) setContractNumber(0);
+		contractNumber === contracts!.length - 1
+			? setContractNumber(0)
+			: setContractNumber(contractNumber + 1);
 	};
 
 	const onButtonClick = () => {
