@@ -21,7 +21,10 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
 	// chain swap hack
 	'0x8E4C057032436498817de977Dc1aE10e3Dfd23c1':
-		'https://ipfs.io/ipfs/QmYQZ6S3xRMVt6wtkFndpdCP8fZQfW6ApHcdEySFSBwSQ3'
+		'https://ipfs.io/ipfs/QmYQZ6S3xRMVt6wtkFndpdCP8fZQfW6ApHcdEySFSBwSQ3',
+	// chain swap posthack
+	'0xE516ef5d103bf567238dB2A5F88781D18214fF6C':
+		'https://ipfs.io/ipfs/QmPnGMZa7n2YWyU35Qo7ph1jzsHiouonb1Km5DopmxfhGo'
 };
 
 export const getVestingMerkleTree = async (
