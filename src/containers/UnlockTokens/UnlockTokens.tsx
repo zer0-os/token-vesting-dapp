@@ -35,7 +35,7 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({
 	};
 
 	return (
-		<div className={`${styles.Container} blur border-primary border-rounded`}>
+		<div className={`${styles.Container} blur`}>
 			<WilderIcon style={{ margin: '0 auto' }} />
 			<h1 style={{ marginTop: 16 }} className="glow-text-white">
 				Unlock {token} Tokens

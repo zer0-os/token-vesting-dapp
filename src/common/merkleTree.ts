@@ -11,21 +11,18 @@ const merkleFiles: { [address: string]: string } = {
 	'0xB7dFcb421412F16B25DDd4AD4bdd73D0883136D8':
 		'https://ipfs.io/ipfs/QmVu6ZhopK9CfpkpuJwbR31ndriThJpkVvyitk7LGU2WsQ',
 	// brett site
-	'0xa779DBc87366C46A51b87CBB0F8be497FE84C511':
-		'https://ipfs.io/ipfs/QmbakE2GeWcSCXWob4hdkVU3VKmStLuFjvdDr6B77bhhAd',
-	//Leo contract 1
-	'0x1625DB76d379A6D06bd9bcAcC0D3d51078B825aF':
+	'0x1d308f379c94e668Ef90328bF0C11dFFbd5055E9':
 		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
-	//Leo contract 2
-	'0x4B1b5A459bbD5c5406562c0839cb2586c1C66aBa':
-		'https://ipfs.io/ipfs/QmZ7gpkxijGHLec8UngyU1Jiu74qrg8w9h34i62cNm9Z8Q',
-	//Leo contract 3
-	'0x3a340D9591b31374e55CEb1f95c08d2aaC91Be24':
-		'https://ipfs.io/ipfs/QmRAK2ACP2Xpg7LLQxP74t1941Da24GDeubFUq9bcYJzuX',
-	//Leo contract 4
-	'0xd90520824daeD187B088D8d14512B611Bfbd5759':
-		'https://ipfs.io/ipfs/QmUQgDSja2k4dnrqjnYYkoqXpNqcYwXWWfnjQFertM4MYA',
-	//Leo contract 5
+		
+	// Alejo Address 1
+	'0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	// Alejo Address 2
+	'0x557f4C36add92E21bAf67971a85440B089D55033':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	// Alejo Address 3
+	'0xE506fEED9E9A4f0Ca195A48A5343c539db170e28':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
 };
 
 export const getVestingMerkleTree = async (

@@ -5,22 +5,19 @@
 	flex-direction: column;
 	justify-content: center;
 
-	width: 645px;
-	padding: 34.5px 40px 40px 40px;
-
-	background: var(--background-blue-card-wilder);
+	width: 100%;
 }
 
 .Container > section:first-of-type {
-	margin-top: 40px;
+	margin-top: 10px;
 }
 
 .Container > section:not(:first-of-type) {
-	margin-top: 70px;
+	margin-top: 40px;
 }
 
 .Container > section > *:not(:first-child) {
-	margin-top: 16px;
+	margin-top: 10px;
 }
 
 .Container h1 {
@@ -162,4 +159,8 @@
 	font-size: 36px;
 	font-weight: 700;
 	text-align: center;
+}
+
+.TextLeft {
+	text-align: left;
 }

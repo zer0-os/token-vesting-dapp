@@ -1,3 +1,4 @@
+import { network } from 'lib/connectors';
 import { ContractAddresses } from '../util';
 
 export enum Network {
@@ -13,17 +14,14 @@ type ContractAddressMap = {
 };
 
 const contractAddresses: ContractAddressMap = {
-	[Network.Mainnet]: {
-		vesting: [process.env.REACT_APP_VESTING_CONTRACT],
-	},
 	[Network.Kovan]: {
+		name: ['INFINITY', 'INITIAL TEAM', 'Q1 BONUS'],
 		vesting: [
-			'0xa779DBc87366C46A51b87CBB0F8be497FE84C511',
-			'0x1625DB76d379A6D06bd9bcAcC0D3d51078B825aF',
-			'0x4B1b5A459bbD5c5406562c0839cb2586c1C66aBa',
-			'0x3a340D9591b31374e55CEb1f95c08d2aaC91Be24',
-			'0xd90520824daeD187B088D8d14512B611Bfbd5759',
+			'0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774',
+			'0x557f4C36add92E21bAf67971a85440B089D55033',
+			'0xE506fEED9E9A4f0Ca195A48A5343c539db170e28',
 		],
+		icon: ['assets/wild.svg', 'assets/wild.svg', 'assets/wild.svg'],
 	},
 } as ContractAddressMap;
 
