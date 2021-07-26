@@ -13,7 +13,7 @@ const merkleFiles: { [address: string]: string } = {
 	// brett site
 	'0x1d308f379c94e668Ef90328bF0C11dFFbd5055E9':
 		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
-		
+
 	// Alejo Address 1
 	'0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774':
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
@@ -22,6 +22,15 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
 	// Alejo Address 3
 	'0xE506fEED9E9A4f0Ca195A48A5343c539db170e28':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	// Alejo Address 4
+	'0x88dB17E38F901BFdFc2A8c890b70305C16a3b232':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	// Alejo Address 5
+	'0xED817C535954054843DaE0b5179bbb2bE64422b1':
+		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	// Alejo Address 6
+	'0xa933534350dfC8Cdd8FeAF966Dd94757F925B64b':
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
 };
 
