@@ -36,7 +36,21 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({
 
 	return (
 		<div className={`${styles.Container} blur`}>
-			<WilderIcon style={{ margin: '0 auto' }} />
+			<div
+				style={{
+					display: 'flex',
+					justifyContent: 'center',
+					alignItems: 'center',
+				}}
+			>
+				<div className={`${styles.Image} glow-box-accent-1`}>
+					<img
+						className={'glow-box-accent-1'}
+						alt={'Wild Logo'}
+						src={'assets/wild.svg'}
+					/>
+				</div>
+			</div>
 			<h1 style={{ marginTop: 16 }} className="glow-text-white">
 				Unlock {token} Tokens
 			</h1>

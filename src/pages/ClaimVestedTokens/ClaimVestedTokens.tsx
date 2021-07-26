@@ -110,7 +110,7 @@ const ClaimVestedTokens: React.FC = () => {
 
 	if (modal === Modals.Claim || modal === Modals.Unlock) {
 		contractData!.vesting.forEach((value, i) => {
-			if (i > 5) {
+			if (i > 4) {
 				itemsCenter = false;
 			}
 			MenuItems.push(
@@ -211,7 +211,7 @@ const ClaimVestedTokens: React.FC = () => {
 				setModal(Modals.Claim);
 			}
 		}
-	}, [vesting, claimState, loading]);
+	}, [vesting, claimState, loading, stop, modal]);
 
 	const release = async () => {
 		logger.debug(`User attempting to release tokens`);
@@ -256,12 +256,10 @@ const ClaimVestedTokens: React.FC = () => {
 			claimState.setState(TransactionState.Pending);
 			return;
 		}
+		closeModal();
 		addNotification('Successfully unlocked tokens');
 
 		claimState.setState(TransactionState.Completed);
-		setStop(false);
-		setModal(Modals.Claim);
-		closeModal();
 	};
 
 	// Modals
