@@ -36,8 +36,8 @@ export function useContracts(): Maybe<Contracts[]> {
 		}
 
 		for (let i = 0; i < contracts.vesting.length; i++) {
-			if (!ethers.utils.isAddress(contracts.vesting[i])) {
-				throw Error(`invalid vesting contract address ` + contracts.vesting[i]);
+			if (!ethers.utils.isAddress(contracts.vesting[i].contract)) {
+				throw Error(`invalid vesting contract address ` + contracts.vesting[i].contract);
 			}
 		}
 
@@ -45,7 +45,7 @@ export function useContracts(): Maybe<Contracts[]> {
 
 		contracts.vesting.map(function (element, index) {
 			vestingContract[index] = {
-				vesting: MerkleTokenVesting__factory.connect(element, signer),
+				vesting: MerkleTokenVesting__factory.connect(element.contract, signer),
 			};
 			return element;
 		});

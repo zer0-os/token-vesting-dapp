@@ -17,10 +17,14 @@ export interface VestingMerkleTree {
 export type Maybe<T> = T | undefined | null;
 export type MaybeNull<T> = T | null;
 
+interface ContractValues{
+	name: string,
+	contract: string,
+	icon: string;
+}
+
 export interface ContractAddresses {
-	name: string[];
-	vesting: string[];
-	icon: string[];
+	vesting: ContractValues[];
 }
 
 export interface Contracts {

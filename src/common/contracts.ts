@@ -15,30 +15,37 @@ type ContractAddressMap = {
 
 const contractAddresses: ContractAddressMap = {
 	[Network.Kovan]: {
-		name: [
-			'INFINITY',
-			'INITIAL TEAM',
-			'Q1 BONUS',
-			'TEST ADDRESS',
-			'TEST ADDRESS 2',
-			'TEST ADDRESS 3',
-		],
 		vesting: [
-			'0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774',
-			'0x557f4C36add92E21bAf67971a85440B089D55033',
-			'0xE506fEED9E9A4f0Ca195A48A5343c539db170e28',
-			'0x88dB17E38F901BFdFc2A8c890b70305C16a3b232',
-			'0xED817C535954054843DaE0b5179bbb2bE64422b1',
-			'0xa933534350dfC8Cdd8FeAF966Dd94757F925B64b',
-		],
-		icon: [
-			'assets/wild.svg',
-			'assets/wild.svg',
-			'assets/wild.svg',
-			'assets/wild.svg',
-			'assets/wild.svg',
-			'assets/wild.svg',
-		],
+			{
+				name: 'INFINITY',
+				contract: '0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'INITIAL TEAM',
+				contract: '0x557f4C36add92E21bAf67971a85440B089D55033',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'Q1 BONUS',
+				contract: '0xE506fEED9E9A4f0Ca195A48A5343c539db170e28',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'TEST ADDRESS',
+				contract: '0x88dB17E38F901BFdFc2A8c890b70305C16a3b232',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'TEST ADDRESS 2',
+				contract: '0xED817C535954054843DaE0b5179bbb2bE64422b1',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'TEST ADDRESS 3',
+				contract: '0xa933534350dfC8Cdd8FeAF966Dd94757F925B64b',
+				icon: 'assets/wild.svg',
+			},]
 	},
 } as ContractAddressMap;
 

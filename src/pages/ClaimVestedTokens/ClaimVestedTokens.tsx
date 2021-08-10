@@ -121,18 +121,17 @@ const ClaimVestedTokens: React.FC = () => {
 							contractToggle(i);
 						}
 					}}
-					className={`${styles.MenuItem} ${
-						contractNumber === i ? styles.MenuItemSelected : ''
-					}`}
+					className={`${styles.MenuItem} 
+					${contractNumber === i ? styles.MenuItemSelected : ''}`}
 				>
 					<div className={'glow-box-accent-1'}>
 						<img
 							className={'glow-box-accent-1'}
 							alt={value + 'Logo'}
-							src={contractData!.icon[i]}
+							src={contractData!.vesting[i].icon}
 						/>
 					</div>
-					<p>{contractData!.name[i]}</p>
+					<p>{contractData!.vesting[i].name}</p>
 				</li>,
 			);
 		});
@@ -298,29 +297,14 @@ const ClaimVestedTokens: React.FC = () => {
 							{claimInterfaceProps &&
 								modal === Modals.Claim &&
 								loading === false && (
-									<section className={`${styles.releaseContainer}`}>
-										<div>
-											<FutureButton
-												onClick={() => {}}
-												glow
-												style={{
-													textTransform: 'uppercase',
-													margin: '15px auto 15px auto',
-													float: 'right',
-												}}
-											>
-												Overview
-											</FutureButton>
-										</div>
-										<ReleaseTokens
-											isLoading={
-												releaseState.isSubmitting || releaseState.isProcessing
-											}
-											network={network}
-											vesting={claimInterfaceProps}
-											onRelease={release}
-										/>
-									</section>
+									<ReleaseTokens
+										isLoading={
+											releaseState.isSubmitting || releaseState.isProcessing
+										}
+										network={network}
+										vesting={claimInterfaceProps}
+										onRelease={release}
+									/>
 								)}
 
 							{modal === Modals.Unlock && loading === false && (

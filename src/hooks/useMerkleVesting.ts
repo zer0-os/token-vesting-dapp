@@ -102,8 +102,11 @@ export const useMerkleVesting = (
 						setVestedTokens(amountVested);
 						setReleasableTokens(amountVested);
 					}
-					setPartialFetch(true);
-					setPartialFetch(false);
+					if(partialFetch == true){
+						setPartialFetch(false);
+					}else{
+						setPartialFetch(true);
+					}
 					return;
 				}
 
@@ -121,8 +124,11 @@ export const useMerkleVesting = (
 				logger.error(`Failed to fetch vesting data for ${user}`);
 				logger.debug(e);
 			}
-			setFullFetch(true);
-			setFullFetch(false);
+			if(fullFetch == true){
+				setFullFetch(false);
+			}else{
+				setFullFetch(true);
+			}
 		};
 
 		fetchValuesFromContract();
