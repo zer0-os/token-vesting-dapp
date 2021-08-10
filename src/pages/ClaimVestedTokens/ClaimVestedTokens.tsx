@@ -255,8 +255,8 @@ const ClaimVestedTokens: React.FC = () => {
 			claimState.setState(TransactionState.Pending);
 			return;
 		}
-		closeModal();
 		addNotification('Successfully unlocked tokens');
+    closeModal();
 
 		claimState.setState(TransactionState.Completed);
 	};
