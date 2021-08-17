@@ -1,5 +1,4 @@
 import { InjectedConnector as MetaMask } from '@web3-react/injected-connector';
-import { NetworkConnector as Network } from '@web3-react/network-connector';
 import { WalletConnectConnector } from '@web3-react/walletconnect-connector';
 import { WalletLinkConnector } from '@web3-react/walletlink-connector';
 import { LedgerConnector } from '@web3-react/ledger-connector';
@@ -20,11 +19,6 @@ export const RPC_URLS: { [chainId: number]: string } = {
 
 export const injected = new MetaMask({
 	supportedChainIds: [1, 3, 4, 5, 42],
-});
-
-export const network = new Network({
-	urls: { 1: RPC_URLS[1], 42: RPC_URLS[42] },
-	defaultChainId: 1,
 });
 
 export const createWalletConnectConnector = () => {
