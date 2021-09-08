@@ -6,9 +6,8 @@ import { getLogger, Maybe, VestingMerkleTree } from '../util';
 const logger = getLogger(`hooks::useVestingMerkleTree`);
 
 export const useVestingMerkleTree = (contract: MerkleTokenVesting) => {
-	const [merkleTree, setMerkleTree] = React.useState<
-		Maybe<VestingMerkleTree>
-	>();
+	const [merkleTree, setMerkleTree] =
+		React.useState<Maybe<VestingMerkleTree>>();
 
 	React.useEffect(() => {
 		const getTree = async () => {

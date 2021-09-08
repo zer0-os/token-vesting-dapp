@@ -22,18 +22,14 @@ export const useMerkleVesting = (
 
 	const [hasAward, setHasAward] = React.useState<MaybeNull<boolean>>(null);
 	const [hasClaimed, setHasClaimed] = React.useState<MaybeNull<boolean>>(null);
-	const [awardedTokens, setAwardedTokens] = React.useState<
-		MaybeNull<BigNumber>
-	>(null);
-	const [vestedTokens, setVestedTokens] = React.useState<MaybeNull<BigNumber>>(
-		null,
-	);
-	const [releasableTokens, setReleasableTokens] = React.useState<
-		MaybeNull<BigNumber>
-	>(null);
-	const [vestingParams, setVestingParams] = React.useState<
-		MaybeNull<VestingParams>
-	>(null);
+	const [awardedTokens, setAwardedTokens] =
+		React.useState<MaybeNull<BigNumber>>(null);
+	const [vestedTokens, setVestedTokens] =
+		React.useState<MaybeNull<BigNumber>>(null);
+	const [releasableTokens, setReleasableTokens] =
+		React.useState<MaybeNull<BigNumber>>(null);
+	const [vestingParams, setVestingParams] =
+		React.useState<MaybeNull<VestingParams>>(null);
 	const [token, setToken] = React.useState<MaybeNull<string>>(null);
 	const [fullFetch, setFullFetch] = React.useState(false);
 	const [partialFetch, setPartialFetch] = React.useState(false);
@@ -102,9 +98,9 @@ export const useMerkleVesting = (
 						setVestedTokens(amountVested);
 						setReleasableTokens(amountVested);
 					}
-					if(partialFetch == true){
+					if (partialFetch == true) {
 						setPartialFetch(false);
-					}else{
+					} else {
 						setPartialFetch(true);
 					}
 					return;
@@ -124,9 +120,9 @@ export const useMerkleVesting = (
 				logger.error(`Failed to fetch vesting data for ${user}`);
 				logger.debug(e);
 			}
-			if(fullFetch == true){
+			if (fullFetch == true) {
 				setFullFetch(false);
-			}else{
+			} else {
 				setFullFetch(true);
 			}
 		};

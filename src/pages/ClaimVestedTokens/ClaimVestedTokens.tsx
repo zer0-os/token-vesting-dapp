@@ -1,5 +1,6 @@
+import { BigNumber } from '@ethersproject/bignumber';
 //- React Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
@@ -18,7 +19,8 @@ import { useContracts } from 'hooks/useContracts';
 import { useRefresh } from 'hooks/useRefresh';
 import useNotification from 'hooks/useNotification';
 import { useMerkleVesting } from 'hooks/useMerkleVesting';
-import { Contracts, Maybe } from '../../util';
+import { Contracts, Maybe, VestingMerkleTree } from '../../util';
+import { getVestingMerkleTree } from '../../common';
 import {
 	TransactionState,
 	useTransactionState,
@@ -37,7 +39,8 @@ import { ReleaseTokens, UnlockTokens } from 'containers';
 
 //- Style Imports
 import styles from './ClaimVestedTokens.module.css';
-import { useMemo } from 'react';
+
+import { useContractMenu } from './useContractMenu';
 
 const logger = getLogger(`components::ClaimVestedTokens`);
 
@@ -94,48 +97,6 @@ const ClaimVestedTokens: React.FC = () => {
 	///////////////
 	// Functions //
 	///////////////
-
-	//The Array does contains the buttons of address
-	const MenuItems: any = [];
-
-	const [contractData, setContractData] = useState<ContractAddresses>();
-
-	useMemo(() => {
-		setContractData(
-			getContractAddressesForNetwork(getNetworkFromChainId(chainId!)),
-		);
-	}, [chainId]);
-
-	var itemsCenter: boolean = true;
-
-	if (modal === Modals.Claim || modal === Modals.Unlock) {
-		contractData!.vesting.forEach((value, i) => {
-			if (i > 4) {
-				itemsCenter = false;
-			}
-			MenuItems.push(
-				<li
-					key={i}
-					onClick={() => {
-						if (i !== contractNumber) {
-							contractToggle(i);
-						}
-					}}
-					className={`${styles.MenuItem} 
-					${contractNumber === i ? styles.MenuItemSelected : ''}`}
-				>
-					<div className={'glow-box-accent-1'}>
-						<img
-							className={'glow-box-accent-1'}
-							alt={value + 'Logo'}
-							src={contractData!.vesting[i].icon}
-						/>
-					</div>
-					<p>{contractData!.vesting[i].name}</p>
-				</li>,
-			);
-		});
-	}
 
 	useEffect(() => {
 		if (
@@ -226,7 +187,7 @@ const ClaimVestedTokens: React.FC = () => {
 			releaseState.setHash(tx.hash);
 
 			await tx.wait();
-		} catch (e) {
+		} catch (e: any) {
 			releaseState.setError(e.message ? e.message : e);
 			releaseState.setState(TransactionState.Pending);
 			return;
@@ -250,13 +211,13 @@ const ClaimVestedTokens: React.FC = () => {
 			claimState.setHash(tx.hash);
 
 			await tx.wait();
-		} catch (e) {
+		} catch (e: any) {
 			claimState.setError(e.message ? e.message : e);
 			claimState.setState(TransactionState.Pending);
 			return;
 		}
+		closeModal();
 		addNotification('Successfully unlocked tokens');
-    closeModal();
 
 		claimState.setState(TransactionState.Completed);
 	};
@@ -265,15 +226,71 @@ const ClaimVestedTokens: React.FC = () => {
 	const closeModal = () => setModal(undefined);
 	const openConnectToWalletModal = () => setModal(Modals.ConnectToWallet);
 
+	//////////////////////////
+	// Claim State for Menu //
+	//////////////////////////
+
+	const contratos = useContractMenu();
+
+	useEffect(() => {
+		setContractNumber(contratos[0]?.id ? contratos[0].id : 0);
+	}, [contratos, account]);
+
+	//The Array does contains the buttons of address
+	const MenuItems: any = [];
+
+	var itemsCenter: boolean = true;
+
+	const buildMenu = () => {
+		contratos.forEach((value, i) => {
+			if (i > 4) {
+				itemsCenter = false;
+			}
+			if (i < contratos.length) {
+				MenuItems.push(
+					<li
+						key={value.id}
+						onClick={() => {
+							if (value.id !== contractNumber) {
+								contractToggle(value.id);
+							}
+							console.log(value.contract);
+						}}
+						className={`${styles.MenuItem} 
+						${contractNumber === value.id ? styles.MenuItemSelected : ''}`}
+					>
+						<div className={'glow-box-accent-1'}>
+							<img
+								className={'glow-box-accent-1'}
+								alt={value + 'Logo'}
+								src={value.icon}
+							/>
+						</div>
+						<p>{value.name}</p>
+					</li>,
+				);
+			}
+		});
+	};
+
+	if (modal === Modals.Claim || modal === Modals.Unlock) {
+		buildMenu();
+	}
+
+	////////////
+	// Render //
+	////////////
+
 	return (
 		<>
 			{/* Modals */}
 			<Overlay
 				centered
 				open={
-					modal === Modals.Menu ||
-					modal === Modals.Unlock ||
-					modal === Modals.Claim
+					(modal === Modals.Menu ||
+						modal === Modals.Unlock ||
+						modal === Modals.Claim) &&
+					vesting.hasAward === true
 				}
 				onClose={closeModal}
 			>

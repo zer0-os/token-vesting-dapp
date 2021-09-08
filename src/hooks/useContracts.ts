@@ -37,7 +37,9 @@ export function useContracts(): Maybe<Contracts[]> {
 
 		for (let i = 0; i < contracts.vesting.length; i++) {
 			if (!ethers.utils.isAddress(contracts.vesting[i].contract)) {
-				throw Error(`invalid vesting contract address ` + contracts.vesting[i].contract);
+				throw Error(
+					`invalid vesting contract address ` + contracts.vesting[i].contract,
+				);
 			}
 		}
 

@@ -75,6 +75,12 @@
 	font-size: 18px;
 	font-weight: 700;
 	z-index: 1;
+	width: 180px;
+	text-align: left;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .MenuItem:not(:first-of-type) {
