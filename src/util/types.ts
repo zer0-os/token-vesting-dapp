@@ -1,3 +1,4 @@
+import { ObjectType } from 'typescript';
 import { MerkleTokenVesting } from '../contracts/types';
 
 export interface VestingMerkleClaim {
@@ -16,8 +17,14 @@ export interface VestingMerkleTree {
 export type Maybe<T> = T | undefined | null;
 export type MaybeNull<T> = T | null;
 
+interface ContractValues {
+	name: string;
+	contract: string;
+	icon: string;
+}
+
 export interface ContractAddresses {
-	vesting: string;
+	vesting: ContractValues[];
 }
 
 export interface Contracts {

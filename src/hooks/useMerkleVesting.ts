@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber';
+import { MerkleTokenVesting } from 'contracts/types';
 import { ethers } from 'ethers';
 import React from 'react';
-import { MerkleTokenVesting } from '../contracts/types';
 import { estimateVestedAmount, getLogger, Maybe, MaybeNull } from '../util';
 import { useVestingMerkleTree } from './useVestingMerkleTree';
 
@@ -31,7 +31,8 @@ export const useMerkleVesting = (
 	const [vestingParams, setVestingParams] =
 		React.useState<MaybeNull<VestingParams>>(null);
 	const [token, setToken] = React.useState<MaybeNull<string>>(null);
-
+	const [fullFetch, setFullFetch] = React.useState(false);
+	const [partialFetch, setPartialFetch] = React.useState(false);
 	React.useEffect(() => {
 		if (!merkleTree) {
 			return;
@@ -97,7 +98,11 @@ export const useMerkleVesting = (
 						setVestedTokens(amountVested);
 						setReleasableTokens(amountVested);
 					}
-
+					if (partialFetch == true) {
+						setPartialFetch(false);
+					} else {
+						setPartialFetch(true);
+					}
 					return;
 				}
 
@@ -115,10 +120,14 @@ export const useMerkleVesting = (
 				logger.error(`Failed to fetch vesting data for ${user}`);
 				logger.debug(e);
 			}
+			if (fullFetch == true) {
+				setFullFetch(false);
+			} else {
+				setFullFetch(true);
+			}
 		};
 
 		fetchValuesFromContract();
-
 		return () => {
 			subscribed = false;
 		};
@@ -171,6 +180,8 @@ export const useMerkleVesting = (
 		awardedTokens,
 		vestedTokens,
 		releasableTokens,
+		fullFetch,
+		partialFetch,
 		claimAward,
 		releaseTokens,
 	};

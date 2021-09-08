@@ -84,6 +84,11 @@
 	--background-purple-card-10: rgba(78, 0, 132, 0.1);
 	--background-purple-light-20: rgba(190, 96, 255, 0.2);
 
+	--background-purple-card-wilder: linear-gradient(
+		rgba(39, 0, 71, 0.7) 0%,
+		rgba(19, 0, 35, 0.7) 100%
+	);
+
 	--background-field-bg: linear-gradient(
 		94.23deg,
 		rgba(60, 161, 255, 0.2) 0%,

@@ -1,19 +1,26 @@
+import { BigNumber } from '@ethersproject/bignumber';
 //- React Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 //- Web3 Imports
 import { useWeb3React } from '@web3-react/core';
 import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
-import { getNetworkFromChainId } from 'common';
+import { getContractAddressesForNetwork, getNetworkFromChainId } from 'common';
 import { ethers } from 'ethers';
 
 //- Library Imports
 import { suggestWildToken } from 'lib/suggestToken';
-import { getLogger, ClaimVestingInterface } from 'util/index';
+import {
+	getLogger,
+	ClaimVestingInterface,
+	ContractAddresses,
+} from 'util/index';
 import { useContracts } from 'hooks/useContracts';
 import { useRefresh } from 'hooks/useRefresh';
 import useNotification from 'hooks/useNotification';
 import { useMerkleVesting } from 'hooks/useMerkleVesting';
+import { Contracts, Maybe, VestingMerkleTree } from '../../util';
+import { getVestingMerkleTree } from '../../common';
 import {
 	TransactionState,
 	useTransactionState,
@@ -33,10 +40,13 @@ import { ReleaseTokens, UnlockTokens } from 'containers';
 //- Style Imports
 import styles from './ClaimVestedTokens.module.css';
 
+import { useContractMenu } from './useContractMenu';
+
 const logger = getLogger(`components::ClaimVestedTokens`);
 
 enum Modals {
 	ConnectToWallet,
+	Menu,
 	Unlock,
 	Claim,
 }
@@ -48,19 +58,27 @@ const ClaimVestedTokens: React.FC = () => {
 
 	// Wallet data
 	const walletContext = useWeb3React<Web3Provider>();
-	const { account, active } = walletContext;
+	const { account, active, chainId } = walletContext;
 
 	const context = useWeb3React();
 
 	const { refreshToken, refresh } = useRefresh();
-	const contracts = useContracts();
-	const vestingContract = contracts!.vesting;
-	const vesting = useMerkleVesting(vestingContract, account, refreshToken);
+
+	const [contractNumber, setContractNumber] = useState(0);
+	const [loading, setLoading] = useState(false);
 
 	const network = getNetworkFromChainId(context.chainId!);
 
 	const claimState = useTransactionState();
 	const releaseState = useTransactionState();
+
+	const contracts: Maybe<Contracts[]> = useContracts();
+
+	let vesting = useMerkleVesting(
+		contracts![contractNumber].vesting,
+		account,
+		refreshToken,
+	);
 
 	//////////////////
 	// State & Refs //
@@ -73,6 +91,8 @@ const ClaimVestedTokens: React.FC = () => {
 	const [claimInterfaceProps, setClaimInterfaceProps] = useState<
 		ClaimVestingInterface | undefined
 	>();
+
+	const [stop, setStop] = useState(false);
 
 	///////////////
 	// Functions //
@@ -101,17 +121,39 @@ const ClaimVestedTokens: React.FC = () => {
 		vesting.vestingParams,
 	]);
 
+	//If full fetch happens, change to action button
+	useEffect(() => {
+		setLoading(false);
+	}, [vesting.fullFetch]);
+
+	//If half fetch happens and hasnt claimed, change to action button
+	useEffect(() => {
+		if (vesting.hasClaimed === false) setLoading(false);
+	}, [vesting.partialFetch]);
+
 	const addWildToMetamask = () => suggestWildToken(context.library);
 
 	const toNumber = (amount: any) => Number(ethers.utils.formatEther(amount));
 
-	const onButtonClick = () => {
-		if (vesting.hasClaimed === false && vesting.awardedTokens) {
+	//toggle contract, and set the loading icon on
+	const contractToggle = (number: number) => {
+		setStop(false);
+		setLoading(true);
+		setContractNumber(number);
+	};
+
+	useEffect(() => {
+		if (
+			modal !== undefined &&
+			vesting.hasClaimed === false &&
+			vesting.awardedTokens
+		) {
 			// Open unlock modal
 			setModal(Modals.Unlock);
-		} else if (vesting.hasClaimed === true) {
+		} else if (stop === false && vesting.hasClaimed === true) {
 			// Open claim modal
 			if (
+				modal !== undefined &&
 				vesting.vestedTokens &&
 				vesting.releasableTokens &&
 				vesting.awardedTokens &&
@@ -125,11 +167,11 @@ const ClaimVestedTokens: React.FC = () => {
 					duration: vesting.vestingParams.duration,
 					cliff: vesting.vestingParams.cliff,
 				});
-
+				setStop(true);
 				setModal(Modals.Claim);
 			}
 		}
-	};
+	}, [vesting, claimState, loading, stop, modal]);
 
 	const release = async () => {
 		logger.debug(`User attempting to release tokens`);
@@ -145,7 +187,7 @@ const ClaimVestedTokens: React.FC = () => {
 			releaseState.setHash(tx.hash);
 
 			await tx.wait();
-		} catch (e) {
+		} catch (e: any) {
 			releaseState.setError(e.message ? e.message : e);
 			releaseState.setState(TransactionState.Pending);
 			return;
@@ -165,55 +207,137 @@ const ClaimVestedTokens: React.FC = () => {
 
 		try {
 			const tx = await vesting.claimAward();
-
 			claimState.setState(TransactionState.Processing);
 			claimState.setHash(tx.hash);
 
 			await tx.wait();
-		} catch (e) {
+		} catch (e: any) {
 			claimState.setError(e.message ? e.message : e);
 			claimState.setState(TransactionState.Pending);
 			return;
 		}
-
-		setTimeout(() => {
-			refresh();
-		}, 1000);
-
+		closeModal();
 		addNotification('Successfully unlocked tokens');
 
 		claimState.setState(TransactionState.Completed);
-		closeModal();
 	};
 
 	// Modals
 	const closeModal = () => setModal(undefined);
 	const openConnectToWalletModal = () => setModal(Modals.ConnectToWallet);
 
+	//////////////////////////
+	// Claim State for Menu //
+	//////////////////////////
+
+	const contratos = useContractMenu();
+
+	useEffect(() => {
+		setContractNumber(contratos[0]?.id ? contratos[0].id : 0);
+	}, [contratos, account]);
+
+	//The Array does contains the buttons of address
+	const MenuItems: any = [];
+
+	var itemsCenter: boolean = true;
+
+	const buildMenu = () => {
+		contratos.forEach((value, i) => {
+			if (i > 4) {
+				itemsCenter = false;
+			}
+			if (i < contratos.length) {
+				MenuItems.push(
+					<li
+						key={value.id}
+						onClick={() => {
+							if (value.id !== contractNumber) {
+								contractToggle(value.id);
+							}
+							console.log(value.contract);
+						}}
+						className={`${styles.MenuItem} 
+						${contractNumber === value.id ? styles.MenuItemSelected : ''}`}
+					>
+						<div className={'glow-box-accent-1'}>
+							<img
+								className={'glow-box-accent-1'}
+								alt={value + 'Logo'}
+								src={value.icon}
+							/>
+						</div>
+						<p>{value.name}</p>
+					</li>,
+				);
+			}
+		});
+	};
+
+	if (modal === Modals.Claim || modal === Modals.Unlock) {
+		buildMenu();
+	}
+
+	////////////
+	// Render //
+	////////////
+
 	return (
 		<>
 			{/* Modals */}
-			{claimInterfaceProps && (
-				<Overlay centered open={modal === Modals.Claim} onClose={closeModal}>
-					<ReleaseTokens
-						isLoading={releaseState.isSubmitting || releaseState.isProcessing}
-						network={network}
-						vesting={claimInterfaceProps}
-						onRelease={release}
-					/>
-				</Overlay>
-			)}
+			<Overlay
+				centered
+				open={
+					(modal === Modals.Menu ||
+						modal === Modals.Unlock ||
+						modal === Modals.Claim) &&
+					vesting.hasAward === true
+				}
+				onClose={closeModal}
+			>
+				<div
+					className={`${styles.ContainerClaim} blur border-primary border-rounded`}
+				>
+					<div className={`${styles.MenuToken}`}>
+						<div className={`${itemsCenter ? styles.HeightCorrector : ''}`}>
+							<ul>{MenuItems}</ul>
+						</div>
+					</div>
+					<div className={`${styles.ContentContainer}`}>
+						<div className={`${styles.ClaimContent}`}>
+							{/* Loading Icon */}
+							{loading === true && vesting.hasAward === true && (
+								<div style={{ display: 'flex', justifyContent: 'center' }}>
+									<LoadingSpinner />
+								</div>
+							)}
 
-			<Overlay centered open={modal === Modals.Unlock} onClose={closeModal}>
-				<UnlockTokens
-					isLoading={claimState.isSubmitting || claimState.isProcessing}
-					numTokens={
-						vesting.awardedTokens
-							? Number(ethers.utils.formatEther(vesting.awardedTokens))
-							: 0
-					}
-					onUnlock={unlock}
-				/>
+							{claimInterfaceProps &&
+								modal === Modals.Claim &&
+								loading === false && (
+									<ReleaseTokens
+										isLoading={
+											releaseState.isSubmitting || releaseState.isProcessing
+										}
+										network={network}
+										vesting={claimInterfaceProps}
+										onRelease={release}
+									/>
+								)}
+
+							{modal === Modals.Unlock && loading === false && (
+								<UnlockTokens
+									isLoading={claimState.isSubmitting || claimState.isProcessing}
+									numTokens={
+										vesting.awardedTokens
+											? Number(ethers.utils.formatEther(vesting.awardedTokens))
+											: 0
+									}
+									onUnlock={unlock}
+								/>
+							)}
+						</div>
+					</div>
+				</div>
 			</Overlay>
 
 			<Overlay
@@ -241,7 +365,6 @@ const ClaimVestedTokens: React.FC = () => {
 								className={styles.Profile}
 								onClick={openConnectToWalletModal}
 							/>
-
 							{/* Loading Icon */}
 							{vesting.token === null && vesting.hasAward !== false && (
 								<div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -250,30 +373,34 @@ const ClaimVestedTokens: React.FC = () => {
 							)}
 
 							{/* Action Button */}
-							{vesting.token !== null && vesting.hasAward === true && (
-								<>
-									<FutureButton
-										style={{ margin: '24px auto' }}
-										glow={vesting.awardedTokens !== undefined}
-										onClick={onButtonClick}
-									>
-										{vesting.hasClaimed === false &&
-											vesting.awardedTokens &&
-											'Unlock Tokens'}
-										{vesting.hasClaimed === true && 'Claim Tokens'}
-									</FutureButton>
-									<TextButton
-										style={{
-											margin: '24px auto',
-											textAlign: 'center',
-											paddingLeft: 13,
-										}}
-										onClick={addWildToMetamask}
-									>
-										Add WILD token to Metamask
-									</TextButton>
-								</>
-							)}
+							{vesting.token !== null &&
+								vesting.hasAward === true &&
+								loading === false && (
+									<>
+										<FutureButton
+											style={{ margin: '24px auto' }}
+											glow={vesting.awardedTokens !== undefined}
+											onClick={() => {
+												if (vesting.awardedTokens !== undefined) {
+													setStop(false);
+													setModal(Modals.Menu);
+												}
+											}}
+										>
+											Claim Tokens
+										</FutureButton>
+										<TextButton
+											style={{
+												margin: '24px auto',
+												textAlign: 'center',
+												paddingLeft: 13,
+											}}
+											onClick={addWildToMetamask}
+										>
+											Add WILD token to Metamask
+										</TextButton>
+									</>
+								)}
 
 							{/* No tokens message */}
 							{vesting.hasAward === false && (

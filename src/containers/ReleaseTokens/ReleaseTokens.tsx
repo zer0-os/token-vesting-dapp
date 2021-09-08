@@ -142,21 +142,16 @@ const ReleaseTokens: React.FC<props> = ({
 	/////////////////////
 
 	return (
-		<form
-			onSubmit={releaseTokens}
-			className={`${styles.Container} blur border-primary border-rounded`}
-		>
-			<WilderIcon style={{ margin: '0 auto' }} />
-			<h1 style={{ marginTop: 16 }} className="glow-text-white">
-				Claim {token} Tokens
-			</h1>
+		<form onSubmit={releaseTokens} className={`${styles.Container}`}>
 			<section>
-				<h2>Tokens You Own</h2>
+				<h2 className={`${styles.TextLeft}`}>Tokens You Own</h2>
 				<div>
 					<div className={styles.ProgressBar}>
 						{/* Claimed bar */}
 						<div style={{ width: `${(claimed / total) * 100}%` }}>
-							<span ref={claimedLabel}>{claimedText}</span>
+							<span style={{ marginLeft: '30px' }} ref={claimedLabel}>
+								{claimedText}
+							</span>
 						</div>
 						{/* Vested bar */}
 						<div style={{ width: `${(vested / total) * 100}%` }}>
@@ -168,7 +163,7 @@ const ReleaseTokens: React.FC<props> = ({
 				</div>
 			</section>
 			<section>
-				<h2>Vesting Timeline</h2>
+				<h2 className={`${styles.TextLeft}`}>Vesting Timeline</h2>
 				<div>
 					<div className={styles.Timeline}>
 						{/* Claimed bar */}
@@ -249,29 +244,37 @@ const ReleaseTokens: React.FC<props> = ({
 				</div>
 			</section>
 			<section>
-				<h2>Tokens To Release</h2>
+				<h2 className={`${styles.TextLeft}`}>Tokens To Claim</h2>
 				<span className={styles.Amount}>
 					{token} {toRelease.toLocaleString()}
 				</span>
-				<p>
-					You can release tokens that have vested but not yet been claimed.
+				<p className={`${styles.TextLeft}`}>
+					You can claim tokens that have vested but not yet been claimed.
 					<br />
-					<br />
-					You have claimed <b>{((claimed / total) * 100).toFixed(2)}%</b> of
-					your vested tokens.
-					<br />
-					<br />
-					You are eligible to release <b>{toRelease.toLocaleString()}</b> tokens
-					now.
+					You've claimed <b>{((claimed / total) * 100).toFixed(2)}%</b> of your
+					vested tokens, so you can claim another{' '}
+					<b>{toRelease.toLocaleString()}</b> tokens now.
 				</p>
-				<FutureButton
-					onClick={() => {}}
-					glow
-					style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
-					loading={isLoading}
-				>
-					Release Tokens
-				</FutureButton>
+				{toRelease.toLocaleString() === '0' && (
+					<FutureButton
+						onClick={() => {}}
+						style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
+						loading={isLoading}
+					>
+						Claim Tokens
+					</FutureButton>
+				)}
+
+				{toRelease.toLocaleString() !== '0' && (
+					<FutureButton
+						onClick={() => {}}
+						glow
+						style={{ textTransform: 'uppercase', margin: '32px auto 0 auto' }}
+						loading={isLoading}
+					>
+						Claim Tokens
+					</FutureButton>
+				)}
 			</section>
 		</form>
 	);
