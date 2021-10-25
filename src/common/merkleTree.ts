@@ -31,6 +31,9 @@ const merkleFiles: { [address: string]: string } = {
 	// polka
 	'0x0851076f0F05E008337b368fAbD6328CeFeb358B':
 		'https://ipfs.io/ipfs/QmdMz1RCnwNLba1PqmSmDQmVE7W9Jo7939ofWQ6UAY7Nq1',
+	// spiro
+	'0x5521D7E4D9AE2294ecDf505fd138b8924Ea7A8E2':
+		'https://ipfs.io/ipfs/QmboKEYYp3rc4q8hC5EZwqGgVJnxPEwiQ3VdAv5qJXz1iE'
 };
 
 export const getVestingMerkleTree = async (
