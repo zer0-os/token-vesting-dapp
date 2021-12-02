@@ -22,6 +22,16 @@ const contractAddresses: ContractAddressMap = {
 				icon: 'assets/wild.svg',
 			},
 			{
+				name: 'Vesting Contract 1',
+				contract: '0xD0adBE472398B375096E070A1f92E4CCAf7e3582',
+				icon: 'assets/wild.svg',
+			},
+			{
+				name: 'Vesting Contract 2',
+				contract: '0x4ed7d53f37F34Cd50cd9248eE12d48e1b61d71b7',
+				icon: 'assets/wild.svg',
+			},
+			{
 				name: 'INITIAL TEAM',
 				contract: '0x557f4C36add92E21bAf67971a85440B089D55033',
 				icon: 'assets/wild.svg',

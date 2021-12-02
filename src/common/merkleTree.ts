@@ -25,7 +25,7 @@ const merkleFiles: { [address: string]: string } = {
 	// polka
 	'0x0851076f0F05E008337b368fAbD6328CeFeb358B':
 		'https://ipfs.io/ipfs/QmdMz1RCnwNLba1PqmSmDQmVE7W9Jo7939ofWQ6UAY7Nq1',
-  // Alejo Address 1
+	// Alejo Address 1
 	'0xD4F82Db8B85AAFb87060e56546C5bcc03fc41774':
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
 	// Alejo Address 2
@@ -53,6 +53,10 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
 	'0x6f448ABa86b14EEB2e6B69971C0a70edbC4B5Cb6':
 		'https://ipfs.io/ipfs/QmcE7DPLy9yqYhK18styiTtNdv5n9P5dLiSywzic7SHvoN',
+	'0xD0adBE472398B375096E070A1f92E4CCAf7e3582':
+		'https://ipfs.io/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
+	'0x4ed7d53f37F34Cd50cd9248eE12d48e1b61d71b7':
+		'https://ipfs.io/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
 };
 
 export const getVestingMerkleTree = async (
