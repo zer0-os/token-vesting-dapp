@@ -17,7 +17,7 @@ const contractAddresses: ContractAddressMap = {
 		vesting: process.env.REACT_APP_VESTING_CONTRACT,
 	},
 	[Network.Kovan]: {
-		vesting: '0x1d308f379c94e668Ef90328bF0C11dFFbd5055E9',
+		vesting: '0x9264a0E8756fEd1F0B65Db660A8e8acb2145A321',
 	},
 } as ContractAddressMap;
 

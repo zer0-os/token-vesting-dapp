@@ -33,7 +33,11 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmdMz1RCnwNLba1PqmSmDQmVE7W9Jo7939ofWQ6UAY7Nq1',
 	// spiro
 	'0x5521D7E4D9AE2294ecDf505fd138b8924Ea7A8E2':
-		'https://ipfs.io/ipfs/QmboKEYYp3rc4q8hC5EZwqGgVJnxPEwiQ3VdAv5qJXz1iE'
+		'https://ipfs.io/ipfs/QmboKEYYp3rc4q8hC5EZwqGgVJnxPEwiQ3VdAv5qJXz1iE',
+	'0x4ed7d53f37F34Cd50cd9248eE12d48e1b61d71b7':
+		'https://ipfs.io/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
+	'0x9264a0E8756fEd1F0B65Db660A8e8acb2145A321':
+		'https://ipfs.io/ipfs/QmNaYGZyM1Pa2Nv3U6txyhTT3wvR7otXkRj3y4TwfyaqMf',
 };
 
 export const getVestingMerkleTree = async (
