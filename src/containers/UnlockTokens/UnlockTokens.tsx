@@ -24,7 +24,7 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({
 
 	// Data
 	const total = Number(numTokens).toLocaleString();
-	const token = 'WILD';
+	const token = 'ZERO';
 
 	///////////////
 	// Functions //
@@ -45,7 +45,7 @@ const UnlockTokens: React.FC<UnlockTokensProps> = ({
 					{token} {total}
 				</span>
 				<p>
-					You have been granted {total} Wild Tokens, which must be unlocked
+					You have been granted {total} Zero Tokens, which must be unlocked
 					before you can claim them. Unlocking is the process of signing the
 					token issue and only needs to be done once. It incurs GAS fees.
 				</p>

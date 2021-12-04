@@ -153,7 +153,7 @@ const ClaimVestedTokens: React.FC = () => {
 
 		releaseState.setState(TransactionState.Pending);
 
-		addNotification(`Successfully claimed ${claimAmount} WILD tokens`);
+		addNotification(`Successfully claimed ${claimAmount} ZERO tokens`);
 
 		refresh();
 	};
@@ -270,7 +270,7 @@ const ClaimVestedTokens: React.FC = () => {
 										}}
 										onClick={addWildToMetamask}
 									>
-										Add WILD token to Metamask
+										Add ZERO token to Metamask
 									</TextButton>
 								</>
 							)}

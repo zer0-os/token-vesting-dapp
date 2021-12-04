@@ -66,7 +66,7 @@ const ReleaseTokens: React.FC<props> = ({
 	const toRelease = vested - claimed;
 	const total = vesting.total;
 
-	const token = 'WILD';
+	const token = 'ZERO';
 
 	// Label refs
 	const claimedLabel = useRef<HTMLSpanElement>(null);
