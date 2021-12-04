@@ -45,7 +45,7 @@ export const MainPage: React.FC = () => {
 			<Container maxWidth="sm" className={classes.page}>
 				<Box className={`${classes.header} glow-text-white`}>
 					<WilderIcon style={{ margin: '0 auto' }} />
-					<h1 className={classes.headerText}>$WILD Token Vesting</h1>
+					<h1 className={classes.headerText}>$ZERO Token Vesting</h1>
 				</Box>
 				<Box className={classes.body}>
 					<Grid container direction="column">

@@ -1,5 +1,5 @@
 //- Asset Imports
-import wilderIcon from './assets/zero-icon.png';
+import wilderIcon from './assets/zero-icon-logo.png';
 
 //- Syle Imports
 import styles from './WilderIcon.module.css';
