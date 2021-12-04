@@ -38,6 +38,8 @@ const merkleFiles: { [address: string]: string } = {
 		'https://ipfs.io/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
 	'0x9264a0E8756fEd1F0B65Db660A8e8acb2145A321':
 		'https://ipfs.io/ipfs/QmNaYGZyM1Pa2Nv3U6txyhTT3wvR7otXkRj3y4TwfyaqMf',
+	'0x956234670110D154Abb591FB46FC3b5A455A3c97':
+		'https://ipfs.io/ipfs/QmYqtCVkFShDXHone1VyjPeUPgANScvjbq7JSqEskparps',
 };
 
 export const getVestingMerkleTree = async (
