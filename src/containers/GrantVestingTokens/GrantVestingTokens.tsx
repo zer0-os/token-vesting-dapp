@@ -1,195 +1,295 @@
 //- GVT MAIN MENU -//
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 
 //- Components Imports
-import { ContainerGral, ContainerPopup } from 'containers/index';
-import {
-	FutureButton,
-	RecipientButton,
-	TextInput,
-	InputTest,
-	EthInput,
-} from 'components/index';
+import { EtherInput, FutureButton } from 'components';
 
-import './GrantVestingTokens.css';
+//- Styles Imports
+import '../../styles/main.css';
+import styles from './GrantVestingTokens.module.css';
+import { ethers } from 'ethers';
+import { useState } from 'react';
 
-//- Styles
-const addRecipientStyle: React.CSSProperties = {
-	color: 'white',
-	borderRadius: '5px',
-	border: 'none',
-};
-
-const TotalGrantedStyle: React.CSSProperties = {
-	color: 'white',
-	backgroundColor: 'rgba(30, 81, 128, 1)',
-	borderRadius: '5px',
-	border: 'none',
-};
+//- Web3 Imports
+import { useWeb3React } from '@web3-react/core';
+import { Web3Provider } from '@ethersproject/providers/lib/web3-provider';
 
 type GrantVestingTokensProps = {
+	varContract: string;
+	onCatchContract: (value: string) => void;
+
+	setInputs: React.ReactNode;
+
+	amount: string;
+
 	onSend: () => void;
+	onAddRecipient?: any;
+
+	textError?: string;
+
+	validateValues: number | undefined;
 };
 
-const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({ onSend }) => {
-	const [contract, catchInput] = useState('');
-	const [address, catchAddress] = useState('');
-	const [amount, catchAmount] = useState('');
+const GrantVestingTokens: React.FC<GrantVestingTokensProps> = ({
+	varContract,
+	onCatchContract,
+
+	setInputs,
+
+	amount,
+
+	onSend,
+	onAddRecipient,
+
+	validateValues,
+
+	textError,
+}) => {
+	//- Wallet Data
+	const walletContext = useWeb3React<Web3Provider>();
+	const { account } = walletContext;
+
+	const [errorState, setError] = useState(false);
+
+	useEffect(() => {
+		if (varContract !== '') {
+			setTimeout(() => {
+				if (textError === 'Checking...') {
+					setError(false);
+				} else {
+					setError(true);
+				}
+			}, 2000);
+		}
+	}, [varContract, account, textError]);
 
 	////////////
 	// RENDER //
 	////////////
 
 	return (
-		<ContainerPopup
-			title={'Grand Vesting Tokens'}
-			childrens={
-				<>
-					<hr className="glow" />
+		<div className={`${styles.Container} blur border-pink-glow border-rounded`}>
+			<h1
+				className="glow-text-white"
+				style={{
+					marginBottom: '56px',
+				}}
+			>
+				Grant Vesting Tokens
+			</h1>
 
-					<div
-						style={{
-							display: 'inline-block',
-							width: '100%',
-							marginTop: '20px',
-							textAlign: 'left',
-						}}
-					>
-						<p
-							style={{
-								fontSize: '1.2em',
-								textShadow: '0px 0px 20px rgba(60, 161, 255, 0.8)',
-							}}
-						>
-							Ethereum vesting contract address you wish to grant from:
-						</p>
-					</div>
+			<div>
+				<hr className="glow" />
+			</div>
 
-					<EthInput
-						title={'hello'}
-						text={'0x1wjlasdi98sdff099sdwiioasoidijjafs8'}
-						copyButton
-						static
+			<section>
+				<h2 className="glow-text-blue">
+					Ethereum vesting contract address you wish to grant from:
+				</h2>
+
+				{!errorState && (
+					<EtherInput
+						ethlogo
+						alphanumeric
+						placeholder={'Vesting Contract Address'}
+						onChange={(value) => onCatchContract(value)}
+						text={varContract}
 					/>
+				)}
 
-					<hr className="glow" />
+				{errorState && (
+					<EtherInput
+						ethlogo
+						alphanumeric
+						placeholder={'Vesting Contract Address'}
+						onChange={(value) => onCatchContract(value)}
+						text={varContract}
+						error
+						errorText={textError}
+					/>
+				)}
+
+				<div style={{ marginTop: '2px' }}>
+					<div
+						style={{
+							display: 'inline-block',
+							margin: '16px 0px 16px 16px',
+						}}
+					>
+						<div
+							style={{
+								display: 'flex',
+								justifyContent: 'center',
+							}}
+						>
+							<div
+								style={{
+									display: 'inline-block',
+									width: '50px',
+									height: '50px',
+									backgroundColor: 'rgba(60, 161, 255, 0.15)',
+									borderRadius: '100%',
+									backgroundSize: 'contain',
+									backgroundImage: 'url(../assets/wild.svg)',
+								}}
+							/>
+							<p
+								className="glow-text-white"
+								style={{
+									display: 'flex',
+									fontWeight: 700,
+									justifyContent: 'center',
+									alignItems: 'center',
+									margin: '15px 0px 0px 15px',
+								}}
+							>
+								WILD
+							</p>
+						</div>
+					</div>
 
 					<div
 						style={{
 							display: 'inline-block',
-							width: '100%',
-							marginTop: '20px',
-							textAlign: 'left',
+							justifyItems: 'center',
+							float: 'right',
+							margin: '30px 20px 0px 0px',
 						}}
 					>
 						<p
+							className="glow-text-blue"
 							style={{
-								fontSize: '1.2em',
-								textShadow: '0px 0px 10px rgba(60, 161, 255, 0.8)',
-							}}
-						>
-							Ethereum address you wish to grant vesting tokens to:
-						</p>
-					</div>
-
-					{/*SCROLL DIV */}
-					<div className="scrollDiv">
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-						<InputTest />
-					</div>
-
-					<div
-						style={{
-							textAlign: 'initial',
-						}}
-					>
-						{/* Input Recipient Address */}
-						<TextInput
-							onChange={(text) => {
-								catchAddress(text);
-							}}
-							alphanumeric={true}
-							text={address}
-							placeholder={'Recipient Address'}
-							ethlogo
-							style={{
-								float: 'left',
-								width: '70%',
-								opacity: '0.8',
-								marginTop: '10px',
-							}}
-						/>
-
-						{/* Input Amount */}
-						<TextInput
-							onChange={(text) => {
-								catchAmount(text);
-							}}
-							numeric={true}
-							text={amount}
-							placeholder={'Amount'}
-							style={{
-								float: 'right',
-								width: '25%',
-								opacity: '0.8',
-								marginTop: '10px',
-							}}
-						/>
-					</div>
-
-					<div
-						style={{
-							position: 'relative',
-						}}
-					>
-						<RecipientButton
-							style={addRecipientStyle}
-							children={'+ Add Recipient'}
-						/>
-
-						<p
-							style={{
-								position: 'absolute',
-								top: '10px',
-								right: '195px',
+								display: 'inline-block',
+								marginRight: '8px',
 								fontSize: '14px',
-								textShadow: '0px 0px 10px rgba(60, 161, 255, 0.7)',
-								opacity: '0.7',
+								color: 'rgba(128, 128, 128, 1)',
 							}}
 						>
-							Total Granted
+							Total Available
 						</p>
 
 						<p
+							className="glow-text-white"
 							style={{
-								position: 'absolute',
-								top: '6px',
-								right: '17px',
+								display: 'inline-block',
 								fontSize: '24px',
-								textShadow: '0px 0px 10px rgba(255, 255, 255, 0.7)',
 							}}
 						>
-							10,000.00 TEST
+							1,000,000.00 TEST
 						</p>
 					</div>
+				</div>
+			</section>
 
-					<FutureButton children={'Send'} glow onClick={onSend} />
-				</>
-			}
-			style={{
-				paddingLeft: '50px',
-				paddingRight: '50px',
-				margin: '0 auto',
-			}}
-		/>
+			<div
+				style={{
+					marginTop: '10px',
+				}}
+			>
+				<hr className="glow" />
+			</div>
+
+			<section
+				style={{
+					marginTop: '26px',
+				}}
+			>
+				<h2 className="glow-text-blue">
+					Ethereum address you wish to grant vesting tokens to:
+				</h2>
+
+				<div className={styles.scroll}>
+					{setInputs}
+
+					<div style={{ marginTop: '10px' }}>
+						<button
+							id="buttonAdd"
+							className="flatButton"
+							style={{
+								display: 'inline-block',
+								width: '142px',
+								height: '35px',
+								backgroundColor: 'rgba(60, 161, 255, 0.15)',
+								borderRadius: '8px',
+								margin: '16px 0px 16px 16px',
+							}}
+						>
+							<p
+								className="glow-text-white"
+								style={{
+									color: '#FFFFFF',
+									marginTop: '8px',
+									fontSize: '16px',
+								}}
+								onClick={onAddRecipient}
+							>
+								+ Add Recipient
+							</p>
+						</button>
+
+						<div
+							style={{
+								display: 'inline-block',
+								justifyItems: 'center',
+								float: 'right',
+								margin: '20px',
+							}}
+						>
+							<p
+								className="glow-text-blue"
+								style={{
+									display: 'inline-block',
+									marginRight: '8px',
+									fontSize: '14px',
+									color: 'rgba(128, 128, 128, 1)',
+								}}
+							>
+								Total Granted
+							</p>
+
+							<p
+								className="glow-text-white"
+								style={{
+									display: 'inline-block',
+									fontSize: '24px',
+								}}
+							>
+								{amount} TEST
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<div
+				style={{
+					display: 'inline-block',
+					width: '100%',
+					textAlign: 'center',
+				}}
+			>
+				<div
+					style={{
+						display: 'inline-block',
+						marginTop: '10px',
+					}}
+				>
+					{validateValues === 0 && textError === 'Checking...' && (
+						<FutureButton onClick={onSend} glow>
+							Send
+						</FutureButton>
+					)}
+
+					{validateValues !== 0 && (
+						<FutureButton onClick={() => {}}>Send</FutureButton>
+					)}
+
+					{validateValues === 0 && textError !== 'Checking...' && (
+						<FutureButton onClick={() => {}}>Send</FutureButton>
+					)}
+				</div>
+			</div>
+		</div>
 	);
 };
 

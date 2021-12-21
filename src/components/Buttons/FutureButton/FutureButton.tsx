@@ -37,9 +37,8 @@ const FutureButton: React.FC<FutureButtonProps> = ({
 
 	return (
 		<button
-			className={`${styles.futureButton} ${isSelected ? styles.selected : ''} ${
-				glow ? styles.glow : ''
-			} ${loading ? styles.Loading : ''} ${alt ? styles.Alt : ''} `}
+			className={`${styles.futureButton} ${isSelected ? styles.selected : ''} ${glow ? styles.glow : ''
+				} ${loading ? styles.Loading : ''} ${alt ? styles.Alt : ''} `}
 			onMouseEnter={handleHover}
 			onMouseUp={handleClick}
 			style={style}
@@ -49,9 +48,8 @@ const FutureButton: React.FC<FutureButtonProps> = ({
 				{loading && <div className={styles.Spinner}></div>}
 			</div>
 			<div
-				className={`${styles.wash} ${
-					hasHovered && !isSelected ? styles.hovered : ''
-				}`}
+				className={`${styles.wash} ${hasHovered && !isSelected ? styles.hovered : ''
+					}`}
 			></div>
 		</button>
 	);

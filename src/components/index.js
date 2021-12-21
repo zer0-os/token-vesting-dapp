@@ -26,6 +26,7 @@ export { default as OptionDropdown } from './Dropdowns/OptionDropdown/OptionDrop
 
 //- Inputs
 export { default as EthInput } from './Inputs/EthInput/EthInput';
+export { default as EtherInput } from './Inputs/EtherInput/EtherInput';
 export { default as InputTest } from './test-component/InputTest';
 export { default as TextInput } from './Inputs/TextInput/TextInput';
 

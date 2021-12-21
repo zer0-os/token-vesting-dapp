@@ -7,5 +7,37 @@
 	align-items: center;
 }
 
-.Button {
+.gvt {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.confirmModal {
+	flex-direction: column;
+	justify-content: center;
+
+	width: 640px;
+	padding: 34.5px 40px 40px 40px;
+	margin: 160px;
+
+	background: var(--background-blue-card-wilder);
+}
+
+.confirmModal h1 {
+	width: 100%;
+
+	font-size: 36px;
+	font-weight: 700;
+	text-align: center;
+}
+
+.confirmModal h2 {
+	font-size: 18px;
+	font-weight: 700;
+}
+
+.confirmModal p {
+	font-size: 24px;
+	line-height: 21.6px;
 }
