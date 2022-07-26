@@ -3,43 +3,43 @@ import { VestingMerkleTree } from '../util/types';
 
 const merkleFiles: { [address: string]: string } = {
 	'0xBB249Ffa0673284A3DdAB5de157A6970f849b0FE':
-		'https://ipfs.io/ipfs/QmdrErpGsuMKLTFQSmziwLuDd7FYCBCmhpfXbpW8jKFtWg',
+		'https://zero-gateway.azure-api.net/ipfs/QmdrErpGsuMKLTFQSmziwLuDd7FYCBCmhpfXbpW8jKFtWg',
 	// wilder IDO
 	'0x6E9c63AF66e1F59137214d51ab7716E8dB9D6467':
-		'https://ipfs.io/ipfs/QmWpyYBmFVyt5x35mWwypirD7zt8k7apyiNuccj3mXKdAq',
+		'https://zero-gateway.azure-api.net/ipfs/QmWpyYBmFVyt5x35mWwypirD7zt8k7apyiNuccj3mXKdAq',
 	// wilder influencer
 	'0xB7dFcb421412F16B25DDd4AD4bdd73D0883136D8':
-		'https://ipfs.io/ipfs/QmVu6ZhopK9CfpkpuJwbR31ndriThJpkVvyitk7LGU2WsQ',
+		'https://zero-gateway.azure-api.net/ipfs/QmVu6ZhopK9CfpkpuJwbR31ndriThJpkVvyitk7LGU2WsQ',
 	// v3
 	'0x441b52f945B6f3E7D2019f2A0a3537DBA1a7ef87':
-		'https://ipfs.io/ipfs/Qme5h8NqdKAirMrVqCNaCTAXyEZJAT68WJbo8aNm3is5mu',
+		'https://zero-gateway.azure-api.net/ipfs/Qme5h8NqdKAirMrVqCNaCTAXyEZJAT68WJbo8aNm3is5mu',
 	// v4
 	'0xD393224e6EBbFb46C6a09A6Fd8acc596f6392402':
-		'https://ipfs.io/ipfs/QmT3Lb9r5M36yRfk7V6rSeYhswqE7wY172amdBnpj7ev8R',
+		'https://zero-gateway.azure-api.net/ipfs/QmT3Lb9r5M36yRfk7V6rSeYhswqE7wY172amdBnpj7ev8R',
 	// brett site
 	'0x1d308f379c94e668Ef90328bF0C11dFFbd5055E9':
-		'https://ipfs.io/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
+		'https://zero-gateway.azure-api.net/ipfs/QmPfDq18TENn736cuExu7qrv3ReGuEXWrvnGgJa2CbddsH',
 	// chain swap hack
 	'0x8E4C057032436498817de977Dc1aE10e3Dfd23c1':
-		'https://ipfs.io/ipfs/QmYQZ6S3xRMVt6wtkFndpdCP8fZQfW6ApHcdEySFSBwSQ3',
+		'https://zero-gateway.azure-api.net/ipfs/QmYQZ6S3xRMVt6wtkFndpdCP8fZQfW6ApHcdEySFSBwSQ3',
 	// chain swap posthack
 	'0xE516ef5d103bf567238dB2A5F88781D18214fF6C':
-		'https://ipfs.io/ipfs/QmPnGMZa7n2YWyU35Qo7ph1jzsHiouonb1Km5DopmxfhGo',
+		'https://zero-gateway.azure-api.net/ipfs/QmPnGMZa7n2YWyU35Qo7ph1jzsHiouonb1Km5DopmxfhGo',
 	// 888
 	'0x109f7B8608785201a9AAa4d75dBF03A9Fa663187':
-		'https://ipfs.io/ipfs/QmbfNeqk7wxaDZDZitSwV76xPt3GW2coW3e3k4pFizjgo6',
+		'https://zero-gateway.azure-api.net/ipfs/QmbfNeqk7wxaDZDZitSwV76xPt3GW2coW3e3k4pFizjgo6',
 	// polka
 	'0x0851076f0F05E008337b368fAbD6328CeFeb358B':
-		'https://ipfs.io/ipfs/QmdMz1RCnwNLba1PqmSmDQmVE7W9Jo7939ofWQ6UAY7Nq1',
+		'https://zero-gateway.azure-api.net/ipfs/QmdMz1RCnwNLba1PqmSmDQmVE7W9Jo7939ofWQ6UAY7Nq1',
 	// spiro
 	'0x5521D7E4D9AE2294ecDf505fd138b8924Ea7A8E2':
-		'https://ipfs.io/ipfs/QmboKEYYp3rc4q8hC5EZwqGgVJnxPEwiQ3VdAv5qJXz1iE',
+		'https://zero-gateway.azure-api.net/ipfs/QmboKEYYp3rc4q8hC5EZwqGgVJnxPEwiQ3VdAv5qJXz1iE',
 	'0x4ed7d53f37F34Cd50cd9248eE12d48e1b61d71b7':
-		'https://ipfs.io/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
+		'https://zero-gateway.azure-api.net/ipfs/QmejrtU5qTeTnbCmMpXAGPRvPz9h5JqLAHmDThRFGhQ57N',
 	'0x9264a0E8756fEd1F0B65Db660A8e8acb2145A321':
-		'https://ipfs.io/ipfs/QmNaYGZyM1Pa2Nv3U6txyhTT3wvR7otXkRj3y4TwfyaqMf',
+		'https://zero-gateway.azure-api.net/ipfs/QmNaYGZyM1Pa2Nv3U6txyhTT3wvR7otXkRj3y4TwfyaqMf',
 	'0x956234670110D154Abb591FB46FC3b5A455A3c97':
-		'https://ipfs.io/ipfs/QmYqtCVkFShDXHone1VyjPeUPgANScvjbq7JSqEskparps',
+		'https://zero-gateway.azure-api.net/ipfs/QmYqtCVkFShDXHone1VyjPeUPgANScvjbq7JSqEskparps',
 };
 
 export const getVestingMerkleTree = async (
