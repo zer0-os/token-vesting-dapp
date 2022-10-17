@@ -40,8 +40,10 @@ const merkleFiles: { [address: string]: string } = {
 		'https://zero-service-gateway.azure-api.net/ipfs/QmNaYGZyM1Pa2Nv3U6txyhTT3wvR7otXkRj3y4TwfyaqMf',
 	'0x956234670110D154Abb591FB46FC3b5A455A3c97':
 		'https://zero-service-gateway.azure-api.net/ipfs/QmYqtCVkFShDXHone1VyjPeUPgANScvjbq7JSqEskparps',
+
+	// zero qdo 9/29/2022
 	'0xC33f704415384d63765e9200cbCfCcF3536fE137':
-		'https://zero-service-gateway.azure-api.net/ipfs/QmVNcxJQkrmCXRxZXpqmosoxGzdHiEoncSQCGbNuXX5zAy'
+		'https://zero-service-gateway.azure-api.net/ipfs/QmXN5gM2hKQxTQ4Eromv6mFDtKH6VMZDYq2XFfzaozHdx6'
 };
 
 export const getVestingMerkleTree = async (
