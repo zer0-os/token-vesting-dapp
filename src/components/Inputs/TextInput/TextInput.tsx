@@ -28,18 +28,18 @@ const imageStyle: React.CSSProperties = {
 	position: 'absolute',
 	width: '16px',
 	height: '26px',
-	top:'22px',
-	left:'24px',
+	top: '22px',
+	left: '24px',
 	backgroundSize: 'contain',
 	backgroundImage: 'url(../assets/ETH-Logo.png)',
-}
+};
 
 const titleStyle: React.CSSProperties = {
 	position: 'absolute',
-	top:'18px',
-	left:'50px',
+	top: '18px',
+	left: '50px',
 	fontSize: '12px',
-}
+};
 
 const TextInput: React.FC<TextInputProps> = ({
 	onChange,
@@ -72,38 +72,36 @@ const TextInput: React.FC<TextInputProps> = ({
 		<div className={styles.Container}>
 			{ethlogo && title && (
 				<>
-				<div style={imageStyle}/>
-				<p style={titleStyle}>
-					{titletext}
-				</p>
-				<input
-					type={type ? type : ''}
-					className={`
+					<div style={imageStyle} />
+					<p style={titleStyle}>{titletext}</p>
+					<input
+						type={type ? type : ''}
+						className={`
 						${styles.TextInput} 
 						${styles.ethlogo} border-blue 
 						${error ? styles.Error : ''}`}
-					onChange={handleChange}
-					style={style}
-					placeholder={placeholder}
-					value={text ? text : ''}
-				/>
+						onChange={handleChange}
+						style={style}
+						placeholder={placeholder}
+						value={text ? text : ''}
+					/>
 				</>
 			)}
 
 			{ethlogo && !title && (
 				<>
-				<div style={imageStyle}/>
-				<input
-					type={type ? type : ''}
-					className={`
+					<div style={imageStyle} />
+					<input
+						type={type ? type : ''}
+						className={`
 						${styles.TextInput} 
 						${styles.ethlogo} border-blue 
 						${error ? styles.Error : ''}`}
-					onChange={handleChange}
-					style={style}
-					placeholder={placeholder}
-					value={text ? text : ''}
-				/>
+						onChange={handleChange}
+						style={style}
+						placeholder={placeholder}
+						value={text ? text : ''}
+					/>
 				</>
 			)}
 

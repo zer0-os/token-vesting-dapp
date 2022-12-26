@@ -1,4 +1,4 @@
-import { MerkleTokenVesting } from '../contracts/types';
+import { MerkleTokenVesting, TokenVestingController } from '../contracts/types';
 
 export interface VestingMerkleClaim {
 	index: number;
@@ -22,6 +22,10 @@ export interface ContractAddresses {
 
 export interface Contracts {
 	vesting: MerkleTokenVesting;
+}
+
+export interface GrantContract {
+	grantableVesting: TokenVestingController;
 }
 
 export interface ClaimVestingInterface {
